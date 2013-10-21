@@ -6,7 +6,7 @@
 ##' greater than 5 and between 5 to 12 years since publishing their
 ##' first article.  So naturally, if this isn't you, then the results
 ##' should be taken with a large pinch of salt.  For more caveats, see
-##' \link{http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/}.
+##' \url{http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/}.
 ##'
 ##' @note A scientist has an h-index of n if he or she publishes n
 ##' papers with at least n citations each.  Values returned are
@@ -15,7 +15,7 @@
 ##'
 ##' @source DE Acuna, S Allesina, KP Kording (2012) Future impact:
 ##' Predicting scientific success.  Nature 489,
-##' 201-202. \link{http://dx.doi.org/10.1038/489201a}.
+##' 201-202. \url{http://dx.doi.org/10.1038/489201a}.
 ##' @param id a character string giving the Google Scholar ID
 ##' @param journals optional character vector of top
 ##' journals. See \code{\link{get_num_top_journals}} for more details.

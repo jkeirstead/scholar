@@ -4,7 +4,7 @@
 \source{
   DE Acuna, S Allesina, KP Kording (2012) Future impact:
   Predicting scientific success.  Nature 489, 201-202.
-  \link{http://dx.doi.org/10.1038/489201a}.
+  \url{http://dx.doi.org/10.1038/489201a}.
 }
 \usage{
   get_num_top_journals(id,

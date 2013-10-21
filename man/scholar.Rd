@@ -5,7 +5,7 @@
 \title{scholar}
 \source{
   The package reads data from
-  \link{http://scholar.google.com}.  Dates and citation
+  \url{http://scholar.google.com}.  Dates and citation
   counts are estimated and are determined automatically by
   a computer program. Use at your own risk.
 }
@@ -19,7 +19,7 @@
 \note{
   A complementary set of Google Scholar functions can be
   found at
-  \link{http://biostat.jhsph.edu/~jleek/code/googleCite.r}.
+  \url{http://biostat.jhsph.edu/~jleek/code/googleCite.r}.
   The \code{scholar} package was developed independently.
 }
 

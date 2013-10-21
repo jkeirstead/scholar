@@ -20,7 +20,7 @@
   name, affiliation, their homepage (if specified), and a
   summary of their key citation and impact metrics.  The
   scholar ID can be found by searching Google Scholar at
-  \link{http://scholar.google.com}.
+  \url{http://scholar.google.com}.
 }
 \examples{
 {

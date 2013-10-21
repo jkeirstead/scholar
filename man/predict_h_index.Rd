@@ -4,7 +4,7 @@
 \source{
   DE Acuna, S Allesina, KP Kording (2012) Future impact:
   Predicting scientific success.  Nature 489, 201-202.
-  \link{http://dx.doi.org/10.1038/489201a}.
+  \url{http://dx.doi.org/10.1038/489201a}.
 }
 \usage{
   predict_h_index(id, journals)
@@ -28,7 +28,7 @@
   to 12 years since publishing their first article.  So
   naturally, if this isn't you, then the results should be
   taken with a large pinch of salt.  For more caveats, see
-  \link{http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/}.
+  \url{http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/}.
 }
 \note{
   A scientist has an h-index of n if he or she publishes n

@@ -6,7 +6,7 @@
 ##' Each scholar profile page gives the researcher's name,
 ##' affiliation, their homepage (if specified), and a summary of their
 ##' key citation and impact metrics.  The scholar ID can be found by
-##' searching Google Scholar at \link{http://scholar.google.com}.
+##' searching Google Scholar at \url{http://scholar.google.com}.
 ##' 
 ##' @param id 	a character string specifying the Google Scholar ID.
 ##' If multiple ids are specified, only the first value is used and a
@@ -132,14 +132,15 @@ get_num_distinct_journals <- function(id) {
 ##'
 ##' @source DE Acuna, S Allesina, KP Kording (2012) Future impact:
 ##' Predicting scientific success.  Nature 489,
-##' 201-202. \link{http://dx.doi.org/10.1038/489201a}.
+##' 201-202. \url{http://dx.doi.org/10.1038/489201a}.
 ##'
 ##' @param id 	a character string giving a Google Scholar ID
 ##' @param journals a character vector giving the names of the top
 ##' journals.  Defaults to Nature, Science, Nature Neuroscience,
 ##' Proceedings of the National Academy of Sciences, and Neuron.
 ##' @export
-get_num_top_journals <- function(id, journals=c("Nature", "Science", "Nature Neuroscience",
+get_num_top_journals <- function(id, journals=c("Nature", "Science",
+                                       "Nature Neuroscience",
                                        "Proceedings of the National Academy of Sciences", "Neuron")) {
   id <- tidy_id(id)
   papers <- get_publications(id)

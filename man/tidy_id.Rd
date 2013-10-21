@@ -1,0 +1,16 @@
+\name{tidy_id}
+\alias{tidy_id}
+\title{Ensures that specified IDs are correctly formatted}
+\usage{
+  tidy_id(id)
+}
+\arguments{
+  \item{id}{a character string specifying the Google
+  Scholar ID. If multiple ids are specified, only the first
+  value is used and a warning is generated.}
+}
+\description{
+  Ensures that specified IDs are correctly formatted
+}
+\keyword{internal}
+

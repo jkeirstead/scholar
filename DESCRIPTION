@@ -1,0 +1,23 @@
+Package: scholar
+Maintainer: James Keirstead <j.keirstead@imperial.ac.uk>
+Author: James Keirstead <j.keirstead@imperial.ac.uk>
+Version: 0.1.0
+License: Apache 2
+Title: Analyse citation data from Google Scholar
+Description: scholar provides functions to extract citation data from Google
+    Scholar.  Convenience functions are also provided for comparing multiple
+    scholars and predicting future h-index values.
+Date: 2013-10-21
+Depends:
+    XML
+Imports:
+    stringr,
+    plyr
+Suggests:
+    roxygen2
+Collate:
+    'scholar-package.r'
+    'scholar.r'
+    'predict.r'
+    'compare.r'
+    'publications.r'

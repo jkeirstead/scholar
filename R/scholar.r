@@ -41,9 +41,10 @@ get_profile <- function(id) {
   name <- bio_info[[1]]
   affiliation <- bio_info[[2]]
 
-  ## Specialities
-  specs <- str_trim(tolower(str_split(bio_info[[3]], " -?")[[1]]))
+  ## Specialities (trim out HTML non-breaking space)
+  specs <- str_trim(tolower(str_split(bio_info[[3]], "\u00a0-?")[[1]]))
   specs <- specs[-which(specs=="")]
+  specs <- str_sub(specs, end=-2)
 
   ## Extract the homepage
   tmp <- xpathApply(tree, '//form[@id="cit-homepage-form"]//*/a/@href')

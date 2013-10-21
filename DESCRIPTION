@@ -12,7 +12,8 @@ Depends:
     XML
 Imports:
     stringr,
-    plyr
+    plyr,
+    R.cache
 Suggests:
     roxygen2
 Collate:

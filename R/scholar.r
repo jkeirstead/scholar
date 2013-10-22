@@ -141,11 +141,15 @@ get_num_distinct_journals <- function(id) {
 ##' journals.  Defaults to Nature, Science, Nature Neuroscience,
 ##' Proceedings of the National Academy of Sciences, and Neuron.
 ##' @export
-get_num_top_journals <- function(id, journals=c("Nature", "Science",
-                                       "Nature Neuroscience",
-                                       "Proceedings of the National Academy of Sciences", "Neuron")) {
+get_num_top_journals <- function(id, journals) {
   id <- tidy_id(id)
   papers <- get_publications(id)
+
+  if (missing(journals)) {
+    journals <-c("Nature", "Science", "Nature Neuroscience",
+                 "Proceedings of the National Academy of Sciences", "Neuron")
+  }
+  
   return(length(which(is.element(papers$journal, journals))))
 }
 

@@ -1,3 +1,6 @@
+# Ugly hack for CRAN checks
+utils::globalVariables(c("year", "cites"))
+
 ##' Compare the citation records of multiple scholars
 ##'
 ##' Compares the citation records of multiple scholars.  This function

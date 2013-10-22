@@ -22,6 +22,7 @@
 ##'    profiles <- lapply(ids, get_profile)
 ##' }
 ##' @export
+##' @import stringr
 get_profile <- function(id) {
 
   id <- tidy_id(id)
@@ -31,25 +32,25 @@ get_profile <- function(id) {
 
   ## Generate a list of all the tables identified by the scholar ID
   tables <- readHTMLTable(url)
-    
+     
   stats <- tables$stats
   ## The citation stats are in tables[[1]]$tables$stats
   ## The personal info is in
   tree <- htmlTreeParse(url, useInternalNodes=TRUE)
   bio_info <- xpathApply(tree, '//*/div[@class="cit-user-info"]//*/form',
-                         xmlValue)
+                          xmlValue)
   name <- bio_info[[1]]
   affiliation <- bio_info[[2]]
-
+ 
   ## Specialities (trim out HTML non-breaking space)
-  specs <- str_trim(tolower(str_split(bio_info[[3]], "\u00a0-?")[[1]]))
+  specs <- iconv(bio_info[[3]], from="UTF8", to="ASCII", sub="zzz")
+  specs <- str_trim(tolower(str_split(specs, "z{6}-?")[[1]]))
   specs <- specs[-which(specs=="")]
-  specs <- str_sub(specs, end=-2)
 
   ## Extract the homepage
   tmp <- xpathApply(tree, '//form[@id="cit-homepage-form"]//*/a/@href')
   homepage <- as.character(tmp[[1]])
-
+ 
   return(list(id=id, name=name, affiliation=affiliation,
               total_cites=as.numeric(as.character(stats[1,2])),
               h_index=as.numeric(as.character(stats[2,2])),

@@ -7,7 +7,7 @@
 ##' multiple IDs are specified, only the publications of the first
 ##' scholar will be retrieved.
 ##' @return a data frame listing the top 100 publications and their details
-##' @import stringr plyr R.cache
+##' @import stringr plyr R.cache XML
 ##' @export
 get_publications <- function(id) {
 

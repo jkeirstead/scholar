@@ -22,7 +22,7 @@
 ##'    profiles <- lapply(ids, get_profile)
 ##' }
 ##' @export
-##' @import stringr
+##' @import stringr XML
 get_profile <- function(id) {
 
   id <- tidy_id(id)
@@ -71,7 +71,7 @@ get_profile <- function(id) {
 ##' @return a data frame giving the number of citations per year to
 ##' work by the given scholar
 ##' @export
-##' @import plyr stringr
+##' @import plyr stringr XML
 get_citation_history <- function(id) {
 
   ## Ensure only one ID  

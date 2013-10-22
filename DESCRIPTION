@@ -7,13 +7,12 @@ Title: Analyse citation data from Google Scholar
 Description: scholar provides functions to extract citation data from Google
     Scholar.  Convenience functions are also provided for comparing multiple
     scholars and predicting future h-index values.
-Date: 2013-10-21
-Depends:
-    XML
+Date: 2013-10-22
 Imports:
     stringr,
     plyr,
-    R.cache
+    R.cache,
+    XML
 Suggests:
     roxygen2
 Collate:

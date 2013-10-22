@@ -7,8 +7,7 @@
   \url{http://dx.doi.org/10.1038/489201a}.
 }
 \usage{
-  get_num_top_journals(id,
-    journals = c("Nature", "Science", "Nature Neuroscience", "Proceedings of the National Academy of Sciences", "Neuron"))
+  get_num_top_journals(id, journals)
 }
 \arguments{
   \item{id}{a character string giving a Google Scholar ID}

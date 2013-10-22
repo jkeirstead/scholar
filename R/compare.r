@@ -43,7 +43,9 @@ compare_scholars <- function(ids) {
 ##' publications are cited.
 ##'
 ##' @param ids 	a character vector of Google Scholar IDs
-##' @param career  a boolean, should a column be added to the results measuring the year relative to the first citation year.  Default = TRUE
+##' @param career  a boolean, should a column be added to the results
+##' measuring the year relative to the first citation year.  Default =
+##' TRUE
 ##' 
 ##' @examples {
 ##' 	## How do Richard Feynmann and Stephen Hawking compare?

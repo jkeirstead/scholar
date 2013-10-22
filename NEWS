@@ -1,0 +1,8 @@
+scholar 0.1.0
+---------------
+
+* initial release
+
+* get profile and publications data for researchers on Google Scholar
+
+* compare multiple scholars and predict future h-index values

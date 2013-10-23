@@ -1,3 +1,8 @@
+scholar 0.1.1
+---------------
+
+* Fixed bug with incorrect parsing of profile summary table (#2)
+
 scholar 0.1.0
 ---------------
 

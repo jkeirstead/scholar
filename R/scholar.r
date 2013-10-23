@@ -32,9 +32,12 @@ get_profile <- function(id) {
 
   ## Generate a list of all the tables identified by the scholar ID
   tables <- readHTMLTable(url)
-     
-  stats <- tables$stats
+
   ## The citation stats are in tables[[1]]$tables$stats
+  ## but the number of rows seems to vary by OS
+  stats <- tables$stats
+  rows <- nrow(stats)
+  
   ## The personal info is in
   tree <- htmlTreeParse(url, useInternalNodes=TRUE)
   bio_info <- xpathApply(tree, '//*/div[@class="cit-user-info"]//*/form',
@@ -52,9 +55,9 @@ get_profile <- function(id) {
   homepage <- as.character(tmp[[1]])
  
   return(list(id=id, name=name, affiliation=affiliation,
-              total_cites=as.numeric(as.character(stats[1,2])),
-              h_index=as.numeric(as.character(stats[2,2])),
-              i10_index=as.numeric(as.character(stats[3,2])),
+              total_cites=as.numeric(as.character(stats[rows-2,2])),
+              h_index=as.numeric(as.character(stats[rows-1,2])),
+              i10_index=as.numeric(as.character(stats[rows,2])),
               fields=specs,
               homepage=homepage))
 }

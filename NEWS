@@ -3,6 +3,10 @@ scholar 0.1.1
 
 * Fixed bug with incorrect parsing of profile summary table (#2)
 
+* `predict_h_index` now predicts a scholar's h-index for every year in
+  the next ten years, not just at 1, 5, and 10 year intervals.  Thanks
+  to Daniel Acuna for providing the necessary regression coefficients.
+
 scholar 0.1.0
 ---------------
 

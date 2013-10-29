@@ -1,7 +1,7 @@
 Package: scholar
 Maintainer: James Keirstead <j.keirstead@imperial.ac.uk>
 Author: James Keirstead <j.keirstead@imperial.ac.uk>
-Version: 0.1.1
+Version: 0.1.2
 License: MIT + file LICENSE
 Title: Analyse citation data from Google Scholar
 Description: scholar provides functions to extract citation data from Google

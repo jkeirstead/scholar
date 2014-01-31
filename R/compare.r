@@ -5,8 +5,7 @@ utils::globalVariables(c("year", "cites"))
 ##'
 ##' Compares the citation records of multiple scholars.  This function
 ##' compiles a data frame comparing the citations received by each of
-##' the scholar's publications by year of publication (currently
-##' limited to just the top 100).
+##' the scholar's publications by year of publication.
 ##'
 ##' @param ids 	a vector of Google Scholar IDs
 ##' @return a data frame giving the ID of each scholar and the total

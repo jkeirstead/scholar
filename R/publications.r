@@ -1,15 +1,17 @@
 ##' Gets the publications for a scholar
 ##'
-##' Gets the publications of a scholar.  The method is currently
-##' limited to the top 100 publications only.
+##' Gets the publications of a scholar.
 
 ##' @param id a character string specifying the Google Scholar ID.  If
 ##' multiple IDs are specified, only the publications of the first
 ##' scholar will be retrieved.
-##' @return a data frame listing the top 100 publications and their details
+##' @param cstart an integer specifying the first article to start counting.
+##' this should not be changed if expecting to get all article. Needed only for recursive search.
+##' in Google Scholar's result page. 
+##' @return a data frame listing the publications and their details
 ##' @import stringr plyr R.cache XML
 ##' @export
-get_publications <- function(id) {
+get_publications <- function(id, cstart = 0) {
 
   ## Ensure we're only getting one scholar's publications
   id <- tidy_id(id)
@@ -22,11 +24,11 @@ get_publications <- function(id) {
   if (is.null(data)) {
   
     ## Build the URL
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works"
-    url <- sprintf(url_template, id)
+    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works&cstart=%d"
+    url <- sprintf(url_template, id, cstart)
 
     ## Load the page
-    doc <- htmlParse(url)
+    doc <- htmlParse(url, encoding="UTF-8")
     cites <- xpathApply(doc, '//tr[@class="cit-table item"]')
 
     ## Works on a list element
@@ -34,10 +36,12 @@ get_publications <- function(id) {
       ## Basic info
       td <- l[[1]]
       title <- xmlValue(td[[1]])
+      pubid  <- str_split(xmlAttrs(td[[1]])[[1]],":")[[1]][2]
       author <- xmlValue(td[[3]])
       
       ## Citation info
-      cited_by <- as.numeric(xmlValue(l[[2]][[1]]))
+      ## NA citations mean 0 citations
+      cited_by <- ifelse(is.na(as.numeric(xmlValue(l[[2]][[1]]))), 0, as.numeric(xmlValue(l[[2]][[1]])))
       year <- as.numeric(xmlValue(l[[4]]))
       
       ## Parse the source information
@@ -57,13 +61,26 @@ get_publications <- function(id) {
       ## Clean up the number part
       numbers <- str_trim(str_sub(src, first_digit+1, str_length(src)))
       
-      return(data.frame(title=title, author=author, journal=journals, number=numbers, cites=cited_by, year=year))
+      return(data.frame(title=title, author=author, journal=journals, number=numbers, cites=cited_by, year=year, pubid=pubid))
     }
 
     tmp <- lapply(cites, parse_cites)
     data <- ldply(tmp)
 
-    saveCache(data, key=list(id))
+    ## Not all the characters UTF-8 are correctly capture (for some reason). 
+    ## Those here are the ones I've found so far...
+    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\xc1","Á",x) else x))
+    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub(" ","-",x) else x))
+    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\u0096","-",x) else x))
+
+    ## Check if we've reached a multiple of 100 articles. Might need to search the next page
+    if (nrow(data) > 0 && nrow(data)%%100 == 0) {
+      data <- rbind(data, get_publications(id, nrow(data)))
+    }
+    ## Save it after everything has been retrieved. (no recursivity left)
+    if (cstart == 0) {
+      # saveCache(data, key=list(id))
+    }
   }
   
   return(data)
@@ -72,9 +89,7 @@ get_publications <- function(id) {
 
 ##' Calculates how many articles a scholar has published
 ##'
-##' Calculate how many articles a scholar has published.  At present
-##' only the first page of results are retrieved so the maximum value
-##' is 100.
+##' Calculate how many articles a scholar has published.
 ##'
 ##' @param id a character string giving the Google Scholar ID
 ##' @return an integer value (max 100)
@@ -87,8 +102,6 @@ get_num_articles <- function(id) {
 ##' Gets the year of the oldest article for a scholar
 ##'
 ##' Gets the year of the oldest article published by a given scholar.
-##' At present this is the oldest of the top 100 published articles
-##' (by total citations).
 ##' 
 ##' @param id 	a character string giving the Google Scholar ID
 ##' @return the year of the oldest article

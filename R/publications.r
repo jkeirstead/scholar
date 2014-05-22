@@ -35,18 +35,27 @@ get_publications <- function(id) {
       td <- l[[1]]
       title <- xmlValue(td[[1]])
       author <- xmlValue(td[[3]])
-      
+
       ## Citation info
-      cited_by <- as.numeric(xmlValue(l[[2]][[1]]))
+      src <- l[[2]][[1]]
+      if(!is.null(src)){
+        cited_by <- as.numeric(xmlValue(src))
+        s <- xmlAttrs(src)[[2]]
+        doc_id <- strsplit(s, "cites=")[[1]][2]
+      } else {
+        cited_by <- 0
+        doc_id <- ""
+      }
+
       year <- as.numeric(xmlValue(l[[4]]))
-      
+
       ## Parse the source information
       src <- xmlValue(td[[5]])
       ## Find the first digit (hopefully not in the journal title)
       first_digit <- as.numeric(regexpr("[\\[\\(]?\\d", src)) - 1
       ids <- which(first_digit<0)
       first_digit <- replace(first_digit, ids, str_length(src)[ids])
-      
+
       ## Clean up the journal part
       journals <- str_trim(str_sub(src, 1, first_digit))
       trailing_commas <- as.numeric(regexpr(",$", journals)) - 1
@@ -56,8 +65,8 @@ get_publications <- function(id) {
 
       ## Clean up the number part
       numbers <- str_trim(str_sub(src, first_digit+1, str_length(src)))
-      
-      return(data.frame(title=title, author=author, journal=journals, number=numbers, cites=cited_by, year=year))
+
+      return(data.frame(title=title, author=author, journal=journals, number=numbers, cites=cited_by, year=year, id=doc_id))
     }
 
     tmp <- lapply(cites, parse_cites)

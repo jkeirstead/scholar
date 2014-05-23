@@ -12,8 +12,6 @@ get_num_articles(id)
 an integer value (max 100)
 }
 \description{
-Calculate how many articles a scholar has published.  At
-present only the first page of results are retrieved so the
-maximum value is 100.
+Calculate how many articles a scholar has published.
 }
 

@@ -13,7 +13,6 @@ the year of the oldest article
 }
 \description{
 Gets the year of the oldest article published by a given
-scholar. At present this is the oldest of the top 100
-published articles (by total citations).
+scholar.
 }
 

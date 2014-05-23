@@ -1,15 +1,26 @@
 ##' Gets the publications for a scholar
 ##'
-##' Gets the publications of a scholar.  The method is currently
-##' limited to the top 100 publications only.
-
+##' Gets the publications of a specified scholar.
+##'
 ##' @param id a character string specifying the Google Scholar ID.  If
 ##' multiple IDs are specified, only the publications of the first
 ##' scholar will be retrieved.
-##' @return a data frame listing the top 100 publications and their details
+##' @param cstart an integer specifying the first article to start
+##' counting.  To get all publications for an author, omit this
+##' parameter.
+##' @details Google uses two id codes to uniquely reference a
+##' publication.  The results of this method includes \code{id} which
+##' can be used to link to a publication's full citation history
+##' (i.e. if you click on the number of citations in the main scholar
+##' profile page), and \code{pubid} which links to the details of the
+##' publication (i.e. if you click on the title of the publication in
+##' the main scholar profile page.)
+##' @return a data frame listing the publications and their details.
+##' These include the publication title, author, journal, number,
+##' cites, year, and two id codes (see details).
 ##' @import stringr plyr R.cache XML
 ##' @export
-get_publications <- function(id) {
+get_publications <- function(id, cstart = 0) {
 
   ## Ensure we're only getting one scholar's publications
   id <- tidy_id(id)
@@ -22,11 +33,11 @@ get_publications <- function(id) {
   if (is.null(data)) {
   
     ## Build the URL
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works"
-    url <- sprintf(url_template, id)
+    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works&cstart=%d"
+    url <- sprintf(url_template, id, cstart)
 
     ## Load the page
-    doc <- htmlParse(url)
+    doc <- htmlParse(url, encoding="UTF-8")
     cites <- xpathApply(doc, '//tr[@class="cit-table item"]')
 
     ## Works on a list element
@@ -34,12 +45,15 @@ get_publications <- function(id) {
       ## Basic info
       td <- l[[1]]
       title <- xmlValue(td[[1]])
+      pubid  <- str_split(xmlAttrs(td[[1]])[[1]],":")[[1]][2]
       author <- xmlValue(td[[3]])
 
       ## Citation info
       src <- l[[2]][[1]]
       if(!is.null(src)){
-        cited_by <- as.numeric(xmlValue(src))
+        cited_by <- suppressWarnings(as.numeric(xmlValue(src)))
+        ## NA citations mean 0 citations
+        cited_by <- ifelse(is.na(cited_by), 0, cited_by)
         s <- xmlAttrs(src)[[2]]
         doc_id <- strsplit(s, "cites=")[[1]][2]
       } else {
@@ -66,13 +80,30 @@ get_publications <- function(id) {
       ## Clean up the number part
       numbers <- str_trim(str_sub(src, first_digit+1, str_length(src)))
 
-      return(data.frame(title=title, author=author, journal=journals, number=numbers, cites=cited_by, year=year, id=doc_id))
+      return(data.frame(title=title, author=author, journal=journals, number=numbers, cites=cited_by, year=year, id=doc_id, pubid=pubid))
+
     }
 
     tmp <- lapply(cites, parse_cites)
     data <- ldply(tmp)
 
-    saveCache(data, key=list(id))
+    ## @jaumebonet reports that not all the UTF-8 characters are
+    ## captured correctly.  I haven't been able to reproduce this on
+    ## my (Windows) machine, so have commented this out for now.
+    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\xc1","Á",x) else x))
+    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub(" ","-",x) else x))
+    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\u0096","-",x) else x))
+
+    ## Check if we've reached a multiple of 100 articles. Might need
+    ## to search the next page
+    if (nrow(data) > 0 && nrow(data)%%100 == 0) {
+      data <- rbind(data, get_publications(id, nrow(data)))
+    }
+    
+    ## Save it after everything has been retrieved.
+    if (cstart == 0) {
+      saveCache(data, key=list(id))
+    }
   }
   
   return(data)
@@ -81,9 +112,7 @@ get_publications <- function(id) {
 
 ##' Calculates how many articles a scholar has published
 ##'
-##' Calculate how many articles a scholar has published.  At present
-##' only the first page of results are retrieved so the maximum value
-##' is 100.
+##' Calculate how many articles a scholar has published.
 ##'
 ##' @param id a character string giving the Google Scholar ID
 ##' @return an integer value (max 100)
@@ -96,8 +125,6 @@ get_num_articles <- function(id) {
 ##' Gets the year of the oldest article for a scholar
 ##'
 ##' Gets the year of the oldest article published by a given scholar.
-##' At present this is the oldest of the top 100 published articles
-##' (by total citations).
 ##' 
 ##' @param id 	a character string giving the Google Scholar ID
 ##' @return the year of the oldest article

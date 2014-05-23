@@ -5,16 +5,17 @@ utils::globalVariables(c("year", "cites"))
 ##'
 ##' Compares the citation records of multiple scholars.  This function
 ##' compiles a data frame comparing the citations received by each of
-##' the scholar's publications by year of publication (currently
-##' limited to just the top 100).
+##' the scholar's publications by year of publication.
 ##'
 ##' @param ids 	a vector of Google Scholar IDs
 ##' @return a data frame giving the ID of each scholar and the total
 ##' number of citations received by work published in a year.
 ##' @examples {
-##'     ## How do Richard Feynmann and Stephen Hawking compare?
-##' 	ids <- c("B7vSqZsAAAAJ", "qj74uXkAAAAJ")
+##' \dontrun{
+##'     ## How do Richard Feynmann and Isaac Newton compare?
+##' 	ids <- c("B7vSqZsAAAAJ", "xJaxiEEAAAAJ")
 ##'     df <- compare_scholars(ids)
+##' }
 ##' }
 ##' @export
 ##' @import plyr
@@ -51,8 +52,8 @@ compare_scholars <- function(ids) {
 ##' TRUE
 ##' 
 ##' @examples {
-##' 	## How do Richard Feynmann and Stephen Hawking compare?
-##' 	ids <- c("B7vSqZsAAAAJ", "qj74uXkAAAAJ")
+##' 	## How do Richard Feynmann and Isaac Newton compare?
+##' 	ids <- c("B7vSqZsAAAAJ", "xJaxiEEAAAAJ")
 ##'     df <- compare_scholar_careers(ids)
 ##' }
 ##' @export

@@ -3,6 +3,8 @@ scholar 0.1.2
 
 * Added a CITATION file
 
+* Added the publication id to `get_publications` (thanks @dfalster)
+
 scholar 0.1.1
 ---------------
 

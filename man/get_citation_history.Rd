@@ -2,7 +2,7 @@
 \alias{get_citation_history}
 \title{Get historical citation data for a scholar}
 \usage{
-  get_citation_history(id)
+get_citation_history(id)
 }
 \arguments{
   \item{id}{a character string specifying the Google
@@ -10,12 +10,12 @@
   first value is used and a warning is generated.}
 }
 \value{
-  a data frame giving the number of citations per year to
-  work by the given scholar
+a data frame giving the number of citations per year to
+work by the given scholar
 }
 \description{
-  Gets the number of citations to a scholar's articles by
-  year. This information is displayed as a bar plot at the
-  top of a standard Google Scholar page.
+Gets the number of citations to a scholar's articles by
+year. This information is displayed as a bar plot at the
+top of a standard Google Scholar page.
 }
 

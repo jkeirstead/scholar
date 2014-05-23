@@ -2,18 +2,18 @@
 \alias{get_num_articles}
 \title{Calculates how many articles a scholar has published}
 \usage{
-  get_num_articles(id)
+get_num_articles(id)
 }
 \arguments{
   \item{id}{a character string giving the Google Scholar
   ID}
 }
 \value{
-  an integer value (max 100)
+an integer value (max 100)
 }
 \description{
-  Calculate how many articles a scholar has published.  At
-  present only the first page of results are retrieved so
-  the maximum value is 100.
+Calculate how many articles a scholar has published.  At
+present only the first page of results are retrieved so the
+maximum value is 100.
 }
 

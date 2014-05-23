@@ -2,7 +2,7 @@
 \alias{compare_scholar_careers}
 \title{Compare the careers of multiple scholars}
 \usage{
-  compare_scholar_careers(ids, career = TRUE)
+compare_scholar_careers(ids, career = TRUE)
 }
 \arguments{
   \item{ids}{a character vector of Google Scholar IDs}
@@ -12,14 +12,13 @@
   year.  Default = TRUE}
 }
 \description{
-  Compares the careers of multiple scholars based on their
-  citation histories.  The scholar's \emph{career} is
-  defined by the number of citations to his or her work in
-  a given year (i.e. the bar chart at the top of a
-  scholar's profile). The function has an \code{career}
-  option that allows users to compare scholars directly,
-  i.e. relative to the first year in which their
-  publications are cited.
+Compares the careers of multiple scholars based on their
+citation histories.  The scholar's \emph{career} is defined
+by the number of citations to his or her work in a given
+year (i.e. the bar chart at the top of a scholar's
+profile). The function has an \code{career} option that
+allows users to compare scholars directly, i.e. relative to
+the first year in which their publications are cited.
 }
 \examples{
 {

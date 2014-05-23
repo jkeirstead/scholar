@@ -17,9 +17,3 @@ Imports:
     XML
 Suggests:
     roxygen2
-Collate:
-    'scholar-package.r'
-    'scholar.r'
-    'predict.r'
-    'compare.r'
-    'publications.r'

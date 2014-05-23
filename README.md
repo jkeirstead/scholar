@@ -27,7 +27,7 @@ Additional functions allow the user to query the publications list, e.g. `get_nu
 
 ## Comparing scholars
 
-You can also compare multiple scholars, for example:
+You can also compare multiple scholars, as shown below.  Note that these two particular scholars are rather profilic and these queries will take a very long time to run.
 
 ```
 # Compare Feynman and Stephen Hawking

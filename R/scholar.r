@@ -84,23 +84,11 @@ get_citation_history <- function(id) {
   
   ## A better way would actually be to read out the plot of citations
   doc <- htmlTreeParse(url, useInternalNodes=TRUE)
-  chart <- xpathSApply(doc, "//img", xmlAttrs)[[3]][['src']]
 
-  ## Get values
-  vals <- str_extract(chart, "chd=t:((([0-9]*.[0-9]*,+)*)[0-9]*.[0-9])")
-  vals <- as.numeric(unlist(str_split(str_sub(vals, 7), ",")))
+  years <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_t']", xmlValue))
+  vals <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_al']", xmlValue))
     
-  ## Get the years
-  years <- str_extract(chart, "chxl=0:\\|((\\d*)\\|)*\\d*")
-  years <- as.numeric(unlist(str_split(str_sub(years, 9), "\\|")))
-  years <- years[!is.na(years)]
-  years <- seq(years[1], years[length(years)])
-    
-  ## Get the y-scale
-  ymax <- str_extract(chart, "chxr=(\\d*,)*\\d*")
-  ymax <- as.numeric(unlist(str_split(str_sub(ymax, 6), ",")))[4]
-    
-  df <- data.frame(year=years, cites=round(vals*ymax/100, 0))
+  df <- data.frame(year=years, cites=vals)
   
   return(df)
 }

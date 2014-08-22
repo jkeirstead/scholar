@@ -35,25 +35,23 @@ get_profile <- function(id) {
 
   ## The citation stats are in tables[[1]]$tables$stats
   ## but the number of rows seems to vary by OS
-  stats <- tables$stats
+  stats <- tables[[1]]
   rows <- nrow(stats)
   
   ## The personal info is in
   tree <- htmlTreeParse(url, useInternalNodes=TRUE)
-  bio_info <- xpathApply(tree, '//*/div[@class="cit-user-info"]//*/form',
-                          xmlValue)
-  name <- bio_info[[1]]
-  affiliation <- bio_info[[2]]
+  name <- xpathApply(tree, '//*/div[@id="gsc_prf_in"]', xmlValue)[[1]]
+  bio_info <- xpathApply(tree, '//*/div[@class="gsc_prf_il"]', xmlValue)
+  affiliation <- str_trim(str_split(bio_info[[1]], ",")[[1]][2])
  
   ## Specialities (trim out HTML non-breaking space)
-  specs <- iconv(bio_info[[3]], from="UTF8", to="ASCII", sub="zzz")
-  specs <- str_trim(tolower(str_split(specs, "z{6}-?")[[1]]))
-  specs <- specs[-which(specs=="")]
+  specs <- iconv(bio_info[[2]], from="UTF8", to="ASCII")
+  specs <- str_trim(tolower(str_split(specs, ",")[[1]]))
 
   ## Extract the homepage
-  tmp <- xpathApply(tree, '//form[@id="cit-homepage-form"]//*/a/@href')
+  tmp <- xpathApply(tree, '//*/div[@id="gsc_prf_ivh"]//a/@href')
   homepage <- as.character(tmp[[1]])
- 
+
   return(list(id=id, name=name, affiliation=affiliation,
               total_cites=as.numeric(as.character(stats[rows-2,2])),
               h_index=as.numeric(as.character(stats[rows-1,2])),
@@ -86,23 +84,11 @@ get_citation_history <- function(id) {
   
   ## A better way would actually be to read out the plot of citations
   doc <- htmlTreeParse(url, useInternalNodes=TRUE)
-  chart <- xpathSApply(doc, "//img", xmlAttrs)[[3]][['src']]
 
-  ## Get values
-  vals <- str_extract(chart, "chd=t:((([0-9]*.[0-9]*,+)*)[0-9]*.[0-9])")
-  vals <- as.numeric(unlist(str_split(str_sub(vals, 7), ",")))
+  years <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_t']", xmlValue))
+  vals <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_al']", xmlValue))
     
-  ## Get the years
-  years <- str_extract(chart, "chxl=0:\\|((\\d*)\\|)*\\d*")
-  years <- as.numeric(unlist(str_split(str_sub(years, 9), "\\|")))
-  years <- years[!is.na(years)]
-  years <- seq(years[1], years[length(years)])
-    
-  ## Get the y-scale
-  ymax <- str_extract(chart, "chxr=(\\d*,)*\\d*")
-  ymax <- as.numeric(unlist(str_split(str_sub(ymax, 6), ",")))[4]
-    
-  df <- data.frame(year=years, cites=round(vals*ymax/100, 0))
+  df <- data.frame(year=years, cites=vals)
   
   return(df)
 }

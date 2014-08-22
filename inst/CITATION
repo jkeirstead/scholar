@@ -1,0 +1,10 @@
+citHeader("To cite scholar in publications, please use:")
+
+citEntry(entry = "manual",
+  author = "James Keirstead",
+  title = "scholar: analyse citation data from Google Scholar",
+  year = "2014",
+  note = "R package version 0.1.2",
+  url = "http://github.com/jkeirstead/scholar",
+  textVersion = "J. Keirstead (2014) scholar: analyse citation data from Google Scholar.  R package version 0.1.2. http://github.com/jkeirstead/scholar."
+)

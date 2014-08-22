@@ -1,7 +1,7 @@
 scholar 0.1.2
 ---------------
 
-* Updated `get_publications` to work with new Google Scholar layout
+* Updated functions work with new Google Scholar layout
 
 * Added a CITATION file
 

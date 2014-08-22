@@ -1,14 +1,11 @@
 scholar 0.1.2   (22 August 2014)
 ---------------
 
-* Updated functions work with new Google Scholar layout
+* Updated functions to work with new Google Scholar layout
 
 * Added a CITATION file
 
 * Added the publication id to `get_publications` (thanks @dfalster)
-
-* `get_publications` now gets all publications, not just the first 100
-  (thanks @jaumebonet)
 
 scholar 0.1.1
 ---------------

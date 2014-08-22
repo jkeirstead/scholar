@@ -27,18 +27,18 @@ get_publications <- function(id, cstart = 0) {
 
   ## Check if we've cached it already
   setCacheRootPath(tempdir())
-  data <- loadCache(list(id))
+  data <- loadCache(list(id, cstart))
 
   ## If not, get the data and save it to cache
   if (is.null(data)) {
   
     ## Build the URL
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works&cstart=%d"
+    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d"
     url <- sprintf(url_template, id, cstart)
 
     ## Load the page
     doc <- htmlParse(url, encoding="UTF-8")
-    cites <- xpathApply(doc, '//tr[@class="cit-table item"]')
+    cites <- xpathApply(doc, '//tr[@class="gsc_a_tr"]')
 
     ## Works on a list element
     parse_cites <- function(l) {
@@ -46,25 +46,24 @@ get_publications <- function(id, cstart = 0) {
       td <- l[[1]]
       title <- xmlValue(td[[1]])
       pubid  <- str_split(xmlAttrs(td[[1]])[[1]],":")[[1]][2]
-      author <- xmlValue(td[[3]])
-
+      author <- xmlValue(td[[2]])
+      year <- as.numeric(xmlValue(l[[3]]))
+      
       ## Citation info
       src <- l[[2]][[1]]
       if(!is.null(src)){
         cited_by <- suppressWarnings(as.numeric(xmlValue(src)))
         ## NA citations mean 0 citations
         cited_by <- ifelse(is.na(cited_by), 0, cited_by)
-        s <- xmlAttrs(src)[[2]]
+        s <- xmlAttrs(src)[[1]]
         doc_id <- strsplit(s, "cites=")[[1]][2]
       } else {
         cited_by <- 0
         doc_id <- ""
       }
 
-      year <- as.numeric(xmlValue(l[[4]]))
-
       ## Parse the source information
-      src <- xmlValue(td[[5]])
+      src <- xmlValue(td[[3]])
       ## Find the first digit (hopefully not in the journal title)
       first_digit <- as.numeric(regexpr("[\\[\\(]?\\d", src)) - 1
       ids <- which(first_digit<0)
@@ -78,7 +77,7 @@ get_publications <- function(id, cstart = 0) {
       journals <- str_sub(journals, 1, trailing_commas)
 
       ## Clean up the number part
-      numbers <- str_trim(str_sub(src, first_digit+1, str_length(src)))
+      numbers <- str_trim(str_sub(src, first_digit+1, str_length(src)-6))
 
       return(data.frame(title=title, author=author, journal=journals, number=numbers, cites=cited_by, year=year, id=doc_id, pubid=pubid))
 
@@ -102,7 +101,7 @@ get_publications <- function(id, cstart = 0) {
     
     ## Save it after everything has been retrieved.
     if (cstart == 0) {
-      saveCache(data, key=list(id))
+      saveCache(data, key=list(id, cstart))
     }
   }
   

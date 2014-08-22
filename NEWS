@@ -1,6 +1,8 @@
 scholar 0.1.2
 ---------------
 
+* Updated `get_publications` to work with new Google Scholar layout
+
 * Added a CITATION file
 
 * Added the publication id to `get_publications` (thanks @dfalster)

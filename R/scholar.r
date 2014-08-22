@@ -35,25 +35,23 @@ get_profile <- function(id) {
 
   ## The citation stats are in tables[[1]]$tables$stats
   ## but the number of rows seems to vary by OS
-  stats <- tables$stats
+  stats <- tables[[1]]
   rows <- nrow(stats)
   
   ## The personal info is in
   tree <- htmlTreeParse(url, useInternalNodes=TRUE)
-  bio_info <- xpathApply(tree, '//*/div[@class="cit-user-info"]//*/form',
-                          xmlValue)
-  name <- bio_info[[1]]
-  affiliation <- bio_info[[2]]
+  name <- xpathApply(tree, '//*/div[@id="gsc_prf_in"]', xmlValue)[[1]]
+  bio_info <- xpathApply(tree, '//*/div[@class="gsc_prf_il"]', xmlValue)
+  affiliation <- str_trim(str_split(bio_info[[1]], ",")[[1]][2])
  
   ## Specialities (trim out HTML non-breaking space)
-  specs <- iconv(bio_info[[3]], from="UTF8", to="ASCII", sub="zzz")
-  specs <- str_trim(tolower(str_split(specs, "z{6}-?")[[1]]))
-  specs <- specs[-which(specs=="")]
+  specs <- iconv(bio_info[[2]], from="UTF8", to="ASCII")
+  specs <- str_trim(tolower(str_split(specs, ",")[[1]]))
 
   ## Extract the homepage
-  tmp <- xpathApply(tree, '//form[@id="cit-homepage-form"]//*/a/@href')
+  tmp <- xpathApply(tree, '//*/div[@id="gsc_prf_ivh"]//a/@href')
   homepage <- as.character(tmp[[1]])
- 
+
   return(list(id=id, name=name, affiliation=affiliation,
               total_cites=as.numeric(as.character(stats[rows-2,2])),
               h_index=as.numeric(as.character(stats[rows-1,2])),

@@ -8,6 +8,8 @@
 ##' @param cstart an integer specifying the first article to start
 ##' counting.  To get all publications for an author, omit this
 ##' parameter.
+##' @param pagesize an integer specifying the number of articles to
+##' fetch
 ##' @details Google uses two id codes to uniquely reference a
 ##' publication.  The results of this method includes \code{id} which
 ##' can be used to link to a publication's full citation history
@@ -20,7 +22,7 @@
 ##' cites, year, and two id codes (see details).
 ##' @import stringr plyr R.cache XML
 ##' @export
-get_publications <- function(id, cstart = 0) {
+get_publications <- function(id, cstart = 0, pagesize=20) {
 
   ## Ensure we're only getting one scholar's publications
   id <- tidy_id(id)
@@ -33,8 +35,8 @@ get_publications <- function(id, cstart = 0) {
   if (is.null(data)) {
   
     ## Build the URL
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d"
-    url <- sprintf(url_template, id, cstart)
+    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d"
+    url <- sprintf(url_template, id, cstart, pagesize)
 
     ## Load the page
     doc <- htmlParse(url, encoding="UTF-8")

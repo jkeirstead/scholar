@@ -1,3 +1,8 @@
+scholar 0.1.3   (xx xx xx)
+---------------
+
+* Add a `pagesize` argument to `get_publications`
+
 scholar 0.1.2   (22 August 2014)
 ---------------
 

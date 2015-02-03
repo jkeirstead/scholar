@@ -22,7 +22,7 @@
 ##' cites, year, and two id codes (see details).
 ##' @import stringr plyr R.cache XML
 ##' @export
-get_publications <- function(id, cstart = 0, pagesize=20) {
+get_publications <- function(id, cstart = 0, pagesize=100) {
 
   ## Ensure we're only getting one scholar's publications
   id <- tidy_id(id)

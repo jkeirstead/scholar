@@ -3,7 +3,7 @@
 \alias{get_publications}
 \title{Gets the publications for a scholar}
 \usage{
-get_publications(id, cstart = 0, pagesize = 20)
+get_publications(id, cstart = 0, pagesize = 100)
 }
 \arguments{
 \item{id}{a character string specifying the Google Scholar ID.  If

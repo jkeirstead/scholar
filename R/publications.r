@@ -22,7 +22,7 @@
 ##' cites, year, and two id codes (see details).
 ##' @import stringr plyr R.cache XML
 ##' @export
-get_publications <- function(id, cstart = 0, pagesize=20) {
+get_publications <- function(id, cstart = 0, pagesize=100) {
 
   ## Ensure we're only getting one scholar's publications
   id <- tidy_id(id)
@@ -95,10 +95,10 @@ get_publications <- function(id, cstart = 0, pagesize=20) {
     ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub(" ","-",x) else x))
     ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\u0096","-",x) else x))
 
-    ## Check if we've reached a multiple of 100 articles. Might need
+    ## Check if we've reached pagesize articles. Might need
     ## to search the next page
-    if (nrow(data) > 0 && nrow(data)%%100 == 0) {
-      data <- rbind(data, get_publications(id, nrow(data)))
+    if (nrow(data) > 0 && nrow(data)==pagesize) {
+      data <- rbind(data, get_publications(id, cstart=cstart+pagesize, pagesize=pagesize))
     }
     
     ## Save it after everything has been retrieved.

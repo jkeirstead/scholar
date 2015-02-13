@@ -1,7 +1,9 @@
-scholar 0.1.3   (xx xx xx)
+scholar 0.x.x   (xx xx xx)
 ---------------
 
 * Add a `pagesize` argument to `get_publications`
+
+* Improved performance of large numbers of publications (#15, thanks @jefferis)
 
 scholar 0.1.2   (22 August 2014)
 ---------------

@@ -8,6 +8,8 @@ utils::globalVariables(c("year", "cites"))
 ##' the scholar's publications by year of publication.
 ##'
 ##' @param ids 	a vector of Google Scholar IDs
+##' @param pagesize an integer specifying the number of articles to
+##' fetch for each scholar
 ##' @return a data frame giving the ID of each scholar and the total
 ##' number of citations received by work published in a year.
 ##' @examples {
@@ -19,10 +21,10 @@ utils::globalVariables(c("year", "cites"))
 ##' }
 ##' @export
 ##' @import plyr
-compare_scholars <- function(ids) {
+compare_scholars <- function(ids, pagesize=100) {
 
   ## Load in the publication data and summarize
-  data <- lapply(ids, function(x) return(cbind(id=x, get_publications(x))))
+  data <- lapply(ids, function(x) return(cbind(id=x, get_publications(x, pagesize=pagesize))))
   data <- ldply(data)
   data <- ddply(data, .(id, year), summarize, cites=sum(cites, na.rm=TRUE))
   data <- ddply(data, .(id), transform, total=cumsum(cites))

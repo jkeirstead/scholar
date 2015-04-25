@@ -33,7 +33,7 @@ get_publications <- function(id, cstart = 0) {
   if (is.null(data)) {
   
     ## Build the URL
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d"
+    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=100"
     url <- sprintf(url_template, id, cstart)
 
     ## Load the page

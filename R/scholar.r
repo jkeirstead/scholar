@@ -62,13 +62,15 @@ get_profile <- function(id) {
 
 ##' Get historical citation data for a scholar
 ##'
-##' Gets the number of citations to a scholar's articles by year.
-##' This information is displayed as a bar plot at the top of a
-##' standard Google Scholar page.
+##' Gets the number of citations to a scholar's articles over the past
+##' nine years.
 ##'
 ##' @param id a character string specifying the Google Scholar ID.  If
 ##' multiple ids are specified, only the first value is used and a
-##' warning is generated.  
+##' warning is generated.
+##' @details This information is displayed as a bar plot at the top of
+##' a standard Google Scholar page and only covers the past nine
+##' years.
 ##' @return a data frame giving the number of citations per year to
 ##' work by the given scholar
 ##' @export

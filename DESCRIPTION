@@ -3,7 +3,7 @@ Maintainer: James Keirstead <j.keirstead@imperial.ac.uk>
 Author: James Keirstead <j.keirstead@imperial.ac.uk>
 Version: 0.1.3
 License: MIT + file LICENSE
-Title: Analyse citation data from Google Scholar
+Title: Analyse Citation Data from Google Scholar
 BugReports: https://github.com/jkeirstead/scholar/issues
 Description: Provides functions to extract citation data from Google
     Scholar.  Convenience functions are also provided for comparing

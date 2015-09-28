@@ -98,13 +98,6 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
     tmp <- lapply(cites, parse_cites)
     data <- ldply(tmp)
 
-    ## @jaumebonet reports that not all the UTF-8 characters are
-    ## captured correctly.  I haven't been able to reproduce this on
-    ## my (Windows) machine, so have commented this out for now.
-    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\xc1","Á",x) else x))
-    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub(" ","-",x) else x))
-    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\u0096","-",x) else x))
-
     ## Check if we've reached pagesize articles. Might need
     ## to search the next page
     if (nrow(data) > 0 && nrow(data)==pagesize) {

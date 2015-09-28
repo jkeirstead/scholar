@@ -74,7 +74,7 @@ get_profile <- function(id) {
 ##' @return a data frame giving the number of citations per year to
 ##' work by the given scholar
 ##' @export
-##' @import plyr stringr XML
+##' @import stringr XML
 get_citation_history <- function(id) {
 
   ## Ensure only one ID  

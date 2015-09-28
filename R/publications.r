@@ -120,6 +120,39 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
   return(data)
 }
 
+##' Gets the citation history of a single article
+##'
+##' @param id a character string giving the id of the scholar
+##' @param article a character string giving the article id.
+##' @return a data frame giving the year, citations per year, and
+##' publication id
+##' @import XML stringr
+##' @export
+get_article_cite_history <- function (id, article) {
+    id <- tidy_id(id)
+    url_base <- paste0("http://scholar.google.com/citations?", 
+                       "view_op=view_citation&hl=en&citation_for_view=")
+    url_tail <- paste(id, article, sep=":")
+    url <- paste0(url_base, url_tail)
+    doc <- htmlTreeParse(url, useInternalNodes = TRUE)
+
+    ## Inspect the bar chart to retrieve the citation values and years
+    years <- xpathSApply(doc, "//*/div[@id='gsc_graph_bars']/a",
+                              xmlGetAttr, 'href')
+    years <- as.numeric(str_replace(years, ".*as_yhi=(.*)$", "\\1"))
+    
+    vals <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_al']", 
+                                   xmlValue))
+    df <- data.frame(year = years, cites = vals)
+
+    ## There may be undefined years in the sequence so fill in these gaps
+    tmp <- merge(data.frame(year=min(years):max(years)),
+                 df, all.x=TRUE)
+    tmp[is.na(tmp)] <- 0
+
+    tmp$pubid <- article
+    return(tmp)
+}
 
 ##' Calculates how many articles a scholar has published
 ##'

@@ -1,9 +1,16 @@
-scholar 0.x.x   (xx xx xx)
+scholar 0.2.0   (xx xx xx)
 ---------------
 
-* Add a `pagesize` argument to `get_publications`
+* Added a `get_article_cite_history` function to get the citation
+  history of a single article (#6, thanks @mkiang)
+
+* Added a `pagesize` argument to `get_publications`
+
+* Added an option to flush cache in `get_publications`
 
 * Improved performance of large numbers of publications (#15, thanks @jefferis)
+
+* Improved documentation
 
 scholar 0.1.2   (22 August 2014)
 ---------------

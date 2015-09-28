@@ -10,6 +10,10 @@
 ##' parameter.
 ##' @param pagesize an integer specifying the number of articles to
 ##' fetch
+##' @param flush should the cache be flushed?  Search results are
+##' cached by default to speed up repeated queries.  If this argument
+##' is TRUE, the cache will be cleared and the data reloaded from
+##' Google.
 ##' @details Google uses two id codes to uniquely reference a
 ##' publication.  The results of this method includes \code{id} which
 ##' can be used to link to a publication's full citation history
@@ -22,13 +26,19 @@
 ##' cites, year, and two id codes (see details).
 ##' @import stringr plyr R.cache XML
 ##' @export
-get_publications <- function(id, cstart = 0, pagesize=100) {
+get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 
   ## Ensure we're only getting one scholar's publications
   id <- tidy_id(id)
 
+  ## Define the cache path 
+  cache.dir <- file.path(tempdir(), "r-scholar")
+  setCacheRootPath(cache.dir)
+
+  ## Clear the cache if requested
+  if (flush) saveCache(NULL, key=list(id, cstart))
+
   ## Check if we've cached it already
-  setCacheRootPath(tempdir())
   data <- loadCache(list(id, cstart))
 
   ## If not, get the data and save it to cache

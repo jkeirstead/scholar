@@ -1,13 +1,14 @@
 Package: scholar
 Maintainer: James Keirstead <j.keirstead@imperial.ac.uk>
 Author: James Keirstead <j.keirstead@imperial.ac.uk>
-Version: 0.1.2
+Version: 0.1.3
 License: MIT + file LICENSE
 Title: Analyse citation data from Google Scholar
-Description: scholar provides functions to extract citation data from Google
-    Scholar.  Convenience functions are also provided for comparing multiple
-    scholars and predicting future h-index values.
-Date: 2014-08-22
+BugReports: https://github.com/jkeirstead/scholar/issues
+Description: Provides functions to extract citation data from Google
+    Scholar.  Convenience functions are also provided for comparing
+    multiple scholars and predicting future h-index values.   
+Date: 2015-09-28
 Depends:
     R (>= 2.15.1)
 Imports:

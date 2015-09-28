@@ -1,14 +1,16 @@
-scholar 0.2.0   (xx xx xx)
+scholar 0.1.3   (28 September 2015)
 ---------------
 
 * Added a `get_article_cite_history` function to get the citation
   history of a single article (#6, thanks @mkiang)
 
-* Added a `pagesize` argument to `get_publications`
+* Added a `pagesize` argument to `get_publications`.  By default 100
+  publications will be fetched.
 
 * Added an option to flush cache in `get_publications`
 
-* Improved performance of large numbers of publications (#15, thanks @jefferis)
+* Improved performance of large numbers of publications (#15, thanks
+  @jefferis)
 
 * Improved documentation
 

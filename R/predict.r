@@ -22,6 +22,12 @@
 ##' @param journals optional character vector of top
 ##' journals. See \code{\link{get_num_top_journals}} for more details.
 ##' @return a data frame giving predicted h-index values in future
+##' @details Since the model is calibrated to neuroscience
+##' researchers, it is entirely possible that very strange
+##' (e.g. negative) h-indices will be predicted if you are a
+##' researcher in another field.  A warning will be displayed if the
+##' sequence of predicted h-indices contains a negative value or is
+##' non-increasing.
 ##' @export
 ##' @examples {
 ##'    ## Predict h-index of original method author
@@ -59,8 +65,18 @@ predict_h_index <- function(id, journals) {
 
   ## Calculate the h-index predictions
   h.pred <- coefs %*% vals
+  h.vals <- c(h, h.pred)
+
+  ## Check for sensible values
+  standard.warning <- "You're probably not a neuroscientist.  Please read the documentation for information on the limitations of this function."
   
-  return(data.frame(years_ahead=c(0:10), h_index=c(h, h.pred)))
+  if (any(diff(h.vals)<0))
+      warning(paste0("Decreasing h-values predicted. ", standard.warning))
+
+  if (any(h.vals<0))
+      warning("Negative h-values predicted. ", standard.warning)
+  
+  return(data.frame(years_ahead=c(0:10), h_index=h.vals))
 
 }
   

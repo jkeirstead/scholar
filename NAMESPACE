@@ -2,6 +2,7 @@
 
 export(compare_scholar_careers)
 export(compare_scholars)
+export(get_article_cite_history)
 export(get_citation_history)
 export(get_num_articles)
 export(get_num_distinct_journals)

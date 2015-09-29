@@ -3,7 +3,7 @@
 \alias{get_publications}
 \title{Gets the publications for a scholar}
 \usage{
-get_publications(id, cstart = 0)
+get_publications(id, cstart = 0, pagesize = 100, flush = FALSE)
 }
 \arguments{
 \item{id}{a character string specifying the Google Scholar ID.  If
@@ -13,6 +13,14 @@ scholar will be retrieved.}
 \item{cstart}{an integer specifying the first article to start
 counting.  To get all publications for an author, omit this
 parameter.}
+
+\item{pagesize}{an integer specifying the number of articles to
+fetch}
+
+\item{flush}{should the cache be flushed?  Search results are
+cached by default to speed up repeated queries.  If this argument
+is TRUE, the cache will be cleared and the data reloaded from
+Google.}
 }
 \value{
 a data frame listing the publications and their details.

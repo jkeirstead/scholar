@@ -8,6 +8,12 @@
 ##' @param cstart an integer specifying the first article to start
 ##' counting.  To get all publications for an author, omit this
 ##' parameter.
+##' @param pagesize an integer specifying the number of articles to
+##' fetch
+##' @param flush should the cache be flushed?  Search results are
+##' cached by default to speed up repeated queries.  If this argument
+##' is TRUE, the cache will be cleared and the data reloaded from
+##' Google.
 ##' @details Google uses two id codes to uniquely reference a
 ##' publication.  The results of this method includes \code{id} which
 ##' can be used to link to a publication's full citation history
@@ -20,21 +26,27 @@
 ##' cites, year, and two id codes (see details).
 ##' @import stringr plyr R.cache XML
 ##' @export
-get_publications <- function(id, cstart = 0) {
+get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 
   ## Ensure we're only getting one scholar's publications
   id <- tidy_id(id)
 
+  ## Define the cache path 
+  cache.dir <- file.path(tempdir(), "r-scholar")
+  setCacheRootPath(cache.dir)
+
+  ## Clear the cache if requested
+  if (flush) saveCache(NULL, key=list(id, cstart))
+
   ## Check if we've cached it already
-  setCacheRootPath(tempdir())
   data <- loadCache(list(id, cstart))
 
   ## If not, get the data and save it to cache
   if (is.null(data)) {
   
     ## Build the URL
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d"
-    url <- sprintf(url_template, id, cstart)
+    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d"
+    url <- sprintf(url_template, id, cstart, pagesize)
 
     ## Load the page
     doc <- htmlParse(url, encoding="UTF-8")
@@ -86,17 +98,10 @@ get_publications <- function(id, cstart = 0) {
     tmp <- lapply(cites, parse_cites)
     data <- ldply(tmp)
 
-    ## @jaumebonet reports that not all the UTF-8 characters are
-    ## captured correctly.  I haven't been able to reproduce this on
-    ## my (Windows) machine, so have commented this out for now.
-    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\xc1","Á",x) else x))
-    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub(" ","-",x) else x))
-    ##    data <- as.data.frame(lapply(data,function(x) if(is.character(x)|is.factor(x)) gsub("\u0096","-",x) else x))
-
-    ## Check if we've reached a multiple of 100 articles. Might need
+    ## Check if we've reached pagesize articles. Might need
     ## to search the next page
-    if (nrow(data) > 0 && nrow(data)%%100 == 0) {
-      data <- rbind(data, get_publications(id, nrow(data)))
+    if (nrow(data) > 0 && nrow(data)==pagesize) {
+      data <- rbind(data, get_publications(id, cstart=cstart+pagesize, pagesize=pagesize))
     }
     
     ## Save it after everything has been retrieved.
@@ -108,6 +113,39 @@ get_publications <- function(id, cstart = 0) {
   return(data)
 }
 
+##' Gets the citation history of a single article
+##'
+##' @param id a character string giving the id of the scholar
+##' @param article a character string giving the article id.
+##' @return a data frame giving the year, citations per year, and
+##' publication id
+##' @import XML stringr
+##' @export
+get_article_cite_history <- function (id, article) {
+    id <- tidy_id(id)
+    url_base <- paste0("http://scholar.google.com/citations?", 
+                       "view_op=view_citation&hl=en&citation_for_view=")
+    url_tail <- paste(id, article, sep=":")
+    url <- paste0(url_base, url_tail)
+    doc <- htmlTreeParse(url, useInternalNodes = TRUE)
+
+    ## Inspect the bar chart to retrieve the citation values and years
+    years <- xpathSApply(doc, "//*/div[@id='gsc_graph_bars']/a",
+                              xmlGetAttr, 'href')
+    years <- as.numeric(str_replace(years, ".*as_yhi=(.*)$", "\\1"))
+    
+    vals <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_al']", 
+                                   xmlValue))
+    df <- data.frame(year = years, cites = vals)
+
+    ## There may be undefined years in the sequence so fill in these gaps
+    tmp <- merge(data.frame(year=min(years):max(years)),
+                 df, all.x=TRUE)
+    tmp[is.na(tmp)] <- 0
+
+    tmp$pubid <- article
+    return(tmp)
+}
 
 ##' Calculates how many articles a scholar has published
 ##'

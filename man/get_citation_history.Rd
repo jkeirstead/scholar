@@ -15,8 +15,12 @@ a data frame giving the number of citations per year to
 work by the given scholar
 }
 \description{
-Gets the number of citations to a scholar's articles by year.
-This information is displayed as a bar plot at the top of a
-standard Google Scholar page.
+Gets the number of citations to a scholar's articles over the past
+nine years.
+}
+\details{
+This information is displayed as a bar plot at the top of
+a standard Google Scholar page and only covers the past nine
+years.
 }
 

@@ -3,10 +3,13 @@
 \alias{compare_scholars}
 \title{Compare the citation records of multiple scholars}
 \usage{
-compare_scholars(ids)
+compare_scholars(ids, pagesize = 100)
 }
 \arguments{
 \item{ids}{a vector of Google Scholar IDs}
+
+\item{pagesize}{an integer specifying the number of articles to
+fetch for each scholar}
 }
 \value{
 a data frame giving the ID of each scholar and the total

@@ -30,6 +30,14 @@ article.  So naturally if this isn't you, then the results should
 be taken with a large pinch of salt.  For more caveats, see
 \url{http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/}.
 }
+\details{
+Since the model is calibrated to neuroscience
+researchers, it is entirely possible that very strange
+(e.g. negative) h-indices will be predicted if you are a
+researcher in another field.  A warning will be displayed if the
+sequence of predicted h-indices contains a negative value or is
+non-increasing.
+}
 \note{
 A scientist has an h-index of n if he or she publishes n
 papers with at least n citations each.  Values returned are

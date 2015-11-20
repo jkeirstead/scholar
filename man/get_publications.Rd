@@ -32,7 +32,7 @@ Gets the publications of a specified scholar.
 }
 \details{
 Google uses two id codes to uniquely reference a
-publication.  The results of this method includes \code{id} which
+publication.  The results of this method includes \code{cid} which
 can be used to link to a publication's full citation history
 (i.e. if you click on the number of citations in the main scholar
 profile page), and \code{pubid} which links to the details of the

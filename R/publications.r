@@ -15,7 +15,7 @@
 ##' is TRUE, the cache will be cleared and the data reloaded from
 ##' Google.
 ##' @details Google uses two id codes to uniquely reference a
-##' publication.  The results of this method includes \code{id} which
+##' publication.  The results of this method includes \code{cid} which
 ##' can be used to link to a publication's full citation history
 ##' (i.e. if you click on the number of citations in the main scholar
 ##' profile page), and \code{pubid} which links to the details of the
@@ -84,7 +84,7 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
                        number=numbers,
                        cites=cited_by,
                        year=year,
-                       id=doc_id,
+                       cid=doc_id,
                        pubid=pubid)
 
     ## Check if we've reached pagesize articles. Might need

@@ -24,7 +24,7 @@
 ##' @return a data frame listing the publications and their details.
 ##' These include the publication title, author, journal, number,
 ##' cites, year, and two id codes (see details).
-##' @import stringr plyr R.cache XML
+##' @import stringr dplyr R.cache rvest httr xml2
 ##' @export
 get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 
@@ -49,54 +49,43 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
     url <- sprintf(url_template, id, cstart, pagesize)
 
     ## Load the page
-    doc <- htmlParse(url, encoding="UTF-8")
-    cites <- xpathApply(doc, '//tr[@class="gsc_a_tr"]')
+    page <- GET(url) %>% read_html()
+    cites <- page %>% html_nodes(xpath="//tr[@class='gsc_a_tr']") 
 
-    ## Works on a list element
-    parse_cites <- function(l) {
-      ## Basic info
-      td <- l[[1]]
-      title <- xmlValue(td[[1]])
-      pubid  <- str_split(xmlAttrs(td[[1]])[[1]],":")[[1]][2]
-      author <- xmlValue(td[[2]])
-      year <- as.numeric(xmlValue(l[[3]]))
-      
-      ## Citation info
-      src <- l[[2]][[1]]
-      if(!is.null(src)){
-        cited_by <- suppressWarnings(as.numeric(xmlValue(src)))
-        ## NA citations mean 0 citations
-        cited_by <- ifelse(is.na(cited_by), 0, cited_by)
-        s <- xmlAttrs(src)[[1]]
-        doc_id <- strsplit(s, "cites=")[[1]][2]
-      } else {
-        cited_by <- 0
-        doc_id <- ""
-      }
+    title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
+    pubid <- cites %>% html_nodes(".gsc_a_at") %>%
+        html_attr("href") %>% str_extract(":.*$") %>% str_sub(start=2)
+    doc_id <- cites %>% html_nodes(".gsc_a_ac") %>% html_attr("href") %>%
+        str_extract("cites=.*$") %>% str_sub(start=7)
+    cited_by <- suppressWarnings(cites %>% html_nodes(".gsc_a_ac") %>% html_text() %>%
+        as.numeric(.) %>% replace(is.na(.), 0))
+    year <- cites %>% html_nodes(".gsc_a_y") %>% html_text() %>%
+        as.numeric()
+    authors <- cites %>% html_nodes("td .gs_gray") %>% html_text() %>%
+        as.data.frame(stringsAsFactors=FALSE) %>% filter(row_number() %% 2 == 1)  %>% .[[1]]
+    
+    ## Get the more complicated parts
+    details <- cites %>% html_nodes("td .gs_gray") %>% html_text() %>%
+        as.data.frame(stringsAsFactors=FALSE) %>% filter(row_number() %% 2 == 0) %>% .[[1]]
 
-      ## Parse the source information
-      src <- xmlValue(td[[3]])
-      ## Find the first digit (hopefully not in the journal title)
-      first_digit <- as.numeric(regexpr("[\\[\\(]?\\d", src)) - 1
-      ids <- which(first_digit<0)
-      first_digit <- replace(first_digit, ids, str_length(src)[ids])
 
-      ## Clean up the journal part
-      journals <- str_trim(str_sub(src, 1, first_digit))
-      trailing_commas <- as.numeric(regexpr(",$", journals)) - 1
-      ids <- which(trailing_commas<0)
-      trailing_commas <- replace(trailing_commas, ids, str_length(journals)[ids])
-      journals <- str_sub(journals, 1, trailing_commas)
+    ## Clean up the journal titles (assume there are no numbers in the journal title)
+    first_digit <- as.numeric(regexpr("[\\[\\(]?\\d", details)) - 1
+    journal <- str_trim(str_sub(details, end=first_digit)) %>% str_replace(",$", "")
 
-      ## Clean up the number part
-      numbers <- str_trim(str_sub(src, first_digit+1, str_length(src)-6))
+    ## Clean up the numbers part
+    numbers <- str_sub(details, start=first_digit) %>%
+        str_trim() %>% str_sub(end=-5) %>% str_trim() %>% str_replace(",$", "")
 
-      return(data.frame(title=title, author=author, journal=journals, number=numbers, cites=cited_by, year=year, id=doc_id, pubid=pubid))
-
-    }
-
-    tmp <- lapply(cites, parse_cites)
-    data <- ldply(tmp)
+    ## Put it all together
+    data <- data.frame(title=title,
+                       author=authors,
+                       journal=journal,
+                       number=numbers,
+                       cites=cited_by,
+                       year=year,
+                       id=doc_id,
+                       pubid=pubid)
 
     ## Check if we've reached pagesize articles. Might need
     ## to search the next page

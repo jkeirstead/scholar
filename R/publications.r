@@ -108,7 +108,7 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 ##' @param article a character string giving the article id.
 ##' @return a data frame giving the year, citations per year, and
 ##' publication id
-##' @import XML stringr
+##' @import stringr httr xml2 rvest stringr
 ##' @export
 get_article_cite_history <- function (id, article) {
     id <- tidy_id(id)
@@ -116,15 +116,20 @@ get_article_cite_history <- function (id, article) {
                        "view_op=view_citation&hl=en&citation_for_view=")
     url_tail <- paste(id, article, sep=":")
     url <- paste0(url_base, url_tail)
-    doc <- htmlTreeParse(url, useInternalNodes = TRUE)
+
+    doc <- GET(url) %>% read_html()
 
     ## Inspect the bar chart to retrieve the citation values and years
-    years <- xpathSApply(doc, "//*/div[@id='gsc_graph_bars']/a",
-                              xmlGetAttr, 'href')
-    years <- as.numeric(str_replace(years, ".*as_yhi=(.*)$", "\\1"))
-    
-    vals <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_al']", 
-                                   xmlValue))
+    years <- doc %>%
+        html_nodes(xpath="//*/div[@id='gsc_graph_bars']/a") %>%
+            html_attr("href") %>%
+                str_replace(".*as_yhi=(.*)$", "\\1") %>%
+                    as.numeric()
+    vals <- doc %>%
+        html_nodes(xpath="//*/span[@class='gsc_g_al']") %>%
+            html_text() %>%
+                as.numeric()
+
     df <- data.frame(year = years, cites = vals)
 
     ## There may be undefined years in the sequence so fill in these gaps

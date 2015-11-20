@@ -10,11 +10,13 @@ Description: Provides functions to extract citation data from Google
     multiple scholars and predicting future h-index values.
 Date: 2015-11-20
 Depends:
-    R (>= 2.15.1)
+    R (>= 2.15.1),
+    httr
 Imports:
-    stringr,
-    plyr,
     R.cache,
-    XML
+    dplyr,
+    rvest,
+    stringr,
+    xml2
 Suggests:
     roxygen2

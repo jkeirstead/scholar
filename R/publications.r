@@ -1,3 +1,6 @@
+# Ugly hack for CRAN checks
+utils::globalVariables(c("."))
+
 ##' Gets the publications for a scholar
 ##'
 ##' Gets the publications of a specified scholar.
@@ -24,82 +27,91 @@
 ##' @return a data frame listing the publications and their details.
 ##' These include the publication title, author, journal, number,
 ##' cites, year, and two id codes (see details).
-##' @import stringr dplyr R.cache rvest httr xml2
+##' @importFrom stringr str_extract str_sub str_trim str_replace
+##' @importFrom dplyr "%>%" row_number filter
+##' @importFrom xml2 read_html
+##' @importFrom rvest html_nodes html_text html_attr
+##' @import R.cache
 ##' @export
 get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 
-  ## Ensure we're only getting one scholar's publications
-  id <- tidy_id(id)
+    ## Ensure we're only getting one scholar's publications
+    id <- tidy_id(id)
 
-  ## Define the cache path 
-  cache.dir <- file.path(tempdir(), "r-scholar")
-  setCacheRootPath(cache.dir)
-
-  ## Clear the cache if requested
-  if (flush) saveCache(NULL, key=list(id, cstart))
-
-  ## Check if we've cached it already
-  data <- loadCache(list(id, cstart))
-
-  ## If not, get the data and save it to cache
-  if (is.null(data)) {
-  
-    ## Build the URL
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d"
-    url <- sprintf(url_template, id, cstart, pagesize)
-
-    ## Load the page
-    page <- GET(url) %>% read_html()
-    cites <- page %>% html_nodes(xpath="//tr[@class='gsc_a_tr']") 
-
-    title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
-    pubid <- cites %>% html_nodes(".gsc_a_at") %>%
-        html_attr("href") %>% str_extract(":.*$") %>% str_sub(start=2)
-    doc_id <- cites %>% html_nodes(".gsc_a_ac") %>% html_attr("href") %>%
-        str_extract("cites=.*$") %>% str_sub(start=7)
-    cited_by <- suppressWarnings(cites %>% html_nodes(".gsc_a_ac") %>% html_text() %>%
-        as.numeric(.) %>% replace(is.na(.), 0))
-    year <- cites %>% html_nodes(".gsc_a_y") %>% html_text() %>%
-        as.numeric()
-    authors <- cites %>% html_nodes("td .gs_gray") %>% html_text() %>%
-        as.data.frame(stringsAsFactors=FALSE) %>% filter(row_number() %% 2 == 1)  %>% .[[1]]
+    ## Define the cache path 
+    cache.dir <- file.path(tempdir(), "r-scholar")
+    setCacheRootPath(cache.dir)
     
-    ## Get the more complicated parts
-    details <- cites %>% html_nodes("td .gs_gray") %>% html_text() %>%
-        as.data.frame(stringsAsFactors=FALSE) %>% filter(row_number() %% 2 == 0) %>% .[[1]]
+    ## Clear the cache if requested
+    if (flush) saveCache(NULL, key=list(id, cstart))
 
+    ## Check if we've cached it already
+    data <- loadCache(list(id, cstart))
 
-    ## Clean up the journal titles (assume there are no numbers in the journal title)
-    first_digit <- as.numeric(regexpr("[\\[\\(]?\\d", details)) - 1
-    journal <- str_trim(str_sub(details, end=first_digit)) %>% str_replace(",$", "")
-
-    ## Clean up the numbers part
-    numbers <- str_sub(details, start=first_digit) %>%
-        str_trim() %>% str_sub(end=-5) %>% str_trim() %>% str_replace(",$", "")
-
-    ## Put it all together
-    data <- data.frame(title=title,
-                       author=authors,
-                       journal=journal,
-                       number=numbers,
-                       cites=cited_by,
-                       year=year,
-                       cid=doc_id,
-                       pubid=pubid)
-
-    ## Check if we've reached pagesize articles. Might need
-    ## to search the next page
-    if (nrow(data) > 0 && nrow(data)==pagesize) {
-      data <- rbind(data, get_publications(id, cstart=cstart+pagesize, pagesize=pagesize))
-    }
-    
-    ## Save it after everything has been retrieved.
-    if (cstart == 0) {
-      saveCache(data, key=list(id, cstart))
-    }
-  }
+    ## If not, get the data and save it to cache
+    if (is.null(data)) {
   
-  return(data)
+        ## Build the URL
+        url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d"
+        url <- sprintf(url_template, id, cstart, pagesize)
+
+        ## Load the page
+        page <- GET(url) %>% read_html()
+        cites <- page %>% html_nodes(xpath="//tr[@class='gsc_a_tr']") 
+
+        title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
+        pubid <- cites %>% html_nodes(".gsc_a_at") %>%
+            html_attr("href") %>% str_extract(":.*$") %>% str_sub(start=2)
+        doc_id <- cites %>% html_nodes(".gsc_a_ac") %>% html_attr("href") %>%
+            str_extract("cites=.*$") %>% str_sub(start=7)
+        cited_by <- suppressWarnings(cites %>% html_nodes(".gsc_a_ac") %>%
+                                     html_text() %>%
+                                     as.numeric(.) %>% replace(is.na(.), 0))
+        year <- cites %>% html_nodes(".gsc_a_y") %>% html_text() %>%
+            as.numeric()
+        authors <- cites %>% html_nodes("td .gs_gray") %>% html_text() %>%
+            as.data.frame(stringsAsFactors=FALSE) %>%
+                filter(row_number() %% 2 == 1)  %>% .[[1]]
+    
+        ## Get the more complicated parts
+        details <- cites %>% html_nodes("td .gs_gray") %>% html_text() %>%
+            as.data.frame(stringsAsFactors=FALSE) %>%
+                filter(row_number() %% 2 == 0) %>% .[[1]]
+
+
+        ## Clean up the journal titles (assume there are no numbers in
+        ## the journal title)
+        first_digit <- as.numeric(regexpr("[\\[\\(]?\\d", details)) - 1
+        journal <- str_trim(str_sub(details, end=first_digit)) %>%
+            str_replace(",$", "")
+
+        ## Clean up the numbers part
+        numbers <- str_sub(details, start=first_digit) %>%
+            str_trim() %>% str_sub(end=-5) %>% str_trim() %>% str_replace(",$", "")
+
+        ## Put it all together
+        data <- data.frame(title=title,
+                           author=authors,
+                           journal=journal,
+                           number=numbers,
+                           cites=cited_by,
+                           year=year,
+                           cid=doc_id,
+                           pubid=pubid)
+        
+        ## Check if we've reached pagesize articles. Might need
+        ## to search the next page
+        if (nrow(data) > 0 && nrow(data)==pagesize) {
+            data <- rbind(data, get_publications(id, cstart=cstart+pagesize, pagesize=pagesize))
+        }
+    
+        ## Save it after everything has been retrieved.
+        if (cstart == 0) {
+            saveCache(data, key=list(id, cstart))
+        }
+    }
+  
+    return(data)
 }
 
 ##' Gets the citation history of a single article
@@ -108,9 +120,14 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 ##' @param article a character string giving the article id.
 ##' @return a data frame giving the year, citations per year, and
 ##' publication id
-##' @import stringr httr xml2 rvest stringr
+##' @importFrom dplyr "%>%"
+##' @importFrom stringr str_replace
+##' @importFrom xml2 read_html
+##' @importFrom rvest html_nodes html_attr html_text
+##'
 ##' @export
 get_article_cite_history <- function (id, article) {
+    
     id <- tidy_id(id)
     url_base <- paste0("http://scholar.google.com/citations?", 
                        "view_op=view_citation&hl=en&citation_for_view=")
@@ -149,8 +166,8 @@ get_article_cite_history <- function (id, article) {
 ##' @return an integer value (max 100)
 ##' @export
 get_num_articles <- function(id) {  
-  papers <- get_publications(id)
-  return(nrow(papers))
+    papers <- get_publications(id)
+    return(nrow(papers))
 }
 
 ##' Gets the year of the oldest article for a scholar
@@ -161,8 +178,8 @@ get_num_articles <- function(id) {
 ##' @return the year of the oldest article
 ##' @export
 get_oldest_article <- function(id) {
-  papers <- get_publications(id)
-  return(min(papers$year, na.rm=TRUE))
+    papers <- get_publications(id)
+    return(min(papers$year, na.rm=TRUE))
 }
 
 

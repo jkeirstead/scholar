@@ -1,7 +1,4 @@
-#' @import httr
-.onLoad <- function(libname, pkgname) {
-    
+.onAttach <- function(libname, pkgname) {
     sample_url <- "https://scholar.google.com/citations?user=B7vSqZsAAAAJ"
-    sink <- GET(sample_url)
-
+    sink <- httr::GET(sample_url)
 }

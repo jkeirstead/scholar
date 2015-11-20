@@ -33,6 +33,12 @@ tidy_id <- function(id) {
     warning(msg)
   }
 
+  ## Check with Google to set cookies
+  if (getOption("scholar_call_home")) {
+      sample_url <- "https://scholar.google.com/citations?user=B7vSqZsAAAAJ"
+      sink <- GET(sample_url)
+      options("scholar_call_home"=FALSE)
+  }
+  
   return(id)
 }
-

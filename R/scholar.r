@@ -22,7 +22,10 @@
 ##'    profiles <- lapply(ids, get_profile)
 ##' }
 ##' @export
-##' @import stringr httr rvest xml2
+##' @importFrom stringr str_trim str_split
+##' @importFrom xml2 read_html
+##' @importFrom rvest html_table html_nodes html_text
+##' @importFrom dplyr "%>%"
 get_profile <- function(id) {
 
   id <- tidy_id(id)
@@ -73,27 +76,28 @@ get_profile <- function(id) {
 ##' @return a data frame giving the number of citations per year to
 ##' work by the given scholar
 ##' @export
-##' @import stringr rvest xml2
+##' @importFrom xml2 read_html
+##' @importFrom rvest html_nodes html_text
+##' @importFrom dplyr "%>%"
 get_citation_history <- function(id) {
 
-  ## Ensure only one ID  
-  id <- tidy_id(id)
+    ## Ensure only one ID  
+    id <- tidy_id(id)
   
-  ## Read the page and parse the key data
-  url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works"
-  url <- sprintf(url_template, id)
+    ## Read the page and parse the key data
+    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works"
+    url <- sprintf(url_template, id)
   
-  ## A better way would actually be to read out the plot of citations
-  page <- GET(url) %>% read_html()
+    ## A better way would actually be to read out the plot of citations
+    page <- GET(url) %>% read_html()
+    years <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_t']") %>%
+        html_text() %>% as.numeric()
+    vals <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_al']") %>%
+        html_text() %>% as.numeric()
 
-  years <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_t']") %>%
-      html_text() %>% as.numeric()
-  vals <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_al']") %>%
-      html_text() %>% as.numeric()
-    
-  df <- data.frame(year=years, cites=vals)
+    df <- data.frame(year=years, cites=vals)
   
-  return(df)
+    return(df)
 }
 
 

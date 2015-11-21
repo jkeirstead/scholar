@@ -25,6 +25,7 @@ NULL
 ##' If multiple ids are specified, only the first value is used and a
 ##' warning is generated.
 ##' @export
+##' @importFrom httr GET
 ##' @keywords internal
 tidy_id <- function(id) {
   if (length(id)!=1) {
@@ -33,6 +34,12 @@ tidy_id <- function(id) {
     warning(msg)
   }
 
+  ## Check with Google to set cookies
+  if (getOption("scholar_call_home")) {
+      sample_url <- "https://scholar.google.com/citations?user=B7vSqZsAAAAJ"
+      sink <- GET(sample_url)      
+      options("scholar_call_home"=FALSE, "scholar_handle"=sink)
+  }
+  
   return(id)
 }
-

@@ -1,5 +1,5 @@
 # Ugly hack for CRAN checks
-utils::globalVariables(c("year", "cites"))
+utils::globalVariables(c("id", "year", "cites"))
 
 ##' Compare the citation records of multiple scholars
 ##'
@@ -20,22 +20,26 @@ utils::globalVariables(c("year", "cites"))
 ##' }
 ##' }
 ##' @export
-##' @import plyr
+##' @importFrom dplyr "%>%" summarize mutate group_by
 compare_scholars <- function(ids, pagesize=100) {
 
-  ## Load in the publication data and summarize
-  data <- lapply(ids, function(x) return(cbind(id=x, get_publications(x, pagesize=pagesize))))
-  data <- ldply(data)
-  data <- ddply(data, .(id, year), summarize, cites=sum(cites, na.rm=TRUE))
-  data <- ddply(data, .(id), transform, total=cumsum(cites))
-
-  ## Fetch the scholar names 
-  tmp <- lapply(ids, get_profile)
-  names <- ldply(tmp, function(l) return(data.frame(id=l$id, name=l$name)))
-
-  ## Merge together with the citation info
-  data <- merge(data, names)
-  return(data)
+    ## Load in the publication data and summarize
+    data <- lapply(ids, function(x) cbind(id=x, get_publications(x, pagesize=pagesize)))
+    data <- do.call("rbind", data)
+    data <- data %>% group_by(id, year) %>%
+        summarize(cites=sum(cites, na.rm=TRUE)) %>%
+            mutate(total=cumsum(cites))
+    
+    ## Fetch the scholar names 
+    names <- lapply(ids, function(i) {
+        p <- get_profile(i)
+        data.frame(id=p$id, name=p$name)
+    })
+    names <- do.call("rbind", names)
+    
+    ## Merge together with the citation info
+    final <- merge(data, names)
+    return(final)
 }
 
 ##' Compare the careers of multiple scholars
@@ -59,22 +63,26 @@ compare_scholars <- function(ids, pagesize=100) {
 ##'     df <- compare_scholar_careers(ids)
 ##' }
 ##' @export
-##' @import plyr
+##' @importFrom dplyr "%>%" group_by mutate
 compare_scholar_careers <- function(ids, career=TRUE) {
 
-  data <- lapply(ids, function(x) return(cbind(id=x, get_citation_history(x))))
-  data <- ldply(data)
+    data <- lapply(ids, function(x) return(cbind(id=x, get_citation_history(x))))
+    data <- do.call("rbind", data)
 
-  ## Calculate the minimum year for each scholar and create a career year
-  if (career) {
-    data <- ddply(data, .(id), transform, career_year=year-min(year))
-  } 
+    ## Calculate the minimum year for each scholar and create a career year
+    if (career) {
+        data <- data %>% group_by(id) %>%
+            mutate(career_year=year-min(year))
+    } 
 
-  ## Fetch the scholar names 
-  tmp <- lapply(ids, get_profile)
-  names <- ldply(tmp, function(l) return(data.frame(id=l$id, name=l$name)))
+    ## Fetch the scholar names 
+    names <- lapply(ids, function(i) {
+        p <- get_profile(i)
+        data.frame(id=p$id, name=p$name)
+    })
+    names <- do.call("rbind", names)
 
-  ## Add the name data
-  data <- merge(data, names)
-  return(data)
+    ## Add the name data
+    data <- merge(data, names)
+    return(data)
 }

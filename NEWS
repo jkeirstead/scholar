@@ -1,3 +1,16 @@
+scholar 0.1.4   (21 November 2015)
+---------------
+
+* Fixed bug with missing cookies that was preventing data from being
+  downloaded.
+
+* Converted code from XML to rvest/dplyr for legibility
+
+* For clarity, `get_publications` now uses `cid` as the name of the
+  column used to link to a publication's full citation history.  This
+  avoids any confusion when you add the scholar's id, which is `id`
+  elsewhere in the package.
+
 scholar 0.1.3   (28 September 2015)
 ---------------
 

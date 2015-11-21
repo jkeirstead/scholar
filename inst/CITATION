@@ -4,7 +4,7 @@ citEntry(entry = "manual",
   author = "James Keirstead",
   title = "scholar: analyse citation data from Google Scholar",
   year = "2015",
-  note = "R package version 0.1.3",
+  note = "R package version 0.1.4",
   url = "http://github.com/jkeirstead/scholar",
-  textVersion = "J. Keirstead (2015) scholar: analyse citation data from Google Scholar.  R package version 0.1.3. http://github.com/jkeirstead/scholar."
+  textVersion = "J. Keirstead (2015) scholar: analyse citation data from Google Scholar.  R package version 0.1.4. http://github.com/jkeirstead/scholar."
 )

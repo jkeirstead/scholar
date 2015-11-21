@@ -22,7 +22,11 @@
 ##'    profiles <- lapply(ids, get_profile)
 ##' }
 ##' @export
-##' @import stringr XML
+##' @importFrom stringr str_trim str_split
+##' @importFrom xml2 read_html
+##' @importFrom rvest html_table html_nodes html_text
+##' @importFrom dplyr "%>%"
+##' @importFrom httr GET
 get_profile <- function(id) {
 
   id <- tidy_id(id)
@@ -31,7 +35,8 @@ get_profile <- function(id) {
   url <- sprintf(url_template, id)
 
   ## Generate a list of all the tables identified by the scholar ID
-  tables <- readHTMLTable(url)
+  page <- GET(url, handle=getOption("scholar_handle")) %>% read_html()
+  tables <- page %>% html_table()
 
   ## The citation stats are in tables[[1]]$tables$stats
   ## but the number of rows seems to vary by OS
@@ -39,18 +44,16 @@ get_profile <- function(id) {
   rows <- nrow(stats)
   
   ## The personal info is in
-  tree <- htmlTreeParse(url, useInternalNodes=TRUE)
-  name <- xpathApply(tree, '//*/div[@id="gsc_prf_in"]', xmlValue)[[1]]
-  bio_info <- xpathApply(tree, '//*/div[@class="gsc_prf_il"]', xmlValue)
-  affiliation <- str_trim(str_split(bio_info[[1]], ",")[[1]][2])
+  name <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_in']") %>% html_text()
+  bio_info <- page %>% html_nodes(xpath="//*/div[@class='gsc_prf_il']") %>% html_text()
+  affiliation <- bio_info[1]
  
   ## Specialities (trim out HTML non-breaking space)
-  specs <- iconv(bio_info[[2]], from="UTF8", to="ASCII")
+  specs <- iconv(bio_info[2], from="UTF8", to="ASCII")
   specs <- str_trim(tolower(str_split(specs, ",")[[1]]))
 
   ## Extract the homepage
-  tmp <- xpathApply(tree, '//*/div[@id="gsc_prf_ivh"]//a/@href')
-  homepage <- as.character(tmp[[1]])
+  homepage <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_ivh']//a/@href") %>% html_text() 
 
   return(list(id=id, name=name, affiliation=affiliation,
               total_cites=as.numeric(as.character(stats[rows-2,2])),
@@ -74,25 +77,29 @@ get_profile <- function(id) {
 ##' @return a data frame giving the number of citations per year to
 ##' work by the given scholar
 ##' @export
-##' @import stringr XML
+##' @importFrom xml2 read_html
+##' @importFrom rvest html_nodes html_text
+##' @importFrom dplyr "%>%"
+##' @importFrom httr GET
 get_citation_history <- function(id) {
 
-  ## Ensure only one ID  
-  id <- tidy_id(id)
-  
-  ## Read the page and parse the key data
-  url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works"
-  url <- sprintf(url_template, id)
-  
-  ## A better way would actually be to read out the plot of citations
-  doc <- htmlTreeParse(url, useInternalNodes=TRUE)
+    ## Ensure only one ID
+    id <- tidy_id(id)
 
-  years <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_t']", xmlValue))
-  vals <- as.numeric(xpathSApply(doc, "//*/span[@class='gsc_g_al']", xmlValue))
-    
-  df <- data.frame(year=years, cites=vals)
+    ## Read the page and parse the key data
+    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works"
+    url <- sprintf(url_template, id)
   
-  return(df)
+    ## A better way would actually be to read out the plot of citations
+    page <- GET(url, handle=getOption("scholar_handle")) %>% read_html()
+    years <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_t']") %>%
+        html_text() %>% as.numeric()
+    vals <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_al']") %>%
+        html_text() %>% as.numeric()
+
+    df <- data.frame(year=years, cites=vals)
+  
+    return(df)
 }
 
 

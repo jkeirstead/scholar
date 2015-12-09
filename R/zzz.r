@@ -1,3 +1,3 @@
-.onAttach <- function(libname, pkgname) {
-    options("scholar_call_home"=TRUE)
+.onLoad <- function(libname, pkgname) {
+  options("scholar_call_home"=TRUE)
 }

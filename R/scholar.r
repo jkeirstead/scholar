@@ -107,7 +107,7 @@ get_citation_history <- function(id) {
       # empty vector of 0s
       allvals=integer(length=length(years))
       # fill in 
-      allvals[zindices]=rev(vals)
+      allvals[zindices]=vals
       # and then reverse
       vals=rev(allvals)
     }

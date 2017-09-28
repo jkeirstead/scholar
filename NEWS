@@ -1,3 +1,8 @@
+scholar 0.1.5   (28 September 2017)
+---------------
+
+* update `get_publications` and `get_article_cite_history` according to the change of Google Scholar (thanks @guangchuangyu)
+
 scholar 0.1.4   (21 November 2015)
 ---------------
 

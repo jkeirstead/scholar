@@ -1,7 +1,7 @@
 Package: scholar
 Maintainer: James Keirstead <james.keirstead@gmail.com>
 Author: James Keirstead <james.keirstead@gmail.com>
-Version: 0.1.4
+Version: 0.1.5
 License: MIT + file LICENSE
 Title: Analyse Citation Data from Google Scholar
 BugReports: https://github.com/jkeirstead/scholar/issues

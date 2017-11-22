@@ -2,7 +2,7 @@
 
 The scholar R package provides functions to extract citation data from [Google Scholar](http://scholar.google.com).  In addition to retrieving basic information about a single scholar, the package also allows you to compare multiple scholars and predict future h-index values.
 
-*The scholar package is no longer under active development.  If you would like to continue development, please note the MIT License and contact me to coordinate transfer of the registered maintainer with CRAN for future releases.*
+*Development of the scholar package has resumed and a new maintainer should be confirmed shortly. Please continue to file issues and make pull requests against https://github.com/jkeirstead/scholar going forwards.*
 
 ## Basic features
 

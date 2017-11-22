@@ -135,7 +135,9 @@ get_article_cite_history <- function (id, article) {
     url_tail <- paste(id, article, sep=":")
     url <- paste0(url_base, url_tail)
 
-    doc <- GET(url, handle=getOption("scholar_handle")) %>% read_html()
+    res <- GET(url, handle=getOption("scholar_handle")) 
+    httr::stop_for_status(res, "get user id / article information")
+    doc <- read_html(res)
 
     ## Inspect the bar chart to retrieve the citation values and years
     years <- doc %>%

@@ -96,7 +96,21 @@ get_citation_history <- function(id) {
         html_text() %>% as.numeric()
     vals <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_al']") %>%
         html_text() %>% as.numeric()
-
+    if(length(years)>length(vals)){
+      # Some years don't have citations. 
+      # We need to match the citation counts and years
+      # <a href="javascript:void(0)" class="gsc_g_a" style="left:8px;height:5px;z-index:9">\n  <span class="gsc_g_al">2</span>\n</a>
+      style_tags=page %>% html_nodes(css = '.gsc_g_a') %>% 
+        html_attr('style')
+      # these z indices seem to be the indices starting with the last year
+      zindices=as.integer(stringr::str_match(style_tags, 'z-index:([0-9]+)')[,2])
+      # empty vector of 0s
+      allvals=integer(length=length(years))
+      # fill in 
+      allvals[zindices]=vals
+      # and then reverse
+      vals=rev(allvals)
+    }
     df <- data.frame(year=years, cites=vals)
   
     return(df)

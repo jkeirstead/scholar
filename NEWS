@@ -1,7 +1,11 @@
-scholar 0.1.5   (xx xx xx)
+scholar 0.1.6   (22 November 2017)
 ---------------
 
 * Fixed .onLoad() vs .onAttach() bug (#25, #26, thanks @jefferis)
+* Fixed zero counts in a year halts get_citation_history (#29 and #42, @jefferis)
+* Fixed get_publications: no publication IDs returned (#41) after changes in 
+  google scholar (@GuangchuangYu). NB this was released as v0.1.5 on his fork
+  of the repository.
 
 scholar 0.1.4   (21 November 2015)
 ---------------

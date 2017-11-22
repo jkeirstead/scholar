@@ -151,14 +151,17 @@ get_article_cite_history <- function (id, article) {
                 as.numeric()
 
     df <- data.frame(year = years, cites = vals)
-
-    ## There may be undefined years in the sequence so fill in these gaps
-    tmp <- merge(data.frame(year=min(years):max(years)),
-                 df, all.x=TRUE)
-    tmp[is.na(tmp)] <- 0
-
-    tmp$pubid <- article
-    return(tmp)
+    if(nrow(df)>0) {
+        ## There may be undefined years in the sequence so fill in these gaps
+        df <- merge(data.frame(year=min(years):max(years)),
+                     df, all.x=TRUE)
+        df[is.na(df)] <- 0
+        df$pubid <- article
+    } else {
+        # complete the 0 row data.frame to be consistent with normal results
+        df$pubid <- vector(mode = mode(article))
+    }
+    return(df)
 }
 
 ##' Calculates how many articles a scholar has published

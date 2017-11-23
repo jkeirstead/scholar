@@ -1,0 +1,114 @@
+---
+title: "scholar: Analyse citation data from Google Scholar"
+author: "Guangchuang Yu, James Keirstead and Gregory Jefferis"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    toc: true
+    theme: cayman
+    highlight: github
+  pdf_document:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{scholar introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+  %\VignetteDepends{ggplot2}
+---
+
+```{r style, echo=FALSE, results="asis", message=FALSE}
+knitr::opts_chunk$set(tidy = FALSE,
+		   message = FALSE)
+```
+
+
+```{r echo=FALSE, results="hide", message=FALSE}
+library("scholar")
+library("ggplot2")
+theme_set(theme_minimal())
+```
+
+
+# Retrieving basic information
+
+```{r}
+## Define the id for Richard Feynman
+id <- 'B7vSqZsAAAAJ'
+
+## Get his profile
+l <- get_profile(id)
+
+## Print his name and affliation
+l$name
+l$affiliation
+
+## Print his citation index
+l$h_index
+l$i10_index
+```
+
+# Retrieving publications
+
+
+`get_publications()` return a `data.frame` of publication records. It contains
+information of the publications, including *title*, *author list*, *page
+number*, *citation number*, *publication year*, *etc.*.
+
+The `pubid` is the article ID used by Google Scholar and it is the identifier
+that used to retrieving citation history of the selected publication.
+
+```{r}
+## Get his publications (a large data frame)
+p <- get_publications(id)
+head(p, 3)
+```
+
+
+# Retrieving citation data
+
+```{r}
+## Get his citation history, i.e. citations to his work in a given year
+ct <- get_citation_history(id)
+
+## Plot citation trend
+library(ggplot2)
+ggplot(ct, aes(year, cites)) + geom_line() + geom_point()
+```
+
+
+User can retrieving citation history of a particular publication using
+`get_article_cite_history()`.
+
+
+```{r}
+## The following publication will be used to demonstrate article citation history
+as.character(p$title[1])
+
+## Get article citation history
+ach <- get_article_cite_history(id, p$pubid[1])
+
+## Plot citation trend
+ggplot(ach, aes(year, cites)) +
+    geom_segment(aes(xend = year, yend = 0), size=1, color='darkgrey') +
+    geom_point(size=3, color='firebrick')
+```
+
+# Comparing scholars
+
+```{r}
+# Compare Feynman and Stephen Hawking
+ids <- c('B7vSqZsAAAAJ', 'qj74uXkAAAAJ')
+
+# Get a data frame comparing the number of citations to their work in
+# a given year
+cs <- compare_scholars(ids)
+
+## remove some 'bad' records without sufficient information
+cs <- subset(cs, !is.na(year) & year > 1900)
+ggplot(cs, aes(year, cites, group=name, color=name)) + geom_line() + theme(legend.position="bottom")
+
+## Compare their career trajectories, based on year of first citation
+csc <- compare_scholar_careers(ids)
+ggplot(csc, aes(career_year, cites, group=name, color=name)) + geom_line() + geom_point() +
+    theme(legend.position=c(.2, .8))
+```

@@ -21,5 +21,9 @@ Imports:
     stringr,
     xml2
 Suggests:
+    ggplot2,
+    knitr,
+    prettydoc,
     roxygen2
+VignetteBuilder: knitr
 RoxygenNote: 6.0.1

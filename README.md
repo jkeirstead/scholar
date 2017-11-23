@@ -2,6 +2,8 @@
 
 The scholar R package provides functions to extract citation data from [Google Scholar](http://scholar.google.com).  In addition to retrieving basic information about a single scholar, the package also allows you to compare multiple scholars and predict future h-index values.
 
+*Development of the scholar package has resumed and a new maintainer should be confirmed shortly. Please continue to file issues and make pull requests against https://github.com/jkeirstead/scholar going forwards.*
+
 ## Basic features
 
 Individual scholars are referenced by a unique character string, which can be found by searching for an author and inspecting the resulting scholar homepage.  For example, the profile of physicist Richard Feynman is located at http://scholar.google.com/citations?user=B7vSqZsAAAAJ and so his unique id is `B7vSqZsAAAAJ`.

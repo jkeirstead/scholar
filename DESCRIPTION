@@ -2,6 +2,8 @@ Package: scholar
 Authors@R: c(
     person("James", "Keirstead", email = "james.keirstead@gmail.com", role = c("aut", "cre")),
     person("Gregory", "Jefferis", email = "jefferis@gmail.com", role = "ctb"))
+Maintainer: James Keirstead <james.keirstead@gmail.com>
+Author: James Keirstead <james.keirstead@gmail.com>
 Version: 0.1.5
 License: MIT + file LICENSE
 Title: Analyse Citation Data from Google Scholar

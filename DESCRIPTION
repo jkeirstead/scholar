@@ -1,9 +1,9 @@
 Package: scholar
 Authors@R: c(
-    person("James", "Keirstead", email = "james.keirstead@gmail.com", role = c("aut", "cre")),
-    person("Gregory", "Jefferis", email = "jefferis@gmail.com", role = "ctb"))
-Maintainer: James Keirstead <james.keirstead@gmail.com>
-Author: James Keirstead <james.keirstead@gmail.com>
+    person("Guangchuang", "Yu",   email = "guangchuangyu@gmail.com",   role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6485-8781")),
+    person("James", "Keirstead",  email = "james.keirstead@gmail.com", role = "aut"),
+    person("Gregory", "Jefferis", email = "jefferis@gmail.com",        role = "ctb"))
+Maintainer: Guangchuang Yu <guangchuangyu@gmail.com>
 Version: 0.1.5
 License: MIT + file LICENSE
 Title: Analyse Citation Data from Google Scholar
@@ -22,3 +22,4 @@ Imports:
     xml2
 Suggests:
     roxygen2
+RoxygenNote: 6.0.1

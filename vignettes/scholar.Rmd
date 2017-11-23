@@ -54,8 +54,8 @@ l$i10_index
 information of the publications, including *title*, *author list*, *page
 number*, *citation number*, *publication year*, *etc.*.
 
-The `pubid` is the article ID used by Google Scholar and it is the identifier
-that used to retrieving citation history of the selected publication.
+The `pubid` is the article ID used by Google Scholar and the identifier
+that is used to retrieve the citation history of a selected publication.
 
 ```{r}
 ## Get his publications (a large data frame)
@@ -76,7 +76,7 @@ ggplot(ct, aes(year, cites)) + geom_line() + geom_point()
 ```
 
 
-User can retrieving citation history of a particular publication using
+Users can retrieve the citation history of a particular publication with
 `get_article_cite_history()`.
 
 
@@ -94,7 +94,8 @@ ggplot(ach, aes(year, cites)) +
 ```
 
 # Comparing scholars
-
+You can compare the citation history of scholars by fetching data with 
+`compare_scholars`.
 ```{r}
 # Compare Feynman and Stephen Hawking
 ids <- c('B7vSqZsAAAAJ', 'qj74uXkAAAAJ')

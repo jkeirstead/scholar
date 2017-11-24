@@ -13,9 +13,9 @@ utils::globalVariables(c("id", "year", "cites"))
 ##' @return a data frame giving the ID of each scholar and the total
 ##' number of citations received by work published in a year.
 ##' @examples {
-##' \dontrun{
-##'     ## How do Richard Feynmann and Isaac Newton compare?
-##' 	ids <- c("B7vSqZsAAAAJ", "xJaxiEEAAAAJ")
+##' \donttest{
+##'     ## How do Richard Feynmann and Stephen Hawking compare?
+##'     ids <- c("B7vSqZsAAAAJ", "qj74uXkAAAAJ")
 ##'     df <- compare_scholars(ids)
 ##' }
 ##' }
@@ -58,8 +58,9 @@ compare_scholars <- function(ids, pagesize=100) {
 ##' TRUE
 ##' 
 ##' @examples {
-##' 	## How do Richard Feynmann and Isaac Newton compare?
-##' 	ids <- c("B7vSqZsAAAAJ", "xJaxiEEAAAAJ")
+##'     ## How do Richard Feynmann and Stephen Hawking compare?
+##'     # Compare Feynman and Stephen Hawking
+##'     ids <- c("B7vSqZsAAAAJ", "qj74uXkAAAAJ")
 ##'     df <- compare_scholar_careers(ids)
 ##' }
 ##' @export

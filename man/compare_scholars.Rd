@@ -23,9 +23,9 @@ the scholar's publications by year of publication.
 }
 \examples{
 {
-\dontrun{
-    ## How do Richard Feynmann and Isaac Newton compare?
-	ids <- c("B7vSqZsAAAAJ", "xJaxiEEAAAAJ")
+\donttest{
+    ## How do Richard Feynmann and Stephen Hawking compare?
+    ids <- c("B7vSqZsAAAAJ", "qj74uXkAAAAJ")
     df <- compare_scholars(ids)
 }
 }

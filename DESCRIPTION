@@ -4,7 +4,7 @@ Authors@R: c(
     person("James", "Keirstead",  email = "james.keirstead@gmail.com", role = "aut"),
     person("Gregory", "Jefferis", email = "jefferis@gmail.com",        role = "ctb"))
 Maintainer: Guangchuang Yu <guangchuangyu@gmail.com>
-Version: 0.1.5
+Version: 0.1.6
 License: MIT + file LICENSE
 Title: Analyse Citation Data from Google Scholar
 BugReports: https://github.com/jkeirstead/scholar/issues

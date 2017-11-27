@@ -21,11 +21,11 @@ install:
 
 check: build
 	cd ..;\
-	Rscript -e 'rcmdcheck::rcmdcheck("$(PKGNAME)_$(PKGVERS).tar.gz", args="--as-cran")'
+	Rscript -e 'rcmdcheck::rcmdcheck("$(PKGNAME)_$(PKGVERS).tar.gz", args="--as-cran --run-donttest")'
 
 check2: build
 	cd ..;\
-	R CMD check $(PKGNAME)_$(PKGVERS).tar.gz
+	R CMD check --run-donttest $(PKGNAME)_$(PKGVERS).tar.gz
 
 clean:
 	cd ..;\

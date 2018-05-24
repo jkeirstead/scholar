@@ -15,5 +15,10 @@ getCompleteAuthors(id, pubid)
 a string containing the complete list of authors
 }
 \description{
-Get the Complete list of authors for a Publication
+Found as Muhammad Qasim Pasta's solution here https://github.com/jkeirstead/scholar/issues/21
+}
+\author{
+Muhammad Qasim Pasta
+
+Abram B. Fleishman
 }

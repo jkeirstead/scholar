@@ -1,5 +1,10 @@
 ##' Get the Complete list of authors for a Publication
 ##'
+##' Found as Muhammad Qasim Pasta's solution here https://github.com/jkeirstead/scholar/issues/21
+##' @author Muhammad Qasim Pasta
+##' @author Abram B. Fleishman
+##'
+##'
 ##' @param id a Google Scholar ID
 ##' @param pubid a Publication ID from a giving google Schalar ID
 ##' @return a string containing the complete list of authors

@@ -135,7 +135,7 @@ get_article_cite_history <- function (id, article) {
     url_tail <- paste(id, article, sep=":")
     url <- paste0(url_base, url_tail)
 
-    res <- GET(url, handle=getOption("scholar_handle")) 
+    res <- GET(url, handle=getOption("scholar_handle"))
     httr::stop_for_status(res, "get user id / article information")
     doc <- read_html(res)
 
@@ -188,4 +188,50 @@ get_oldest_article <- function(id) {
     return(min(papers$year, na.rm=TRUE))
 }
 
+
+
+
+##' Get journal metrics.
+##'
+##' Get journal metrics (impact factor) for a journal list.
+##'
+##' @examples
+##' library(scholar)
+##'
+##' id <- get_publications("bg0BZ-QAAAAJ&hl")
+##' impact <- get_impactfactor(journals=id$journal, max.distance = 0.1)
+##'
+##' id <- cbind(id, impact)
+##'
+##' @param journals a character list giving the journal list
+##' @param max.distance maximum distance allowed for a match bewteen journal and journal list. Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components
+##'
+##' @return Journal metrics data.
+##'
+##' @import dplyr
+##' @export
+get_impactfactor <- function(journals, max.distance = 0.1) {
+  data <- scholar::impactfactor
+
+  index <- c()
+  for(journal in as.character(journals)){
+    if(!journal == ""){
+      closest <- NA
+      closest <- agrep(journal,
+                       data$Journal,
+                       max.distance = max.distance,
+                       value = FALSE,
+                       ignore.case = TRUE)
+      if(is.null(closest)==FALSE){
+        index <- c(index, closest[1])
+      } else{
+        index <- c(index, NA)
+      }
+    } else{
+      index <- c(index, NA)
+    }
+  }
+
+  return(data[index, ])
+}
 

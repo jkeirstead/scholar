@@ -1,6 +1,8 @@
 
 * `get_impactfactor` function to query journal's impact factor (thanks @DominiqueMakowski)
 
+* `getCompleteAuthors` to get the complete list of authors for a publication (thanks @abfleishman)
+
 scholar 0.1.6   (23 May 2018)
 ---------------
 

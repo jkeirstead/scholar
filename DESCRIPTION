@@ -11,6 +11,7 @@ BugReports: https://github.com/jkeirstead/scholar/issues
 Description: Provides functions to extract citation data from Google
     Scholar.  Convenience functions are also provided for comparing
     multiple scholars and predicting future h-index values.
+LazyData: true
 Depends:
     R (>= 2.15.1)
 Imports:

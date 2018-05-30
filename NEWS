@@ -1,3 +1,5 @@
+scholar 0.1.6.1   (30 May 2018)
+---------------
 
 * `get_impactfactor` function to query journal's impact factor (thanks @DominiqueMakowski)
 

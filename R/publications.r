@@ -211,27 +211,26 @@ get_oldest_article <- function(id) {
 ##' @import dplyr
 ##' @export
 get_impactfactor <- function(journals, max.distance = 0.1) {
-  data <- scholar::impactfactor
+    journals <- as.character(journals)
+    index <- rep(NA, length(journals))
 
-  index <- c()
-  for(journal in as.character(journals)){
-    if(!journal == ""){
-      closest <- NA
-      closest <- agrep(journal,
-                       data$Journal,
-                       max.distance = max.distance,
-                       value = FALSE,
-                       ignore.case = TRUE)
-      if(is.null(closest)==FALSE){
-        index <- c(index, closest[1])
-      } else{
-        index <- c(index, NA)
-      }
-    } else{
-      index <- c(index, NA)
+    for(i in seq_along(journals)) {
+        journal <- journals[i]
+        if(journal == ""){
+            next
+        }
+
+        closest <- agrep(journal,
+                         impactfactor$Journal,
+                         max.distance = max.distance,
+                         value = FALSE,
+                         ignore.case = TRUE)
+        if(!is.null(closest)){
+            index[i] <- closest[1]
+        }
+
     }
-  }
 
-  return(data[index, ])
+    return(impactfactor[index, ])
 }
 

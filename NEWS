@@ -1,3 +1,11 @@
+
+* `get_impactfactor` function to query journal's impact factor (thanks @DominiqueMakowski)
+
+scholar 0.1.6   (23 May 2018)
+---------------
+
+* add vignette
+
 scholar 0.1.5   (28 September 2017)
 ---------------
 

@@ -165,3 +165,79 @@ get_num_top_journals <- function(id, journals) {
   return(length(which(is.element(papers$journal, journals))))
 }
 
+#' Gets the network of coauthors of a scholar
+#'
+##' @param id a character string specifying the Google Scholar ID.
+##' If multiple ids are specified, only the first value is used and a
+##' warning is generated.
+#' @param n_coauthors Number of coauthors to explore. This number should usually be between 1 and 10 as
+#' choosing many coauthors can make the network graph too messy.
+#' @param n_deep The number of degrees that you want to go down the network. When \code{n_deep} is equal to \code{1}
+#' then \code{grab_coauthor} will only grab the coauthors of Joe and Mary, so Joe -- > Mary --> All coauthors. This can get
+#' out of control very quickly if \code{n_deep} is set to \code{2} or above. The preferred number is \code{1}, the default.
+#'
+#' @return A data frame with two columns showing all authors and coauthors.
+#' 
+#' @seealso \code{\link{plot_coauthors}}
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#' 
+#' library(scholar)
+#' coauthor_network <- get_coauthors('amYIKXQAAAAJ&hl')
+#' plot_coauthors(coauthor_network)
+#' }
+#'
+#'
+get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
+  
+  stopifnot(is.numeric(n_deep), length(n_deep) >= 1, n_deep != 0)
+  stopifnot(is.numeric(n_coauthors), length(n_coauthors) >= 1, n_coauthors != 0)
+  
+  all_coauthors <- list_coauthors(id, n_coauthors)
+  
+  empty_network <- replicate(n_deep, list())
+  
+  for (i in seq_len(n_deep)) {
+    if (i == 1)  {
+      empty_network[[i]] <- clean_network(all_coauthors$coauthors_url, n_coauthors)
+    } else {
+      empty_network[[i]] <- clean_network(empty_network[[i - 1]]$coauthors_url, n_coauthors)
+    }
+  }
+  
+  final_network <- rbind(all_coauthors, Reduce(rbind, empty_network))
+  final_network[c("author", "coauthors")]
+}
+
+
+#' Plot a network of coauthors
+#'
+#' @param network A data frame given by \code{\link{get_coauthors}}
+#' @param size_labels Size of the label names
+#'
+#' @return a \code{ggplot2} object but prints a plot as a side effect.
+#' @export
+#' @importFrom dplyr "%>%"
+#' 
+#' @seealso \code{\link{get_coauthors}}
+#' 
+#' @examples
+#' \dontrun{
+#' library(scholar)
+#' coauthor_network <- get_coauthors('amYIKXQAAAAJ&hl')
+#' plot_coauthors(coauthor_network)
+#' }
+plot_coauthors <- function(network, size_labels = 5) {
+  graph <- tidygraph::as_tbl_graph(network) %>%
+    mutate(closeness = suppressWarnings(tidygraph::centrality_closeness()))
+
+  ggraph::ggraph(graph, layout = 'kk') +
+    ggraph::geom_edge_link(ggplot2::aes_string(alpha = '..index..', color = as.character('from')), alpha = 1/3, show.legend = FALSE) +
+    ggraph::geom_node_point(ggplot2::aes_string(size = 'closeness'), alpha = 1/2, show.legend = FALSE) +
+    ggraph::geom_node_text(ggplot2::aes_string(label = 'name'), size = size_labels, repel = TRUE, check_overlap = TRUE) +
+    ggplot2::labs(title = paste0("Network of coauthorship of ", network$author[1])) +
+    ggraph::theme_graph(title_size = 16)
+}

@@ -31,7 +31,6 @@ utils::globalVariables(c("."))
 ##' @importFrom dplyr "%>%" row_number filter
 ##' @importFrom xml2 read_html
 ##' @importFrom rvest html_nodes html_text html_attr
-##' @importFrom httr GET
 ##' @import R.cache
 ##' @export
 get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
@@ -57,7 +56,7 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
         url <- sprintf(url_template, id, cstart, pagesize)
 
         ## Load the page
-        page <- GET(url, handle=getOption("scholar_handle")) %>% read_html()
+        page <- get_resp(url) %>% read_html()
         cites <- page %>% html_nodes(xpath="//tr[@class='gsc_a_tr']")
 
         title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
@@ -125,7 +124,6 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 ##' @importFrom stringr str_replace
 ##' @importFrom xml2 read_html
 ##' @importFrom rvest html_nodes html_attr html_text
-##' @importFrom httr GET
 ##' @export
 get_article_cite_history <- function (id, article) {
 
@@ -135,7 +133,7 @@ get_article_cite_history <- function (id, article) {
     url_tail <- paste(id, article, sep=":")
     url <- paste0(url_base, url_tail)
 
-    res <- GET(url, handle=getOption("scholar_handle"))
+    res <- get_resp(url)
     httr::stop_for_status(res, "get user id / article information")
     doc <- read_html(res)
 

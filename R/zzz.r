@@ -22,10 +22,8 @@ get_resp <- function(url, attempts_left = 5) {
 
 ## We can use this function through the package to compose
 ## a url by only providing the id
-compose_url <- function(id) {
+compose_url <- function(id, url_template) {
   id <- tidy_id(id)
-  
-  url_template <- "http://scholar.google.com/citations?hl=en&user=%s"
   url <- sprintf(url_template, id)
   
   url
@@ -40,7 +38,8 @@ grab_id <- function(url) {
 # only return the names of the author and coauthors
 list_coauthors <- function(id, n_coauthors) {
   
-  url <- compose_url(id)
+  url_template <- "http://scholar.google.com/citations?hl=en&user=%s"
+  url <- compose_url(id, url_template)
   
   if (url == "") {
     return(
@@ -83,7 +82,8 @@ list_coauthors <- function(id, n_coauthors) {
     vapply(
       grab_id(coauthor_href),
       compose_url,
-      character(1)
+      url_template,
+      FUN.VALUE = character(1)
     )
   
   data.frame(

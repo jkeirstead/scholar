@@ -14,7 +14,8 @@
 ##' multiple scholars.
 ##' 
 ##' @return 	a list containing the scholar's name, affiliation,
-##' citations, impact metrics, fields of study, and homepage
+##' citations, impact metrics, fields of study, homepage and
+##' the author's list of coauthors provided by Google Scholar.
 ##' 
 ##' @examples {
 ##'    ## Gets profiles of some famous physicists
@@ -51,13 +52,17 @@ get_profile <- function(id) {
 
   ## Extract the homepage
   homepage <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_ivh']//a/@href") %>% html_text() 
+  
+  ## Grab all coauthors
+  coauthors <- list_coauthors(id, n_coauthors = 20) # maximum availabe in profile
 
   return(list(id=id, name=name, affiliation=affiliation,
               total_cites=as.numeric(as.character(stats[rows-2,2])),
               h_index=as.numeric(as.character(stats[rows-1,2])),
               i10_index=as.numeric(as.character(stats[rows,2])),
               fields=specs,
-              homepage=homepage))
+              homepage=homepage,
+              coauthors=coauthors$coauthors))
 }
 
 ##' Get historical citation data for a scholar
@@ -184,7 +189,6 @@ get_num_top_journals <- function(id, journals) {
 #'
 #'
 get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
-  
   stopifnot(is.numeric(n_deep), length(n_deep) >= 1, n_deep != 0)
   stopifnot(is.numeric(n_coauthors), length(n_coauthors) >= 1, n_coauthors != 0)
   

@@ -237,5 +237,5 @@ plot_coauthors <- function(network, size_labels = 5) {
     ggraph::geom_node_point(ggplot2::aes_string(size = 'closeness'), alpha = 1/2, show.legend = FALSE) +
     ggraph::geom_node_text(ggplot2::aes_string(label = 'name'), size = size_labels, repel = TRUE, check_overlap = TRUE) +
     ggplot2::labs(title = paste0("Network of coauthorship of ", network$author[1])) +
-    ggraph::theme_graph(title_size = 16)
+    ggraph::theme_graph(title_size = 16, base_family = "sans")
 }

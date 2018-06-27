@@ -196,11 +196,15 @@ get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
   
   empty_network <- replicate(n_deep, list())
   
+  # Here I grab the id of the coauthors url because list_coauthors
+  # needs to accept ids and not urls
   for (i in seq_len(n_deep)) {
     if (i == 1)  {
-      empty_network[[i]] <- clean_network(all_coauthors$coauthors_url, n_coauthors)
+      empty_network[[i]] <- clean_network(grab_id(all_coauthors$coauthors_url),
+                                          n_coauthors)
     } else {
-      empty_network[[i]] <- clean_network(empty_network[[i - 1]]$coauthors_url, n_coauthors)
+      empty_network[[i]] <- clean_network(grab_id(empty_network[[i - 1]]$coauthors_url),
+                                          n_coauthors)
     }
   }
   

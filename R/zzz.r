@@ -23,6 +23,7 @@ get_resp <- function(url, attempts_left = 5) {
 ## We can use this function through the package to compose
 ## a url by only providing the id
 compose_url <- function(id, url_template) {
+  if (is.na(id)) return(NA_character_)
   id <- tidy_id(id)
   url <- sprintf(url_template, id)
   
@@ -37,11 +38,10 @@ grab_id <- function(url) {
 # Extract the coauthors of an id and
 # only return the names of the author and coauthors
 list_coauthors <- function(id, n_coauthors) {
-  
   url_template <- "http://scholar.google.com/citations?hl=en&user=%s"
   url <- compose_url(id, url_template)
   
-  if (url == "") {
+  if (id == "" | is.na(id)) {
     return(
       data.frame(author = character(),
                  author_href = character(),

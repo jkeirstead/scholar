@@ -131,3 +131,4 @@ And then we have a built-in function to plot this visualization.
 plot_coauthors(coauthor_network)
 ```
 
+Note however, that these are the coauthors listed in Google Scholar profile and not coauthors from all publications.

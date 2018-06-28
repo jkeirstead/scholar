@@ -1,3 +1,6 @@
+# Ugly hack for CRAN checks
+utils::globalVariables(c("name"))
+
 ## Originally started on 14 May 2013
 
 ##' Gets profile information for a scholar
@@ -172,6 +175,10 @@ get_num_top_journals <- function(id, journals) {
 #' @param n_deep The number of degrees that you want to go down the network. When \code{n_deep} is equal to \code{1}
 #' then \code{grab_coauthor} will only grab the coauthors of Joe and Mary, so Joe -- > Mary --> All coauthors. This can get
 #' out of control very quickly if \code{n_deep} is set to \code{2} or above. The preferred number is \code{1}, the default.
+#' 
+#' @details Considering that scraping each publication for all coauthors is error prone, \code{get_coauthors}
+#' grabs only the coauthors listed on the google scholar profile (on the bottom right of the profile),
+#' not from all publications.
 #'
 #' @return A data frame with two columns showing all authors and coauthors.
 #' 

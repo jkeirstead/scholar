@@ -14,7 +14,8 @@ multiple scholars.}
 }
 \value{
 a list containing the scholar's name, affiliation,
-citations, impact metrics, fields of study, and homepage
+citations, impact metrics, fields of study, homepage and
+the author's list of coauthors provided by Google Scholar.
 }
 \description{
 Gets profile information for a researcher from Google Scholar.

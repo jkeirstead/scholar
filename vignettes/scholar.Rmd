@@ -113,3 +113,22 @@ csc <- compare_scholar_careers(ids)
 ggplot(csc, aes(career_year, cites, group=name, color=name)) + geom_line() + geom_point() +
     theme(legend.position=c(.2, .8))
 ```
+
+# Visualizing and comparing network of coauthors
+
+```{r}
+# Be careful with specifying too many coauthors as the visualization of the
+# network can get very messy.
+coauthor_network <- get_coauthors('amYIKXQAAAAJ&hl', n_coauthors = 7)
+
+coauthor_network
+```
+
+
+And then we have a built-in function to plot this visualization.
+
+```{r}
+plot_coauthors(coauthor_network)
+```
+
+Note however, that these are the coauthors listed in Google Scholar profile and not coauthors from all publications.

@@ -24,6 +24,11 @@ A data frame with two columns showing all authors and coauthors.
 \description{
 Gets the network of coauthors of a scholar
 }
+\details{
+Considering that scraping each publication for all coauthors is error prone, \code{get_coauthors}
+grabs only the coauthors listed on the google scholar profile (on the bottom right of the profile),
+not from all publications.
+}
 \examples{
 
 \dontrun{

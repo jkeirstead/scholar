@@ -7,7 +7,7 @@ Authors@R: c(
     person("Max", "Czapanskiy", email = "maxczapanskiy@gmail.com",        role = "ctb")
     )
 Maintainer: Guangchuang Yu <guangchuangyu@gmail.com>
-Version: 0.1.6.1
+Version: 0.1.7
 License: MIT + file LICENSE
 Title: Analyse Citation Data from Google Scholar
 BugReports: https://github.com/jkeirstead/scholar/issues
@@ -16,8 +16,8 @@ Description: Provides functions to extract citation data from Google
     multiple scholars and predicting future h-index values.
 LazyData: true
 Depends:
-    R (>= 2.15.1)
-Imports: 
+    R (>= 3.4.0)
+Imports:
     R.cache,
     dplyr,
     httr,
@@ -27,7 +27,7 @@ Imports:
     tidygraph,
     ggraph,
     ggplot2
-Suggests: 
+Suggests:
     knitr,
     prettydoc,
     roxygen2

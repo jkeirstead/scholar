@@ -8,9 +8,8 @@
 ##' @param id a Google Scholar ID
 ##' @param pubid a Publication ID from a giving google Schalar ID
 ##' @return a string containing the complete list of authors
-
 ##' @export
-getCompleteAuthors = function(id, pubid)
+get_complete_authors = function(id, pubid)
 {
   auths = ""
   url_template = "http://scholar.google.com/citations?view_op=view_citation&citation_for_view=%s:%s"

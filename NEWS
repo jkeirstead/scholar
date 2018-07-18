@@ -1,3 +1,19 @@
+scholar 0.1.7   (03 Jul 2018)
+---------------
+
+* update impact factor data to 2017 (released on 2018-06-26)
+
+* `plot_coauthors` function to plot co-author network (thanks @cimentadaj)
+
+* `get_impactfactor` function to query journal's impact factor (thanks @DominiqueMakowski)
+
+* `getCompleteAuthors` to get the complete list of authors for a publication (thanks @abfleishman)
+
+scholar 0.1.6   (23 May 2018)
+---------------
+
+* add vignette
+
 scholar 0.1.5   (28 September 2017)
 ---------------
 

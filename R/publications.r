@@ -31,7 +31,6 @@ utils::globalVariables(c("."))
 ##' @importFrom dplyr "%>%" row_number filter
 ##' @importFrom xml2 read_html
 ##' @importFrom rvest html_nodes html_text html_attr
-##' @importFrom httr GET
 ##' @import R.cache
 ##' @export
 get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
@@ -57,7 +56,7 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
         url <- sprintf(url_template, id, cstart, pagesize)
 
         ## Load the page
-        page <- GET(url, handle=getOption("scholar_handle")) %>% read_html()
+        page <- get_resp(url) %>% read_html()
         cites <- page %>% html_nodes(xpath="//tr[@class='gsc_a_tr']")
 
         title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
@@ -125,7 +124,6 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 ##' @importFrom stringr str_replace
 ##' @importFrom xml2 read_html
 ##' @importFrom rvest html_nodes html_attr html_text
-##' @importFrom httr GET
 ##' @export
 get_article_cite_history <- function (id, article) {
 
@@ -135,7 +133,7 @@ get_article_cite_history <- function (id, article) {
     url_tail <- paste(id, article, sep=":")
     url <- paste0(url_base, url_tail)
 
-    res <- GET(url, handle=getOption("scholar_handle")) 
+    res <- get_resp(url)
     httr::stop_for_status(res, "get user id / article information")
     doc <- read_html(res)
 
@@ -188,4 +186,86 @@ get_oldest_article <- function(id) {
     return(min(papers$year, na.rm=TRUE))
 }
 
+
+
+
+##' Get journal metrics.
+##'
+##' Get journal metrics (impact factor) for a journal list.
+##'
+##' @examples
+##' library(scholar)
+##'
+##' id <- get_publications("bg0BZ-QAAAAJ&hl")
+##' impact <- get_impactfactor(journals=id$journal, max.distance = 0.1)
+##'
+##' id <- cbind(id, impact)
+##'
+##' @param journals a character list giving the journal list
+##' @param max.distance maximum distance allowed for a match bewteen journal and journal list.
+##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
+##' (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components
+##'
+##' @return Journal metrics data.
+##'
+##' @import dplyr
+##' @export
+##' @author Dominique Makowski and Guangchuang Yu
+get_impactfactor <- function(journals, max.distance = 0.05) {
+    journals <- as.character(journals)
+    index <- rep(NA, length(journals))
+
+    for(i in seq_along(journals)) {
+        journal <- journals[i]
+        if(journal == ""){
+            next
+        }
+
+        closest <- agrep(journal,
+                         impactfactor$Journal,
+                         max.distance = max.distance,
+                         value = FALSE,
+                         ignore.case = TRUE)
+
+        if(!is.null(closest)){
+            ## agrep() returns all "close" matches
+            ## but unfortunately does not return the degree of closeness.
+
+            ## index[i] <- closest[1]
+
+
+            j <- grep(paste0("^", journal, "$"), impactfactor$Journal[closest], ignore.case=TRUE)
+            if (length(j) > 0) {
+                j <- j[1]
+                index[i] <- closest[j]
+                next
+            }
+
+            get_hit <- function(pattern, x) {
+                j <- grep(pattern, x, ignore.case = TRUE)
+                if (length(j) > 0) {
+                    return(j[1])
+                }
+                return(NULL)
+            }
+
+            hit <- closest[1]
+            patterns <- c(paste0("^", journal, "$"),
+                          paste0("^", journal),
+                          paste0(journal, "$"))
+            for (pp in patterns) {
+                j <- get_hit(pp, impactfactor$Journal[closest])
+                if (!is.null(j)) {
+                    hit <- j
+                    break
+                }
+            }
+
+            index[i] <- hit
+        }
+
+    }
+
+    return(impactfactor[index, ])
+}
 

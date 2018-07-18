@@ -1,3 +1,6 @@
+# Ugly hack for CRAN checks
+utils::globalVariables(c("name"))
+
 ## Originally started on 14 May 2013
 
 ##' Gets profile information for a scholar
@@ -14,7 +17,8 @@
 ##' multiple scholars.
 ##' 
 ##' @return 	a list containing the scholar's name, affiliation,
-##' citations, impact metrics, fields of study, and homepage
+##' citations, impact metrics, fields of study, homepage and
+##' the author's list of coauthors provided by Google Scholar.
 ##' 
 ##' @examples {
 ##'    ## Gets profiles of some famous physicists
@@ -26,16 +30,13 @@
 ##' @importFrom xml2 read_html
 ##' @importFrom rvest html_table html_nodes html_text
 ##' @importFrom dplyr "%>%"
-##' @importFrom httr GET
 get_profile <- function(id) {
 
-  id <- tidy_id(id)
-  
   url_template <- "http://scholar.google.com/citations?hl=en&user=%s"
-  url <- sprintf(url_template, id)
+  url <- compose_url(id, url_template)
 
   ## Generate a list of all the tables identified by the scholar ID
-  page <- GET(url, handle=getOption("scholar_handle")) %>% read_html()
+  page <- get_resp(url) %>% read_html()
   tables <- page %>% html_table()
 
   ## The citation stats are in tables[[1]]$tables$stats
@@ -54,13 +55,17 @@ get_profile <- function(id) {
 
   ## Extract the homepage
   homepage <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_ivh']//a/@href") %>% html_text() 
+  
+  ## Grab all coauthors
+  coauthors <- list_coauthors(id, n_coauthors = 20) # maximum availabe in profile
 
   return(list(id=id, name=name, affiliation=affiliation,
               total_cites=as.numeric(as.character(stats[rows-2,2])),
               h_index=as.numeric(as.character(stats[rows-1,2])),
               i10_index=as.numeric(as.character(stats[rows,2])),
               fields=specs,
-              homepage=homepage))
+              homepage=homepage,
+              coauthors=coauthors$coauthors))
 }
 
 ##' Get historical citation data for a scholar
@@ -80,18 +85,13 @@ get_profile <- function(id) {
 ##' @importFrom xml2 read_html
 ##' @importFrom rvest html_nodes html_text
 ##' @importFrom dplyr "%>%"
-##' @importFrom httr GET
 get_citation_history <- function(id) {
 
-    ## Ensure only one ID
-    id <- tidy_id(id)
-
-    ## Read the page and parse the key data
     url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works"
-    url <- sprintf(url_template, id)
-  
+    url <- compose_url(id, url_template)
+
     ## A better way would actually be to read out the plot of citations
-    page <- GET(url, handle=getOption("scholar_handle")) %>% read_html()
+    page <- get_resp(url) %>% read_html()
     years <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_t']") %>%
         html_text() %>% as.numeric()
     vals <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_al']") %>%
@@ -165,3 +165,90 @@ get_num_top_journals <- function(id, journals) {
   return(length(which(is.element(papers$journal, journals))))
 }
 
+#' Gets the network of coauthors of a scholar
+#'
+##' @param id a character string specifying the Google Scholar ID.
+##' If multiple ids are specified, only the first value is used and a
+##' warning is generated.
+#' @param n_coauthors Number of coauthors to explore. This number should usually be between 1 and 10 as
+#' choosing many coauthors can make the network graph too messy.
+#' @param n_deep The number of degrees that you want to go down the network. When \code{n_deep} is equal to \code{1}
+#' then \code{grab_coauthor} will only grab the coauthors of Joe and Mary, so Joe -- > Mary --> All coauthors. This can get
+#' out of control very quickly if \code{n_deep} is set to \code{2} or above. The preferred number is \code{1}, the default.
+#' 
+#' @details Considering that scraping each publication for all coauthors is error prone, \code{get_coauthors}
+#' grabs only the coauthors listed on the google scholar profile (on the bottom right of the profile),
+#' not from all publications.
+#'
+#' @return A data frame with two columns showing all authors and coauthors.
+#' 
+#' @seealso \code{\link{plot_coauthors}}
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#' 
+#' library(scholar)
+#' coauthor_network <- get_coauthors('amYIKXQAAAAJ&hl')
+#' plot_coauthors(coauthor_network)
+#' }
+#'
+#'
+get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
+  stopifnot(is.numeric(n_deep), length(n_deep) >= 1, n_deep != 0)
+  stopifnot(is.numeric(n_coauthors), length(n_coauthors) >= 1, n_coauthors != 0)
+  
+  all_coauthors <- list_coauthors(id, n_coauthors)
+  
+  empty_network <- replicate(n_deep, list())
+  
+  # Here I grab the id of the coauthors url because list_coauthors
+  # needs to accept ids and not urls
+  for (i in seq_len(n_deep)) {
+    if (i == 1)  {
+      empty_network[[i]] <- clean_network(grab_id(all_coauthors$coauthors_url),
+                                          n_coauthors)
+    } else {
+      empty_network[[i]] <- clean_network(grab_id(empty_network[[i - 1]]$coauthors_url),
+                                          n_coauthors)
+    }
+  }
+  
+  final_network <- rbind(all_coauthors, Reduce(rbind, empty_network))
+  final_network$author <- stringr::str_to_title(final_network$author)
+  final_network$coauthors <- stringr::str_to_title(final_network$coauthors)
+  final_network[c("author", "coauthors")]
+}
+
+
+#' Plot a network of coauthors
+#'
+#' @param network A data frame given by \code{\link{get_coauthors}}
+#' @param size_labels Size of the label names
+#'
+#' @return a \code{ggplot2} object but prints a plot as a side effect.
+#' @export
+#' @importFrom dplyr "%>%"
+#' 
+#' @seealso \code{\link{get_coauthors}}
+#' 
+#' @examples
+#' \dontrun{
+#' library(scholar)
+#' coauthor_network <- get_coauthors('amYIKXQAAAAJ&hl')
+#' plot_coauthors(coauthor_network)
+#' }
+plot_coauthors <- function(network, size_labels = 5) {
+  graph <- tidygraph::as_tbl_graph(network) %>%
+    mutate(closeness = suppressWarnings(tidygraph::centrality_closeness())) %>% 
+    filter(name != "")
+  # to delete authors who have **no coauthors**, that is ""
+
+  ggraph::ggraph(graph, layout = 'kk') +
+    ggraph::geom_edge_link(ggplot2::aes_string(alpha = 1/2, color = as.character('from')), alpha = 1/3, show.legend = FALSE) +
+    ggraph::geom_node_point(ggplot2::aes_string(size = 'closeness'), alpha = 1/2, show.legend = FALSE) +
+    ggraph::geom_node_text(ggplot2::aes_string(label = 'name'), size = size_labels, repel = TRUE, check_overlap = TRUE) +
+    ggplot2::labs(title = paste0("Network of coauthorship of ", network$author[1])) +
+    ggraph::theme_graph(title_size = 16, base_family = "sans")
+}

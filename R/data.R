@@ -1,4 +1,4 @@
-## #' Journal metric (2017)
+## #' Impact Factor (2017)
 ## #'
 ## #' Downloaded from https://www.researchgate.net/post/New_Impact_factors_2017_for_Journals_are_released_now
 ## #'
@@ -26,3 +26,16 @@
 ## #'   \item{Eigenfactor}{Eigenfactor}
 ## #' }
 ## "impactfactor"
+
+
+# Journal metrics (2017)
+# 
+# Downloaded from https://www.scimagojr.com/journalrank.php
+# 
+# Rename (remove whitespaces) to scimagojr2017.csv
+# 
+# library(tidyverse)
+# journalrankings <- read.csv2("scimagojr2017.csv") %>%
+#    dplyr::rename(Journal = Title)
+# # 
+# save(journalrankings, file="journalrankings.rda", compress="xz")

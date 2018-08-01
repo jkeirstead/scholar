@@ -274,7 +274,7 @@ plot_coauthors <- function(network, size_labels = 5) {
 ##' author <- scholar::get_profile(id)
 ##' author <- author$name
 ##'
-##' author_order(publications, author)
+##' author_position(publications, author)
 ##'
 ##' @param publications list of publication authors
 ##' @param author author's name to look for
@@ -283,7 +283,7 @@ plot_coauthors <- function(network, size_labels = 5) {
 ##'
 ##' @export
 ##' @author Dominique Makowski
-author_order <- function(publications, author){
+author_position <- function(publications, author){
   author <- sapply(strsplit(author, " "), tail, 1)
   authors <- strsplit(as.character(publications), ", ")
 

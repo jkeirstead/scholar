@@ -10,16 +10,16 @@ utils::globalVariables(c("name"))
 ##' affiliation, their homepage (if specified), and a summary of their
 ##' key citation and impact metrics.  The scholar ID can be found by
 ##' searching Google Scholar at \url{http://scholar.google.com}.
-##' 
+##'
 ##' @param id 	a character string specifying the Google Scholar ID.
 ##' If multiple ids are specified, only the first value is used and a
 ##' warning is generated.  See the example below for how to profile
 ##' multiple scholars.
-##' 
+##'
 ##' @return 	a list containing the scholar's name, affiliation,
 ##' citations, impact metrics, fields of study, homepage and
 ##' the author's list of coauthors provided by Google Scholar.
-##' 
+##'
 ##' @examples {
 ##'    ## Gets profiles of some famous physicists
 ##'    ids <- c("xJaxiEEAAAAJ", "qj74uXkAAAAJ")
@@ -43,19 +43,19 @@ get_profile <- function(id) {
   ## but the number of rows seems to vary by OS
   stats <- tables[[1]]
   rows <- nrow(stats)
-  
+
   ## The personal info is in
   name <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_in']") %>% html_text()
   bio_info <- page %>% html_nodes(xpath="//*/div[@class='gsc_prf_il']") %>% html_text()
   affiliation <- bio_info[1]
- 
+
   ## Specialities (trim out HTML non-breaking space)
   specs <- iconv(bio_info[2], from="UTF8", to="ASCII")
   specs <- str_trim(tolower(str_split(specs, ",")[[1]]))
 
   ## Extract the homepage
-  homepage <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_ivh']//a/@href") %>% html_text() 
-  
+  homepage <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_ivh']//a/@href") %>% html_text()
+
   ## Grab all coauthors
   coauthors <- list_coauthors(id, n_coauthors = 20) # maximum availabe in profile
 
@@ -97,22 +97,22 @@ get_citation_history <- function(id) {
     vals <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_al']") %>%
         html_text() %>% as.numeric()
     if(length(years)>length(vals)){
-      # Some years don't have citations. 
+      # Some years don't have citations.
       # We need to match the citation counts and years
       # <a href="javascript:void(0)" class="gsc_g_a" style="left:8px;height:5px;z-index:9">\n  <span class="gsc_g_al">2</span>\n</a>
-      style_tags=page %>% html_nodes(css = '.gsc_g_a') %>% 
+      style_tags=page %>% html_nodes(css = '.gsc_g_a') %>%
         html_attr('style')
       # these z indices seem to be the indices starting with the last year
       zindices=as.integer(stringr::str_match(style_tags, 'z-index:([0-9]+)')[,2])
       # empty vector of 0s
       allvals=integer(length=length(years))
-      # fill in 
+      # fill in
       allvals[zindices]=vals
       # and then reverse
       vals=rev(allvals)
     }
     df <- data.frame(year=years, cites=vals)
-  
+
     return(df)
 }
 
@@ -126,10 +126,10 @@ get_citation_history <- function(id) {
 ##' containing publication where applicable.  So a \emph{journal} here
 ##' might actually be a journal, a book, a report, or some other
 ##' publication outlet.
-##' 
+##'
 ##' @param id 	a character string giving the Google Scholar id
 ##' @return the number of distinct journals
-##' @export 
+##' @export
 get_num_distinct_journals <- function(id) {
   id <- tidy_id(id)
   papers <- get_publications(id)
@@ -142,7 +142,7 @@ get_num_distinct_journals <- function(id) {
 ##' The definition of a 'top journal' comes from Acuna et al. and the
 ##' original list was based on the field of neuroscience.  This
 ##' function allows users to specify that list for themselves, or use
-##' the default Acuna et al. list.  
+##' the default Acuna et al. list.
 ##'
 ##' @source DE Acuna, S Allesina, KP Kording (2012) Future impact:
 ##' Predicting scientific success.  Nature 489,
@@ -161,7 +161,7 @@ get_num_top_journals <- function(id, journals) {
     journals <-c("Nature", "Science", "Nature Neuroscience",
                  "Proceedings of the National Academy of Sciences", "Neuron")
   }
-  
+
   return(length(which(is.element(papers$journal, journals))))
 }
 
@@ -175,20 +175,20 @@ get_num_top_journals <- function(id, journals) {
 #' @param n_deep The number of degrees that you want to go down the network. When \code{n_deep} is equal to \code{1}
 #' then \code{grab_coauthor} will only grab the coauthors of Joe and Mary, so Joe -- > Mary --> All coauthors. This can get
 #' out of control very quickly if \code{n_deep} is set to \code{2} or above. The preferred number is \code{1}, the default.
-#' 
+#'
 #' @details Considering that scraping each publication for all coauthors is error prone, \code{get_coauthors}
 #' grabs only the coauthors listed on the google scholar profile (on the bottom right of the profile),
 #' not from all publications.
 #'
 #' @return A data frame with two columns showing all authors and coauthors.
-#' 
+#'
 #' @seealso \code{\link{plot_coauthors}}
 #' @export
 #'
 #' @examples
 #'
 #' \dontrun{
-#' 
+#'
 #' library(scholar)
 #' coauthor_network <- get_coauthors('amYIKXQAAAAJ&hl')
 #' plot_coauthors(coauthor_network)
@@ -198,11 +198,11 @@ get_num_top_journals <- function(id, journals) {
 get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
   stopifnot(is.numeric(n_deep), length(n_deep) >= 1, n_deep != 0)
   stopifnot(is.numeric(n_coauthors), length(n_coauthors) >= 1, n_coauthors != 0)
-  
+
   all_coauthors <- list_coauthors(id, n_coauthors)
-  
+
   empty_network <- replicate(n_deep, list())
-  
+
   # Here I grab the id of the coauthors url because list_coauthors
   # needs to accept ids and not urls
   for (i in seq_len(n_deep)) {
@@ -214,7 +214,7 @@ get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
                                           n_coauthors)
     }
   }
-  
+
   final_network <- rbind(all_coauthors, Reduce(rbind, empty_network))
   final_network$author <- stringr::str_to_title(final_network$author)
   final_network$coauthors <- stringr::str_to_title(final_network$coauthors)
@@ -230,9 +230,9 @@ get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
 #' @return a \code{ggplot2} object but prints a plot as a side effect.
 #' @export
 #' @importFrom dplyr "%>%"
-#' 
+#'
 #' @seealso \code{\link{get_coauthors}}
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' library(scholar)
@@ -241,7 +241,7 @@ get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
 #' }
 plot_coauthors <- function(network, size_labels = 5) {
   graph <- tidygraph::as_tbl_graph(network) %>%
-    mutate(closeness = suppressWarnings(tidygraph::centrality_closeness())) %>% 
+    mutate(closeness = suppressWarnings(tidygraph::centrality_closeness())) %>%
     filter(name != "")
   # to delete authors who have **no coauthors**, that is ""
 
@@ -251,4 +251,69 @@ plot_coauthors <- function(network, size_labels = 5) {
     ggraph::geom_node_text(ggplot2::aes_string(label = 'name'), size = size_labels, repel = TRUE, check_overlap = TRUE) +
     ggplot2::labs(title = paste0("Network of coauthorship of ", network$author[1])) +
     ggraph::theme_graph(title_size = 16, base_family = "sans")
+}
+
+
+
+
+
+
+
+
+##' Get author order.
+##'
+##' Get author rank in authors list.
+##'
+##' @examples
+##' library(scholar)
+##'
+##' publications <- scholar::get_publications("bg0BZ-QAAAAJ&hl")
+##' publications <- publications$author
+##' author <- scholar::get_profile("bg0BZ-QAAAAJ&hl")
+##' author <- author$name
+##'
+##' author_order(publications, author)
+##'
+##' @param publications list of publication authors
+##' @param author author's name to look for
+##'
+##' @return dataframe with author's position and position percentage.
+##'
+##' @export
+##' @author Dominique Makowski
+author_order <- function(publications, author){
+  author <- sapply(strsplit(author, " "), tail, 1)
+  authors <- strsplit(publications, ", ")
+
+  positions <- c()
+  percentages <- c()
+  n <- c()
+  for(publication in authors){
+    names <- sapply(strsplit(publication, " "), tail, 1)
+    position <- grep(author, names, ignore.case = TRUE)
+    current_n <- length(names)
+
+    # Catch when not in list
+    if(length(position) == 0){
+      position <- NA
+    }
+    percentage <- position / current_n
+
+    # Catch unknown number of authors
+    if("..." %in% names){
+      percentage <- NA
+      current_n <- NA
+    }
+
+    positions <- c(positions, position)
+    percentages <- c(percentages, percentage)
+    n <- c(n, current_n)
+  }
+
+  order <- data.frame(Authors = publications,
+                      Position = positions,
+                      n_Authors = n,
+                      Percentage = percentages*100)
+  return(order)
+
 }

@@ -267,9 +267,11 @@ plot_coauthors <- function(network, size_labels = 5) {
 ##' @examples
 ##' library(scholar)
 ##'
-##' publications <- scholar::get_publications("bg0BZ-QAAAAJ&hl")
+##' id <- "bg0BZ-QAAAAJ&hl"
+##'
+##' publications <- scholar::get_publications(id)
 ##' publications <- publications$author
-##' author <- scholar::get_profile("bg0BZ-QAAAAJ&hl")
+##' author <- scholar::get_profile(id)
 ##' author <- author$name
 ##'
 ##' author_order(publications, author)
@@ -283,7 +285,7 @@ plot_coauthors <- function(network, size_labels = 5) {
 ##' @author Dominique Makowski
 author_order <- function(publications, author){
   author <- sapply(strsplit(author, " "), tail, 1)
-  authors <- strsplit(publications, ", ")
+  authors <- strsplit(as.character(publications), ", ")
 
   positions <- c()
   percentages <- c()
@@ -294,16 +296,32 @@ author_order <- function(publications, author){
     current_n <- length(names)
 
     # Catch when not in list
-    if(length(position) == 0){
+    if(length(position) != 1){
       position <- NA
+      percentage <- NA
     }
-    percentage <- position / current_n
 
     # Catch unknown number of authors
     if("..." %in% names){
       percentage <- NA
       current_n <- NA
     }
+
+    # Compute position percentage
+    if(!is.na(position)){
+      if(!is.na(current_n)){
+        if(current_n == 1){
+          percentage <- 0
+        } else{
+          percentage <- (position-1)/(current_n-1)
+        }
+      } else{
+        pectentage <- NA
+      }
+    } else{
+      pectentage <- NA
+    }
+
 
     positions <- c(positions, position)
     percentages <- c(percentages, percentage)

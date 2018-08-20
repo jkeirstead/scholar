@@ -35,6 +35,9 @@ utils::globalVariables(c("."))
 ##' @export
 get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 
+    ## Make sure pagesize is not greater than max allowed by Google Scholar
+    if (pagesize > 100) pagesize <- 100
+
     ## Ensure we're only getting one scholar's publications
     id <- tidy_id(id)
 

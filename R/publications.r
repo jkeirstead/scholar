@@ -36,7 +36,10 @@ utils::globalVariables(c("."))
 get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 
     ## Make sure pagesize is not greater than max allowed by Google Scholar
-    if (pagesize > 100) pagesize <- 100
+    if (pagesize > 100) {
+        warning("pagesize: ", pagesize, " exceeds Google Scholar maximum. Setting to 100.")
+        pagesize <- 100
+    }
 
     ## Ensure we're only getting one scholar's publications
     id <- tidy_id(id)

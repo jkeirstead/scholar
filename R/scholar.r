@@ -269,23 +269,22 @@ plot_coauthors <- function(network, size_labels = 5) {
 ##'
 ##' id <- "bg0BZ-QAAAAJ&hl"
 ##'
-##' publications <- scholar::get_publications(id)
-##' publications <- publications$author
-##' author <- scholar::get_profile(id)
-##' author <- author$name
+##' authorlist <- scholar::get_publications(id)$author
+##' author <- scholar::get_profile(id)$name
 ##'
-##' author_position(publications, author)
+##' author_position(authorlist, author)
 ##'
-##' @param publications list of publication authors
+##' @param authorlist list of publication authors
 ##' @param author author's name to look for
 ##'
-##' @return dataframe with author's position and position percentage.
+##' @return dataframe with author's position and normalized position (a normalized index, with 0 corresponding, 1 to last and 0.5 to the middle. Note that single authorship will be considered as first, i.e., 0).
+##'
 ##'
 ##' @export
 ##' @author Dominique Makowski
-author_position <- function(publications, author){
+author_position <- function(authorlist, author){
   author <- sapply(strsplit(author, " "), tail, 1)
-  authors <- strsplit(as.character(publications), ", ")
+  authors <- strsplit(as.character(authorlist), ", ")
 
   positions <- c()
   percentages <- c()
@@ -328,10 +327,10 @@ author_position <- function(publications, author){
     n <- c(n, current_n)
   }
 
-  order <- data.frame(Authors = publications,
+  order <- data.frame(Authors = authorlist,
                       Position = positions,
                       n_Authors = n,
-                      Percentage = percentages*100)
+                      Position_Normalized = percentages)
   return(order)
 
 }

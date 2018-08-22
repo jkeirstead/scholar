@@ -17,9 +17,8 @@ vignette: >
 ---
 
 ```{r style, echo=FALSE, results="asis", message=FALSE}
-knitr::opts_chunk$set(
-  tidy = FALSE,
-  message = FALSE)
+knitr::opts_chunk$set(tidy = FALSE,
+		   message = FALSE)
 ```
 
 
@@ -34,22 +33,19 @@ theme_set(theme_minimal())
 
 ```{r}
 ## Define the id for Richard Feynman
-id <- 'MlMKkPUAAAAJ'
+id <- 'B7vSqZsAAAAJ'
 
 ## Get his profile
-profile <- get_profile(id)
+l <- get_profile(id)
 
-## Print his name, affliation and homepage
-profile$name
-profile$affiliation
-profile$homepage
+## Print his name and affliation
+l$name
+l$affiliation
 
 ## Print his citation index
-profile$h_index
-profile$i10_index
+l$h_index
+l$i10_index
 ```
-
-
 
 # Retrieving publications
 
@@ -63,32 +59,20 @@ that is used to retrieve the citation history of a selected publication.
 
 ```{r}
 ## Get his publications (a large data frame)
-publications <- get_publications(id)
-head(publications, 5)
+p <- get_publications(id)
+head(p, 3)
 ```
-```{r, echo=FALSE}
-knitr::kable(head(publications, 5))
-```
-
 
 
 # Retrieving citation data
 
 ```{r}
 ## Get his citation history, i.e. citations to his work in a given year
-citations <- get_citation_history(id)
+ct <- get_citation_history(id)
 
 ## Plot citation trend
 library(ggplot2)
-
-ggplot(citations, aes(year, cites)) + 
-  geom_line() + 
-  geom_point()
-```
-```{r, eval=FALSE, include=FALSE}
-# To put it on the README
-ggsave("img/fig1.png",
-       ggplot(citations, aes(year, cites)) + geom_line() + geom_point(), width=10, height=6)
+ggplot(ct, aes(year, cites)) + geom_line() + geom_point()
 ```
 
 
@@ -98,28 +82,16 @@ Users can retrieve the citation history of a particular publication with
 
 ```{r}
 ## The following publication will be used to demonstrate article citation history
-as.character(publications$title[1])
+as.character(p$title[1])
 
 ## Get article citation history
-article_citations <- get_article_cite_history(id, publications$pubid[1])
+ach <- get_article_cite_history(id, p$pubid[1])
 
 ## Plot citation trend
-ggplot(article_citations, aes(year, cites)) +
-  geom_segment(aes(xend = year, yend = 0), size=1, color='darkgrey') +
-  geom_point(size=3, color='firebrick') +
-  ggtitle("Article Citation History", as.character(publications$title[1]))
+ggplot(ach, aes(year, cites)) +
+    geom_segment(aes(xend = year, yend = 0), size=1, color='darkgrey') +
+    geom_point(size=3, color='firebrick')
 ```
-```{r, eval=FALSE, include=FALSE}
-# To put it on the README
-ggsave("img/fig2.png",
-       ggplot(article_citations, aes(year, cites)) +
-  geom_segment(aes(xend = year, yend = 0), size=1, color='darkgrey') +
-  geom_point(size=3, color='firebrick') +
-  ggtitle("Article Citation History", as.character(publications$title[1])), width=10, height=6)
-```
-
-
-
 
 # Comparing scholars
 You can compare the citation history of scholars by fetching data with 
@@ -130,25 +102,17 @@ ids <- c('B7vSqZsAAAAJ', 'qj74uXkAAAAJ')
 
 # Get a data frame comparing the number of citations to their work in
 # a given year
-comparison <- compare_scholars(ids)
+cs <- compare_scholars(ids)
 
 ## remove some 'bad' records without sufficient information
-comparison <- subset(comparison, !is.na(year) & year > 1900)
-ggplot(comparison, aes(year, cites, group=name, color=name)) + geom_line() + theme(legend.position="bottom")
+cs <- subset(cs, !is.na(year) & year > 1900)
+ggplot(cs, aes(year, cites, group=name, color=name)) + geom_line() + theme(legend.position="bottom")
 
 ## Compare their career trajectories, based on year of first citation
-careers <- compare_scholar_careers(ids)
-ggplot(careers, aes(career_year, cites, group=name, color=name)) + geom_line() + geom_point() +
+csc <- compare_scholar_careers(ids)
+ggplot(csc, aes(career_year, cites, group=name, color=name)) + geom_line() + geom_point() +
     theme(legend.position=c(.2, .8))
 ```
-```{r, eval=FALSE, include=FALSE}
-# To put it on the README
-ggsave("img/fig3.png",
-       ggplot(careers, aes(career_year, cites, group=name, color=name)) + geom_line() + geom_point() +
-    theme(legend.position=c(.2, .8)), width=10, height=6)
-```
-
-
 
 # Visualizing and comparing network of coauthors
 

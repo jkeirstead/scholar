@@ -6,7 +6,7 @@
 ##'
 ##'
 ##' @param id a Google Scholar ID
-##' @param pubid a Publication ID from a giving google Schalar ID
+##' @param pubid a Publication ID from a giving google Scholar ID
 ##' @return a string containing the complete list of authors
 ##' @export
 get_complete_authors = function(id, pubid)

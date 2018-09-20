@@ -9,7 +9,7 @@ get_complete_authors(id, pubid)
 \arguments{
 \item{id}{a Google Scholar ID}
 
-\item{pubid}{a Publication ID from a giving google Schalar ID}
+\item{pubid}{a Publication ID from a giving google Scholar ID}
 }
 \value{
 a string containing the complete list of authors

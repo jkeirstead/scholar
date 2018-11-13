@@ -11,12 +11,16 @@ utils::globalVariables(c("."))
 ##' @param cstart an integer specifying the first article to start
 ##' counting.  To get all publications for an author, omit this
 ##' parameter.
+##' @param cstop an integer specifying the last article to
+##' process.
 ##' @param pagesize an integer specifying the number of articles to
 ##' fetch
 ##' @param flush should the cache be flushed?  Search results are
 ##' cached by default to speed up repeated queries.  If this argument
 ##' is TRUE, the cache will be cleared and the data reloaded from
 ##' Google.
+##' @param sortby a character with value \code{"citation"} or
+##' value \code{"year"} specifying how results are sorted.
 ##' @details Google uses two id codes to uniquely reference a
 ##' publication.  The results of this method includes \code{cid} which
 ##' can be used to link to a publication's full citation history
@@ -33,7 +37,7 @@ utils::globalVariables(c("."))
 ##' @importFrom rvest html_nodes html_text html_attr
 ##' @import R.cache
 ##' @export
-get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
+get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FALSE, sortby="citation") {
 
     ## Make sure pagesize is not greater than max allowed by Google Scholar
     if (pagesize > 100) {
@@ -58,7 +62,17 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
     if (is.null(data)) {
 
         ## Build the URL
-        url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d"
+
+        stopifnot(sortby == "citation" | sortby == "year")
+
+        if(sortby == "citation"){
+          url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d"
+        }
+
+        if(sortby == "year"){
+          url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d&sortby=pubdate"
+        }
+
         url <- sprintf(url_template, id, cstart, pagesize)
 
         ## Load the page
@@ -107,6 +121,10 @@ get_publications <- function(id, cstart = 0, pagesize=100, flush=FALSE) {
 
         ## Check if we've reached pagesize articles. Might need
         ## to search the next page
+        if (cstart >= I(cstop)) {
+          return(data)
+        }
+
         if (nrow(data) > 0 && nrow(data)==pagesize) {
             data <- rbind(data, get_publications(id, cstart=cstart+pagesize, pagesize=pagesize))
         }

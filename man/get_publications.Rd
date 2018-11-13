@@ -4,7 +4,8 @@
 \alias{get_publications}
 \title{Gets the publications for a scholar}
 \usage{
-get_publications(id, cstart = 0, pagesize = 100, flush = FALSE)
+get_publications(id, cstart = 0, cstop = Inf, pagesize = 100,
+  flush = FALSE, sortby = "citation")
 }
 \arguments{
 \item{id}{a character string specifying the Google Scholar ID.  If
@@ -15,6 +16,9 @@ scholar will be retrieved.}
 counting.  To get all publications for an author, omit this
 parameter.}
 
+\item{cstop}{an integer specifying the last article to
+process.}
+
 \item{pagesize}{an integer specifying the number of articles to
 fetch}
 
@@ -22,6 +26,9 @@ fetch}
 cached by default to speed up repeated queries.  If this argument
 is TRUE, the cache will be cleared and the data reloaded from
 Google.}
+
+\item{sortby}{a character with value \code{"citation"} or
+value \code{"year"} specifying how results are sorted.}
 }
 \value{
 a data frame listing the publications and their details.

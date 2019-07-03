@@ -334,3 +334,70 @@ author_position <- function(authorlist, author){
   return(order)
 
 }
+
+#' Search for Google Scholar ID by name and affiliation 
+#'
+#' @param first_name Researcher first name. 
+#' @param last_name Researcher last name. 
+#' @param affiliation Researcher affiliation. 
+#'
+#' @return Google Scholar ID as a character string. 
+#' @export
+#'
+#' @examples
+#'  get_scholar_id(first_name = "kristopher", last_name = "mcneill")
+#'  get_scholar_id(first_name = "michael", last_name = "sander", affiliation = NA)
+#'  get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "eth")
+#'  get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "ETH Zurich")
+#'  get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "Mines")
+#'  get_scholar_id(first_name = "james", last_name = "babler")
+#'  
+#'  
+get_scholar_id <- function(first_name, last_name, affiliation = NA) {
+  url <- paste0(
+    'https://scholar.google.com/citations?view_op=search_authors&mauthors=',
+    first_name,
+    '+',
+    last_name,
+    '&hl=en&oi=ao'
+  )
+  aa <- RCurl::getURL(url = url)
+  ids <-
+    stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")
+  
+  if (length(unlist(ids)) == 0) {
+    message("No Scholar ID found.")
+    return(NA)
+  }
+  
+  ids <- ids %>%
+    unlist %>%
+    gsub(";user=|[[:punct:]]$", "", .) %>%
+    unique
+  
+  if (length(ids) > 1) {
+    profiles <- lapply(ids, scholar::get_profile)
+    if (is.na(affiliation)) {
+      x_profile <- profiles[[1]]
+    } else {
+      which_profile <- sapply(profiles, function(x) {
+        stringr::str_count(
+          string = x$affiliation,
+          pattern = stringr::coll(affiliation, ignore_case = TRUE)
+        )
+      })
+      if(all(which_profile == 0)){
+        message("No researcher found at the indicated affiliation.")
+        return(NA)
+      } else {
+        x_profile <- profiles[[which(which_profile != 0)]]
+      }
+    }
+  } else {
+    x_profile <- scholar::get_profile(id = ids)
+  }
+  return(x_profile$id)
+}
+
+
+

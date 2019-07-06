@@ -379,6 +379,7 @@ get_scholar_id <- function(first_name, last_name, affiliation = NA) {
     profiles <- lapply(ids, scholar::get_profile)
     if (is.na(affiliation)) {
       x_profile <- profiles[[1]]
+      warning("Selecting first out of ", length(profiles), " candidate matches.")
     } else {
       which_profile <- sapply(profiles, function(x) {
         stringr::str_count(
@@ -387,7 +388,7 @@ get_scholar_id <- function(first_name, last_name, affiliation = NA) {
         )
       })
       if(all(which_profile == 0)){
-        message("No researcher found at the indicated affiliation.")
+        warning("No researcher found at the indicated affiliation.")
         return(NA)
       } else {
         x_profile <- profiles[[which(which_profile != 0)]]

@@ -20,12 +20,12 @@ Google Scholar ID as a character string.
 Search for Google Scholar ID by name and affiliation
 }
 \examples{
- get_scholar_id(first_name = "kristopher", last_name = "mcneill")
- get_scholar_id(first_name = "michael", last_name = "sander", affiliation = NA)
- get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "eth")
- get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "ETH Zurich")
- get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "Mines")
- get_scholar_id(first_name = "james", last_name = "babler")
- 
- 
+get_scholar_id(first_name = "kristopher", last_name = "mcneill")
+\donttest{
+get_scholar_id(first_name = "michael", last_name = "sander", affiliation = NA)
+get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "eth")
+get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "ETH Zurich")
+get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "Mines")
+get_scholar_id(first_name = "james", last_name = "babler")
+}
 }

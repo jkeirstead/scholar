@@ -345,14 +345,14 @@ author_position <- function(authorlist, author){
 #' @export
 #'
 #' @examples
-#'  get_scholar_id(first_name = "kristopher", last_name = "mcneill")
-#'  get_scholar_id(first_name = "michael", last_name = "sander", affiliation = NA)
-#'  get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "eth")
-#'  get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "ETH Zurich")
-#'  get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "Mines")
-#'  get_scholar_id(first_name = "james", last_name = "babler")
-#'  
-#'  
+#' get_scholar_id(first_name = "kristopher", last_name = "mcneill")
+#' \donttest{
+#' get_scholar_id(first_name = "michael", last_name = "sander", affiliation = NA)
+#' get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "eth")
+#' get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "ETH Zurich")
+#' get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "Mines")
+#' get_scholar_id(first_name = "james", last_name = "babler")
+#' }
 get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
   if(!any(nzchar(c(first_name, last_name))))
     stop("At least one of first and last name must be specified!")

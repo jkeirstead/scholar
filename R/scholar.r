@@ -361,7 +361,7 @@ get_scholar_id <- function(first_name, last_name, affiliation = NA) {
     last_name,
     '&hl=en&oi=ao'
   )
-  aa <- RCurl::getURL(url = url)
+  aa <- get_resp(url)
   ids <-
     stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")
   

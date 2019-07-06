@@ -335,13 +335,13 @@ author_position <- function(authorlist, author){
 
 }
 
-#' Search for Google Scholar ID by name and affiliation 
+#' Search for Google Scholar ID by name and affiliation
 #'
-#' @param first_name Researcher first name. 
-#' @param last_name Researcher last name. 
-#' @param affiliation Researcher affiliation. 
+#' @param last_name Researcher last name.
+#' @param first_name Researcher first name.
+#' @param affiliation Researcher affiliation.
 #'
-#' @return Google Scholar ID as a character string. 
+#' @return Google Scholar ID as a character string.
 #' @export
 #'
 #' @examples

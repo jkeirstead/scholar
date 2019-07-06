@@ -353,7 +353,10 @@ author_position <- function(authorlist, author){
 #'  get_scholar_id(first_name = "james", last_name = "babler")
 #'  
 #'  
-get_scholar_id <- function(first_name, last_name, affiliation = NA) {
+get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
+  if(!any(nzchar(c(first_name, last_name))))
+    stop("At least one of first and last name must be specified!")
+
   url <- paste0(
     'https://scholar.google.com/citations?view_op=search_authors&mauthors=',
     first_name,

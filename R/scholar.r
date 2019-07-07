@@ -334,3 +334,74 @@ author_position <- function(authorlist, author){
   return(order)
 
 }
+
+#' Search for Google Scholar ID by name and affiliation
+#'
+#' @param last_name Researcher last name.
+#' @param first_name Researcher first name.
+#' @param affiliation Researcher affiliation.
+#'
+#' @return Google Scholar ID as a character string.
+#' @export
+#'
+#' @examples
+#' get_scholar_id(first_name = "kristopher", last_name = "mcneill")
+#' \donttest{
+#' get_scholar_id(first_name = "michael", last_name = "sander", affiliation = NA)
+#' get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "eth")
+#' get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "ETH Zurich")
+#' get_scholar_id(first_name = "michael", last_name = "sander", affiliation = "Mines")
+#' get_scholar_id(first_name = "james", last_name = "babler")
+#' }
+get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
+  if(!any(nzchar(c(first_name, last_name))))
+    stop("At least one of first and last name must be specified!")
+
+  url <- paste0(
+    'https://scholar.google.com/citations?view_op=search_authors&mauthors=',
+    first_name,
+    '+',
+    last_name,
+    '&hl=en&oi=ao'
+  )
+  aa <- get_resp(url)
+  ids <-
+    stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")
+  
+  if (length(unlist(ids)) == 0) {
+    message("No Scholar ID found.")
+    return(NA)
+  }
+  
+  ids <- ids %>%
+    unlist %>%
+    gsub(";user=|[[:punct:]]$", "", .) %>%
+    unique
+  
+  if (length(ids) > 1) {
+    profiles <- lapply(ids, scholar::get_profile)
+    if (is.na(affiliation)) {
+      x_profile <- profiles[[1]]
+      warning("Selecting first out of ", length(profiles), " candidate matches.")
+    } else {
+      which_profile <- sapply(profiles, function(x) {
+        stringr::str_count(
+          string = x$affiliation,
+          pattern = stringr::coll(affiliation, ignore_case = TRUE)
+        )
+      })
+      if(all(which_profile == 0)){
+        warning("No researcher found at the indicated affiliation.")
+        return(NA)
+      } else {
+        x_profile <- profiles[[which(which_profile != 0)]]
+      }
+    }
+  } else {
+    x_profile <- scholar::get_profile(id = ids)
+  }
+  return(x_profile$id)
+}
+
+
+

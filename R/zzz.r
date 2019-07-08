@@ -7,7 +7,7 @@ get_resp <- function(url, attempts_left = 5) {
   
   stopifnot(attempts_left > 0)
   
-  resp <- httr::GET(url, handle = getOption("scholar_handle"))
+  resp <- httr::GET(url, handle = scholar_handle())
   
   # On a successful GET, return the response
   if (httr::status_code(resp) == 200) {

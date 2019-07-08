@@ -12,7 +12,7 @@ author_position(authorlist, author)
 \item{author}{author's name to look for}
 }
 \value{
-dataframe with author's position and normalized position (a normalized index, with 0 corresponding, 1 to last and 0.5 to the middle. Note that single authorship will be considered as first, i.e., 0).
+dataframe with author's position and normalized position (a normalized index, with 0 corresponding, 1 to last and 0.5 to the middle. Note that single authorship will be considered as last, i.e., 1).
 }
 \description{
 Get author rank in authors list.

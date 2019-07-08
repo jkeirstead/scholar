@@ -103,7 +103,7 @@ list_coauthors <- function(id, n_coauthors) {
         )
     }
     
-    resp <- get_resp(url, 5)
+    resp <- get_scholar_resp(url, 5)
     
     google_scholar <- httr::content(resp)
     

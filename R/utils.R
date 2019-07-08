@@ -19,7 +19,7 @@ tidy_id <- function(id) {
 
 #' Recursively try to GET a Google Scholar Page
 #' 
-#' @param the URL to fetch
+#' @param url URL to fetch
 #' @param attempts_left The number of times to try and fetch the page
 #' 
 #' @return an \code{httr::\link{response}} object

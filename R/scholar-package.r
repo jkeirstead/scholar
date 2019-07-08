@@ -33,8 +33,6 @@ tidy_id <- function(id) {
     msg <- sprintf("Only one ID at a time; retrieving %s", id)
     warning(msg)
   }
-  # make sure that we get Google Scholar cookies
-  # not sure if we need to do this here
-  scholar_handle()
+
   return(id)
 }

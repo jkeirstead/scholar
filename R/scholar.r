@@ -343,6 +343,7 @@ author_position <- function(authorlist, author){
 #'
 #' @return Google Scholar ID as a character string.
 #' @export
+#' @importFrom httr content
 #'
 #' @examples
 #' get_scholar_id(first_name = "kristopher", last_name = "mcneill")
@@ -364,7 +365,7 @@ get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
     last_name,
     '&hl=en&oi=ao'
   )
-  aa <- get_resp(url)
+  aa <- content(get_resp(url), as='text')
   ids <-
     stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")
   

@@ -131,7 +131,6 @@ get_citation_history <- function(id) {
 ##' @return the number of distinct journals
 ##' @export
 get_num_distinct_journals <- function(id) {
-  id <- tidy_id(id)
   papers <- get_publications(id)
   return(length(unique(papers$journal)))
 }
@@ -154,7 +153,6 @@ get_num_distinct_journals <- function(id) {
 ##' Proceedings of the National Academy of Sciences, and Neuron.
 ##' @export
 get_num_top_journals <- function(id, journals) {
-  id <- tidy_id(id)
   papers <- get_publications(id)
 
   if (missing(journals)) {

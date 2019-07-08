@@ -33,13 +33,8 @@ tidy_id <- function(id) {
     msg <- sprintf("Only one ID at a time; retrieving %s", id)
     warning(msg)
   }
-
-  ## Check with Google to set cookies
-  if (getOption("scholar_call_home")) {
-      sample_url <- "https://scholar.google.com/citations?user=B7vSqZsAAAAJ"
-      sink <- GET(sample_url)      
-      options("scholar_call_home"=FALSE, "scholar_handle"=sink)
-  }
-  
+  # make sure that we get Google Scholar cookies
+  # not sure if we need to do this here
+  scholar_handle()
   return(id)
 }

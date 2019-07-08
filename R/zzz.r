@@ -20,6 +20,16 @@ get_resp <- function(url, attempts_left = 5) {
   }
 }
 
+# get a curl handle with Google scholar cookies set
+scholar_handle <- function() {
+  if (getOption("scholar_call_home")) {
+    sample_url <- "https://scholar.google.com/citations?user=B7vSqZsAAAAJ"
+    sink <- GET(sample_url)      
+    options("scholar_call_home"=FALSE, "scholar_handle"=sink)
+  }
+  getOption("scholar_handle")
+}
+
 ## We can use this function through the package to compose
 ## a url by only providing the id
 compose_url <- function(id, url_template) {

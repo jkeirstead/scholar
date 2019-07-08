@@ -281,6 +281,7 @@ plot_coauthors <- function(network, size_labels = 5) {
 ##'
 ##'
 ##' @export
+##' @importFrom utils tail
 ##' @author Dominique Makowski
 author_position <- function(authorlist, author){
   author <- sapply(strsplit(author, " "), tail, 1)

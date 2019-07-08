@@ -277,7 +277,7 @@ plot_coauthors <- function(network, size_labels = 5) {
 ##' @param authorlist list of publication authors
 ##' @param author author's name to look for
 ##'
-##' @return dataframe with author's position and normalized position (a normalized index, with 0 corresponding, 1 to last and 0.5 to the middle. Note that single authorship will be considered as first, i.e., 0).
+##' @return dataframe with author's position and normalized position (a normalized index, with 0 corresponding, 1 to last and 0.5 to the middle. Note that single authorship will be considered as last, i.e., 1).
 ##'
 ##'
 ##' @export
@@ -310,7 +310,7 @@ author_position <- function(authorlist, author){
     if(!is.na(position)){
       if(!is.na(current_n)){
         if(current_n == 1){
-          percentage <- 0
+          percentage <- 1
         } else{
           percentage <- (position-1)/(current_n-1)
         }

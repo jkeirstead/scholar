@@ -1,5 +1,12 @@
-# Recursively try to GET Google Scholar Page
-get_resp <- function(url, attempts_left = 5) {
+#' Recursively try to GET a Google Scholar Page
+#' 
+#' @param the URL to fetch
+#' @param attempts_left The number of times to try and fetch the page
+#' 
+#' @return an \code{httr::\link{response}} object
+#' @seealso \code{httr::\link{GET}}
+#' @export
+get_scholar_resp <- function(url, attempts_left = 5) {
     
     stopifnot(attempts_left > 0)
     
@@ -12,7 +19,7 @@ get_resp <- function(url, attempts_left = 5) {
         stop("Cannot connect to Google Scholar. Is the ID you provided correct?")
     } else { # Otherwise, sleep a second and try again
         Sys.sleep(1)
-        get_resp(url, attempts_left - 1)
+        get_scholar_resp(url, attempts_left - 1)
     }
 }
 

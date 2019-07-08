@@ -17,11 +17,14 @@ tidy_id <- function(id) {
 }
 
 
-#' Recursively try to GET a Google Scholar Page
-#' 
+#' Recursively try to GET a Google Scholar Page storing session cookies
+#'
+#' see \code{\link{scholar-package}} documentation for details about Scholar
+#' session cookies.
+#'
 #' @param url URL to fetch
 #' @param attempts_left The number of times to try and fetch the page
-#' 
+#'
 #' @return an \code{httr::\link{response}} object
 #' @seealso \code{httr::\link{GET}}
 #' @export

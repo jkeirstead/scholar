@@ -76,7 +76,7 @@ get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FA
         url <- sprintf(url_template, id, cstart, pagesize)
 
         ## Load the page
-        page <- get_resp(url) %>% read_html()
+        page <- get_scholar_resp(url) %>% read_html()
         cites <- page %>% html_nodes(xpath="//tr[@class='gsc_a_tr']")
 
         title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
@@ -157,7 +157,7 @@ get_article_cite_history <- function (id, article) {
     url_tail <- paste(id, article, sep=":")
     url <- paste0(url_base, url_tail)
 
-    res <- get_resp(url)
+    res <- get_scholar_resp(url)
     httr::stop_for_status(res, "get user id / article information")
     doc <- read_html(res)
 

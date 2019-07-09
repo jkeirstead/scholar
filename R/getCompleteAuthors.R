@@ -14,11 +14,9 @@ get_complete_authors = function(id, pubid)
   auths = ""
   url_template = "http://scholar.google.com/citations?view_op=view_citation&citation_for_view=%s:%s"
   url = sprintf(url_template, id, pubid)
-
-  print("parsing html")
-
-  url1<-xml2::read_html(url)
+  
+  url1<- get_scholar_resp(url) %>%
+    read_html
   auths=as.character(rvest::html_node(url1,".gsc_vcd_value") %>% rvest::html_text())
   return(auths)
-
 }

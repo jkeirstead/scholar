@@ -44,7 +44,6 @@ get_complete_authors = function(id, pubid, delay = .4, initials = TRUE)
     auths <- sapply(pubid, function(x) {
       delay <- sample(seq(min_delay, max_delay, by = .001), 1)
       Sys.sleep(delay)
-      message(sprintf(url_template, id, x)," - ", i)
       auth <- get_author(id, x)
       i <<- i + 1
       utils::setTxtProgressBar(pb, i)

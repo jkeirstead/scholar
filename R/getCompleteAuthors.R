@@ -6,9 +6,9 @@
 ##' @author James H. Conigrave
 ##'
 ##' @param id a Google Scholar ID
-##' @param pubid a Publication ID from a giving google Scholar ID
-##' @param delay average delay between multiple polls. A delay is needed to stop google identifying you as a bot
-##' @param initials if TRUE, first and middle names will be abbreviated
+##' @param pubid a Publication ID from a given google Scholar ID
+##' @param delay average delay between requests. A delay is needed to stop Google identifying you as a bot
+##' @param initials if TRUE (default), first and middle names will be abbreviated
 ##' @return a string containing the complete list of authors
 ##' @export
 
@@ -33,13 +33,13 @@ get_complete_authors = function(id, pubid, delay = .4, initials = TRUE)
       stop("Requesting author lists for more than 50 publications risks google identifying you as a bot and blocking your ip range (429 errors).")
     }
 
-    i = 1
-    pb = utils::txtProgressBar(min = 1, max = length(pubid), style = 3)
-
     min_delay = delay - .5
     max_delay = delay + .5
     if(min_delay < 0) min_delay <- 0
-    if(delay == 0) max_delay = 0
+    if(delay == 0) max_delay <- 0
+
+    pb = utils::txtProgressBar(min = 1, max = length(pubid), style = 3)
+    i = 1
 
     auths <- sapply(pubid, function(x) {
       delay <- sample(seq(min_delay, max_delay, by = .001), 1)

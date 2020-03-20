@@ -9,11 +9,11 @@ get_complete_authors(id, pubid, delay = 0.4, initials = TRUE)
 \arguments{
 \item{id}{a Google Scholar ID}
 
-\item{pubid}{a Publication ID from a giving google Scholar ID}
+\item{pubid}{a Publication ID from a given google Scholar ID}
 
-\item{delay}{average delay between multiple polls. A delay is needed to stop google identifying you as a bot}
+\item{delay}{average delay between requests. A delay is needed to stop Google identifying you as a bot}
 
-\item{initials}{if TRUE, first and middle names will be abbreviated}
+\item{initials}{if TRUE (default), first and middle names will be abbreviated}
 }
 \value{
 a string containing the complete list of authors

@@ -4,8 +4,14 @@
 \alias{get_publications}
 \title{Gets the publications for a scholar}
 \usage{
-get_publications(id, cstart = 0, cstop = Inf, pagesize = 100,
-  flush = FALSE, sortby = "citation")
+get_publications(
+  id,
+  cstart = 0,
+  cstop = Inf,
+  pagesize = 100,
+  flush = FALSE,
+  sortby = "citation"
+)
 }
 \arguments{
 \item{id}{a character string specifying the Google Scholar ID.  If

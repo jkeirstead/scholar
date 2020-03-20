@@ -4,12 +4,16 @@
 \alias{get_complete_authors}
 \title{Get the Complete list of authors for a Publication}
 \usage{
-get_complete_authors(id, pubid)
+get_complete_authors(id, pubid, delay = 0.4, initials = TRUE)
 }
 \arguments{
 \item{id}{a Google Scholar ID}
 
 \item{pubid}{a Publication ID from a giving google Scholar ID}
+
+\item{delay}{average delay between multiple polls. A delay is needed to stop google identifying you as a bot}
+
+\item{initials}{if TRUE, first and middle names will be abbreviated}
 }
 \value{
 a string containing the complete list of authors
@@ -21,4 +25,6 @@ Found as Muhammad Qasim Pasta's solution here https://github.com/jkeirstead/scho
 Muhammad Qasim Pasta
 
 Abram B. Fleishman
+
+James H. Conigrave
 }

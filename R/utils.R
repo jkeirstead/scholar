@@ -12,7 +12,7 @@ tidy_id <- function(id) {
         msg <- sprintf("Only one ID at a time; retrieving %s", id)
         warning(msg)
     }
-    
+
     return(id)
 }
 
@@ -29,14 +29,16 @@ tidy_id <- function(id) {
 #' @seealso \code{httr::\link{GET}}
 #' @export
 get_scholar_resp <- function(url, attempts_left = 5) {
-    
+
     stopifnot(attempts_left > 0)
-    
+
     resp <- httr::GET(url, handle = scholar_handle())
-    
+
     # On a successful GET, return the response
     if (httr::status_code(resp) == 200) {
         resp
+    } else if(httr::status_code(resp) == 429){
+      stop("Response code 429. Google is rate limiting you for making too many requests too quickly.")
     } else if (attempts_left == 1) { # When attempts run out, stop with an error
         stop("Cannot connect to Google Scholar. Is the ID you provided correct?")
     } else { # Otherwise, sleep a second and try again
@@ -49,7 +51,7 @@ get_scholar_resp <- function(url, attempts_left = 5) {
 scholar_handle <- function() {
     if (getOption("scholar_call_home")) {
         sample_url <- "https://scholar.google.com/citations?user=B7vSqZsAAAAJ"
-        sink <- GET(sample_url)      
+        sink <- GET(sample_url)
         options("scholar_call_home"=FALSE, "scholar_handle"=sink)
     }
     getOption("scholar_handle")
@@ -61,7 +63,7 @@ compose_url <- function(id, url_template) {
     if (is.na(id)) return(NA_character_)
     id <- tidy_id(id)
     url <- sprintf(url_template, id)
-    
+
     url
 }
 

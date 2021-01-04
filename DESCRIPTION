@@ -9,7 +9,7 @@ Authors@R: c(
     person("Dominique", "Makowski", email = "dom.makowski@gmail.com",        role = "ctb")
     )
 Maintainer: Guangchuang Yu <guangchuangyu@gmail.com>
-Version: 0.1.7
+Version: 0.1.8
 License: MIT + file LICENSE
 Title: Analyse Citation Data from Google Scholar
 BugReports: https://github.com/jkeirstead/scholar/issues

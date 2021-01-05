@@ -20,13 +20,14 @@ Journal metrics data.
 Get journal metrics (impact factor) for a journal list.
 }
 \examples{
+\dontrun{
 library(scholar)
 
 id <- get_publications("bg0BZ-QAAAAJ&hl")
 impact <- get_impactfactor(journals=id$journal, max.distance = 0.1)
 
 id <- cbind(id, impact)
-
+}
 }
 \author{
 Dominique Makowski and Guangchuang Yu

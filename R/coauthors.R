@@ -51,7 +51,9 @@ get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
     final_network <- rbind(all_coauthors, Reduce(rbind, empty_network))
     final_network$author <- stringr::str_to_title(final_network$author)
     final_network$coauthors <- stringr::str_to_title(final_network$coauthors)
-    final_network[c("author", "coauthors")]
+    res <- final_network[c("author", "coauthors")]
+    res <- res[!res$coauthors %in% c("Sort By Year", "Sort By Title", "Sort By Citations"), ]
+    return(res)
 }
 
 

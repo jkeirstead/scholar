@@ -145,7 +145,7 @@ get_num_distinct_journals <- function(id) {
 ##'
 ##' @source DE Acuna, S Allesina, KP Kording (2012) Future impact:
 ##' Predicting scientific success.  Nature 489,
-##' 201-202. \url{http://dx.doi.org/10.1038/489201a}.
+##' 201-202. \doi{10.1038/489201a}.
 ##'
 ##' @param id 	a character string giving a Google Scholar ID
 ##' @param journals a character vector giving the names of the top

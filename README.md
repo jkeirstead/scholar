@@ -45,7 +45,7 @@ compare_scholar_careers(ids)
 
 ## Predicting future h-index values
 
-Finally users can predict the future [h-index](http://en.wikipedia.org/wiki/H-index) of a scholar, based on the method of [Acuna et al.](http://www.nature.com/nature/journal/v489/n7415/full/489201a.html).  Since the method was originally calibrated on data from neuroscientists, it goes without saying that, if the scholar is from another discipline, then the results should be taken with a large pinch of salt.  A more general critique of the original paper is available   [here](http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/).  Still, it's a bit of fun.  
+Finally users can predict the future [h-index](http://en.wikipedia.org/wiki/H-index) of a scholar, based on the method of [Acuna et al.](https://www.nature.com/nature/articles/489201a).  Since the method was originally calibrated on data from neuroscientists, it goes without saying that, if the scholar is from another discipline, then the results should be taken with a large pinch of salt.  A more general critique of the original paper is available   [here](http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/).  Still, it's a bit of fun.  
 
 ```
 ## Predict h-index of original method author, Daniel Acuna

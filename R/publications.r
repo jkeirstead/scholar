@@ -308,13 +308,14 @@ get_journal_stats <- function(journals, max.distance, source_data, col = "Journa
 ##' Get journal ranking for a journal list.
 ##'
 ##' @examples
+##' \dontrun{
 ##' library(scholar)
 ##'
 ##' id <- get_publications("bg0BZ-QAAAAJ&hl")
 ##' impact <- get_journalrank(journals=id$journal)
 ##'
 ##' id <- cbind(id, impact)
-##'
+##' }
 ##' @param journals a character list giving the journal list
 ##' @param max.distance maximum distance allowed for a match bewteen journal and journal list.
 ##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost

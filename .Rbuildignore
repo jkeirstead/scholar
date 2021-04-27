@@ -4,3 +4,4 @@ cran-comments.md
 ^\.Rproj\.user$
 Makefile
 README.md
+^\.github$

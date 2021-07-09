@@ -47,6 +47,7 @@ get_profile <- function(id) {
   ## The personal info is in
   name <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_in']") %>% html_text()
   bio_info <- page %>% html_nodes(xpath="//*/div[@class='gsc_prf_il']") %>% html_text()
+  interests <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_int']") %>% html_children() %>% html_text()
   affiliation <- bio_info[1]
 
   ## Specialities (trim out HTML non-breaking space)
@@ -65,6 +66,7 @@ get_profile <- function(id) {
               i10_index=as.numeric(as.character(stats[rows,2])),
               fields=specs,
               homepage=homepage,
+              interests=interests,
               coauthors=coauthors$coauthors))
 }
 

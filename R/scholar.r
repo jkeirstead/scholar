@@ -17,7 +17,7 @@ utils::globalVariables(c("name"))
 ##' multiple scholars.
 ##'
 ##' @return 	a list containing the scholar's name, affiliation,
-##' citations, impact metrics, fields of study, homepage and
+##' citations, impact metrics, research intersts, homepage and
 ##' the author's list of coauthors provided by Google Scholar.
 ##'
 ##' @examples {
@@ -28,7 +28,7 @@ utils::globalVariables(c("name"))
 ##' @export
 ##' @importFrom stringr str_trim str_split
 ##' @importFrom xml2 read_html
-##' @importFrom rvest html_table html_nodes html_text
+##' @importFrom rvest html_table html_nodes html_text html_children
 ##' @importFrom dplyr "%>%"
 get_profile <- function(id) {
     site <- getOption("scholar_site")

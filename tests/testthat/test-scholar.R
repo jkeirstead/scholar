@@ -32,6 +32,14 @@ test_that("get_citation_history works", {
     expect_equal(names(h), c("year", "cites"))
 })
 
+test_that("get_article_cite_history works", {
+  skip_on_cran()
+  skip_if_offline()
+  expect_is(ach <- get_article_cite_history("B7vSqZsAAAAJ", "hMod-77fHWUC"), 
+            'data.frame')
+  expect_equal(names(ach), c("year", "cites", "pubid"))
+})
+
 test_that("get_profile works", {
     skip_on_cran()
     skip_if_offline()

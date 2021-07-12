@@ -21,8 +21,8 @@ get_complete_authors = function(id, pubid, delay = .4, initials = TRUE)
       url = sprintf(url_template, id, pubid)
       
       url1 <- get_scholar_resp(url[1]) %>%
-          read_html
-      auths = as.character(rvest::html_node(url1, ".gsc_vcd_value") %>% rvest::html_text())
+          read_html()
+      auths = as.character(rvest::html_node(url1, ".gsc_oci_value") %>% rvest::html_text())
       return(auths)
   }
 

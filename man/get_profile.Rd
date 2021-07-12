@@ -14,7 +14,7 @@ multiple scholars.}
 }
 \value{
 a list containing the scholar's name, affiliation,
-citations, impact metrics, fields of study, homepage and
+citations, impact metrics, research interests, homepage and
 the author's list of coauthors provided by Google Scholar.
 }
 \description{

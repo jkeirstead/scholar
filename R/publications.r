@@ -58,6 +58,8 @@ get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FA
     ## Check if we've cached it already
     data <- loadCache(list(id, cstart))
 
+    site <- getOption("scholar_site")
+
     ## If not, get the data and save it to cache
     if (is.null(data)) {
 
@@ -66,11 +68,11 @@ get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FA
         stopifnot(sortby == "citation" | sortby == "year")
 
         if(sortby == "citation"){
-          url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d"
+            url_template <- paste0(site, "/citations?hl=en&user=%s&cstart=%d&pagesize=%d")
         }
 
         if(sortby == "year"){
-          url_template <- "http://scholar.google.com/citations?hl=en&user=%s&cstart=%d&pagesize=%d&sortby=pubdate"
+            url_template <- paste0(site, "/citations?hl=en&user=%s&cstart=%d&pagesize=%d&sortby=pubdate")
         }
 
         url <- sprintf(url_template, id, cstart, pagesize)
@@ -151,8 +153,9 @@ get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FA
 ##' @export
 get_article_cite_history <- function (id, article) {
 
+    site <- getOption("scholar_site")
     id <- tidy_id(id)
-    url_base <- paste0("http://scholar.google.com/citations?",
+    url_base <- paste0(site, "/citations?",
                        "view_op=view_citation&hl=en&citation_for_view=")
     url_tail <- paste(id, article, sep=":")
     url <- paste0(url_base, url_tail)
@@ -218,13 +221,14 @@ get_oldest_article <- function(id) {
 ##' Get journal metrics (impact factor) for a journal list.
 ##'
 ##' @examples
+##' \dontrun{
 ##' library(scholar)
 ##'
 ##' id <- get_publications("bg0BZ-QAAAAJ&hl")
 ##' impact <- get_impactfactor(journals=id$journal, max.distance = 0.1)
 ##'
 ##' id <- cbind(id, impact)
-##'
+##'}
 ##' @param journals a character list giving the journal list
 ##' @param max.distance maximum distance allowed for a match bewteen journal and journal list.
 ##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
@@ -304,13 +308,14 @@ get_journal_stats <- function(journals, max.distance, source_data, col = "Journa
 ##' Get journal ranking for a journal list.
 ##'
 ##' @examples
+##' \dontrun{
 ##' library(scholar)
 ##'
 ##' id <- get_publications("bg0BZ-QAAAAJ&hl")
 ##' impact <- get_journalrank(journals=id$journal)
 ##'
 ##' id <- cbind(id, impact)
-##'
+##' }
 ##' @param journals a character list giving the journal list
 ##' @param max.distance maximum distance allowed for a match bewteen journal and journal list.
 ##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost

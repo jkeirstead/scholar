@@ -1,3 +1,16 @@
+##' set scholar mirror
+##'
+##' setting google scholar mirror
+##' @title set_scholar_mirror
+##' @param mirror compatible scholar mirror
+##' @return NULL
+##' @export
+##' @author Guangchuang Yu
+set_scholar_mirror <- function(mirror = "https://g88.i-research.edu.eu.org/ggxs") {
+    options("scholar_site" = mirror)
+}
+
+
 ##' Ensures that specified IDs are correctly formatted
 ##'
 ##' @param id a character string specifying the Google Scholar ID.
@@ -49,8 +62,9 @@ get_scholar_resp <- function(url, attempts_left = 5) {
 
 # get a curl handle with Google scholar cookies set
 scholar_handle <- function() {
+    site <- getOption("scholar_site")
     if (getOption("scholar_call_home")) {
-        sample_url <- "https://scholar.google.com/citations?user=B7vSqZsAAAAJ"
+        sample_url <- paste0(site, "/citations?user=B7vSqZsAAAAJ")
         sink <- GET(sample_url)
         options("scholar_call_home"=FALSE, "scholar_handle"=sink)
     }

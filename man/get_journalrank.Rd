@@ -20,13 +20,14 @@ Journal ranking data.
 Get journal ranking for a journal list.
 }
 \examples{
+\dontrun{
 library(scholar)
 
 id <- get_publications("bg0BZ-QAAAAJ&hl")
 impact <- get_journalrank(journals=id$journal)
 
 id <- cbind(id, impact)
-
+}
 }
 \author{
 Dominique Makowski and Guangchuang Yu

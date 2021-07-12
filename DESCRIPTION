@@ -9,14 +9,13 @@ Authors@R: c(
     person("Dominique", "Makowski", email = "dom.makowski@gmail.com",        role = "ctb")
     )
 Maintainer: Guangchuang Yu <guangchuangyu@gmail.com>
-Version: 0.1.7
+Version: 0.2.1
 License: MIT + file LICENSE
 Title: Analyse Citation Data from Google Scholar
 BugReports: https://github.com/jkeirstead/scholar/issues
 Description: Provides functions to extract citation data from Google
     Scholar.  Convenience functions are also provided for comparing
     multiple scholars and predicting future h-index values.
-LazyData: true
 Depends:
     R (>= 3.4.0)
 Imports:
@@ -31,6 +30,7 @@ Imports:
     ggplot2
 Suggests:
     knitr,
+    rmarkdown,
     prettydoc,
     roxygen2,
     testthat (>= 2.1.0)

@@ -61,12 +61,12 @@ get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
             grep("Sort by ", final_network$coauthors)),]  # remove false entries containing "Sort by *" 
     final_network$author <- stringr::str_to_title(final_network$author)
     final_network$coauthors <- stringr::str_to_title(final_network$coauthors)
-    
     if(n_deep == 0) {
         final_network <- final_network[final_network$coauthors %in% final_network$author,]
     }
-    final_network[c("author", "coauthors")]
-
+    res <- final_network[c("author", "coauthors")]
+    res <- res[!res$coauthors %in% c("Sort By Year", "Sort By Title", "Sort By Citations"), ]
+    return(res)
 }
 
 
@@ -105,7 +105,8 @@ plot_coauthors <- function(network, size_labels = 5) {
 # Extract the coauthors of an id and
 # only return the names of the author and coauthors
 list_coauthors <- function(id, n_coauthors) {
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s"
+    site <- getOption("scholar_site")
+    url_template <- paste0(site, "/citations?hl=en&user=%s")
     url <- compose_url(id, url_template)
     
     if (id == "" | is.na(id)) {

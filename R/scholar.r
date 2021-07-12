@@ -31,14 +31,14 @@ utils::globalVariables(c("name"))
 ##' @importFrom rvest html_table html_nodes html_text
 ##' @importFrom dplyr "%>%"
 get_profile <- function(id) {
+    site <- getOption("scholar_site")
+    url_template <- paste0(site, "/citations?hl=en&user=%s")
+    url <- compose_url(id, url_template)
 
-  url_template <- "http://scholar.google.com/citations?hl=en&user=%s"
-  url <- compose_url(id, url_template)
-
-  ## Generate a list of all the tables identified by the scholar ID
-  page <- get_scholar_resp(url) %>% read_html()
-  tables <- page %>% html_table()
-
+    ## Generate a list of all the tables identified by the scholar ID
+    page <- get_scholar_resp(url) %>% read_html()
+    tables <- page %>% html_table()
+    
   ## The citation stats are in tables[[1]]$tables$stats
   ## but the number of rows seems to vary by OS
   stats <- tables[[1]]
@@ -86,8 +86,8 @@ get_profile <- function(id) {
 ##' @importFrom rvest html_nodes html_text
 ##' @importFrom dplyr "%>%"
 get_citation_history <- function(id) {
-
-    url_template <- "http://scholar.google.com/citations?hl=en&user=%s&pagesize=100&view_op=list_works"
+    site <- getOption("scholar_site")
+    url_template <- paste0(site, "/citations?hl=en&user=%s&pagesize=100&view_op=list_works")
     url <- compose_url(id, url_template)
 
     ## A better way would actually be to read out the plot of citations
@@ -145,7 +145,7 @@ get_num_distinct_journals <- function(id) {
 ##'
 ##' @source DE Acuna, S Allesina, KP Kording (2012) Future impact:
 ##' Predicting scientific success.  Nature 489,
-##' 201-202. \url{http://dx.doi.org/10.1038/489201a}.
+##' 201-202. \doi{10.1038/489201a}.
 ##'
 ##' @param id 	a character string giving a Google Scholar ID
 ##' @param journals a character vector giving the names of the top
@@ -263,12 +263,14 @@ get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
   if(!any(nzchar(c(first_name, last_name))))
     stop("At least one of first and last name must be specified!")
 
+  site <- getOption("scholar_site")
   url <- paste0(
-    'https://scholar.google.com/citations?view_op=search_authors&mauthors=',
-    first_name,
-    '+',
-    last_name,
-    '&hl=en&oi=ao'
+      site,
+      '/citations?view_op=search_authors&mauthors=',
+      first_name,
+      '+',
+      last_name,
+      '&hl=en&oi=ao'
   )
   aa <- content(get_scholar_resp(url), as='text')
   ids <-

@@ -166,14 +166,13 @@ get_article_cite_history <- function (id, article) {
 
     ## Inspect the bar chart to retrieve the citation values and years
     years <- doc %>%
-        html_nodes(xpath="//*/div[@id='gsc_vcd_graph_bars']/a") %>%
-            html_attr("href") %>%
-                str_replace(".*as_yhi=(.*)$", "\\1") %>%
-                    as.numeric()
+        html_nodes(".gsc_oci_g_t") %>% 
+        html_text() %>% 
+        as.numeric()
     vals <- doc %>%
-        html_nodes(xpath="//*/span[@class='gsc_vcd_g_al']") %>%
-            html_text() %>%
-                as.numeric()
+        html_nodes(".gsc_oci_g_al") %>% 
+        html_text() %>% 
+        as.numeric()
 
     df <- data.frame(year = years, cites = vals)
     if(nrow(df)>0) {

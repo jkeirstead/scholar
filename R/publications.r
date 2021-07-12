@@ -83,7 +83,7 @@ get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FA
 
         title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
         pubid <- cites %>% html_nodes(".gsc_a_at") %>%
-            html_attr("data-href") %>% str_extract(":.*$") %>% str_sub(start=2)
+            html_attr("href") %>% str_extract(":.*$") %>% str_sub(start=2)
         doc_id <- cites %>% html_nodes(".gsc_a_ac") %>% html_attr("href") %>%
             str_extract("cites=.*$") %>% str_sub(start=7)
         cited_by <- suppressWarnings(cites %>% html_nodes(".gsc_a_ac") %>%

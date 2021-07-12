@@ -17,7 +17,7 @@ utils::globalVariables(c("name"))
 ##' multiple scholars.
 ##'
 ##' @return 	a list containing the scholar's name, affiliation,
-##' citations, impact metrics, research intersts, homepage and
+##' citations, impact metrics, research interests, homepage and
 ##' the author's list of coauthors provided by Google Scholar.
 ##'
 ##' @examples {

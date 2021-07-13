@@ -36,7 +36,8 @@ A complementary set of Google Scholar functions can be found at
 \seealso{
 Useful links:
 \itemize{
-  \item Report bugs at \url{https://github.com/jkeirstead/scholar/issues}
+  \item \url{https://github.com/YuLab-SMU/scholar}
+  \item Report bugs at \url{https://github.com/YuLab-SMU/scholar/issues}
 }
 
 }

@@ -166,8 +166,10 @@ get_article_cite_history <- function (id, article) {
 
     ## Inspect the bar chart to retrieve the citation values and years
     years <- doc %>%
-        html_nodes(".gsc_oci_g_t") %>% 
-        html_text() %>% 
+        html_nodes(".gsc_oci_g_a") %>% 
+        html_attr('href') %>% 
+        stringr::str_match("as_ylo=(\\d{4})&") %>% 
+        "["(,2) %>% 
         as.numeric()
     vals <- doc %>%
         html_nodes(".gsc_oci_g_al") %>% 

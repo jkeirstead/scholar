@@ -79,7 +79,7 @@ get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FA
 
         ## Load the page
         page <- get_scholar_resp(url)
-        if (is.na(page)) return(NA)
+        if (is.null(page)) return(NA)
 
         page <- page %>% read_html()
         cites <- page %>% html_nodes(xpath="//tr[@class='gsc_a_tr']")
@@ -164,7 +164,7 @@ get_article_cite_history <- function (id, article) {
     url <- paste0(url_base, url_tail)
 
     res <- get_scholar_resp(url)
-    if (is.na(res)) return(NA)
+    if (is.null(res)) return(NA)
 
     httr::stop_for_status(res, "get user id / article information")
     doc <- read_html(res)

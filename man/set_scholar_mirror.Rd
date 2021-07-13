@@ -4,7 +4,7 @@
 \alias{set_scholar_mirror}
 \title{set_scholar_mirror}
 \usage{
-set_scholar_mirror(mirror = "https://g88.i-research.edu.eu.org/ggxs")
+set_scholar_mirror(mirror = NULL)
 }
 \arguments{
 \item{mirror}{compatible scholar mirror}

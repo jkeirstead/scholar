@@ -1,6 +1,6 @@
 # scholar 0.2.2
 
-+ return NA if fail to access data (follow CRAN policy)
++ return NULL if fail to access data (follow CRAN policy)
 + restore `pubid` (@conig, #97)
 + extending `get_profile(id)` to include professional interests (@TS404, #95)
 + allow `n_deep = 0`, for immediate author network (#timonelmer, #90)

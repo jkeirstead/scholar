@@ -37,7 +37,7 @@ get_profile <- function(id) {
 
     ## Generate a list of all the tables identified by the scholar ID
     page <- get_scholar_resp(url)
-    if (is.na(page)) return(NA)
+    if (is.null(page)) return(NA)
 
     page <- page %>% read_html()
     tables <- page %>% html_table()
@@ -97,7 +97,7 @@ get_citation_history <- function(id) {
 
     ## A better way would actually be to read out the plot of citations
     page <- get_scholar_resp(url)
-    if (is.na(page)) return(page)
+    if (is.null(page)) return(page)
 
     page <- page %>% read_html()
     years <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_t']") %>%
@@ -281,7 +281,7 @@ get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
       '&hl=en&oi=ao'
   )
   page <- get_scholar_resp(url)
-  if (is.na(page)) return(NA)
+  if (is.null(page)) return(NA)
 
   aa <- content(page, as='text')
   ids <-

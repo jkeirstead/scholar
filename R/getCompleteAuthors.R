@@ -20,7 +20,7 @@ get_complete_authors = function(id, pubid, delay = .4, initials = TRUE) {
       url = sprintf(url_template, id, pubid)
 
       page <- get_scholar_resp(url[1])
-      if (is.na(page)) return(NA)
+      if (is.null(page)) return(NA)
 
       url1 <- page %>%
           read_html

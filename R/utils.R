@@ -6,8 +6,10 @@
 ##' @return NULL
 ##' @export
 ##' @author Guangchuang Yu
-set_scholar_mirror <- function(mirror = "https://g88.i-research.edu.eu.org/ggxs") {
-    options("scholar_site" = mirror)
+set_scholar_mirror <- function(mirror = NULL) {
+    if (!is.null(mirror)) {
+        options("scholar_site" = mirror)
+    }   
 }
 
 
@@ -52,13 +54,13 @@ get_scholar_resp <- function(url, attempts_left = 5) {
         resp
     } else if (httr::status_code(resp )) {
         warning("Page 404. Please check whether the provided URL is correct.")
-        return(NA)
+        return(NULL)
     } else if(httr::status_code(resp) == 429){
         warning("Response code 429. Google is rate limiting you for making too many requests too quickly.")
-        return(NA)
+        return(NULL)
     } else if (attempts_left == 1) { # When attempts run out, stop with an error
         warning("Cannot connect to Google Scholar. Is the ID you provided correct?")
-        return(NA)
+        return(NULL)
     } else { # Otherwise, sleep a second and try again
         Sys.sleep(1)
         get_scholar_resp(url, attempts_left - 1)

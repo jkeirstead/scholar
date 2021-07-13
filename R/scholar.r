@@ -17,7 +17,7 @@ utils::globalVariables(c("name"))
 ##' multiple scholars.
 ##'
 ##' @return 	a list containing the scholar's name, affiliation,
-##' citations, impact metrics, fields of study, homepage and
+##' citations, impact metrics, research interests, homepage and
 ##' the author's list of coauthors provided by Google Scholar.
 ##'
 ##' @examples {
@@ -28,7 +28,7 @@ utils::globalVariables(c("name"))
 ##' @export
 ##' @importFrom stringr str_trim str_split
 ##' @importFrom xml2 read_html
-##' @importFrom rvest html_table html_nodes html_text
+##' @importFrom rvest html_table html_nodes html_text html_children
 ##' @importFrom dplyr "%>%"
 get_profile <- function(id) {
     site <- getOption("scholar_site")
@@ -47,6 +47,7 @@ get_profile <- function(id) {
   ## The personal info is in
   name <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_in']") %>% html_text()
   bio_info <- page %>% html_nodes(xpath="//*/div[@class='gsc_prf_il']") %>% html_text()
+  interests <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_int']") %>% html_children() %>% html_text()
   affiliation <- bio_info[1]
 
   ## Specialities (trim out HTML non-breaking space)
@@ -65,6 +66,7 @@ get_profile <- function(id) {
               i10_index=as.numeric(as.character(stats[rows,2])),
               fields=specs,
               homepage=homepage,
+              interests=interests,
               coauthors=coauthors$coauthors))
 }
 

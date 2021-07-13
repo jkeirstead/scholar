@@ -229,7 +229,7 @@ get_oldest_article <- function(id) {
 ##' id <- cbind(id, impact)
 ##'}
 ##' @param journals a character list giving the journal list
-##' @param max.distance maximum distance allowed for a match bewteen journal and journal list.
+##' @param max.distance maximum distance allowed for a match between journal and journal list.
 ##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
 ##' (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components
 ##'
@@ -316,7 +316,7 @@ get_journal_stats <- function(journals, max.distance, source_data, col = "Journa
 ##' id <- cbind(id, impact)
 ##' }
 ##' @param journals a character list giving the journal list
-##' @param max.distance maximum distance allowed for a match bewteen journal and journal list.
+##' @param max.distance maximum distance allowed for a match between journal and journal list.
 ##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
 ##' (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components
 ##'

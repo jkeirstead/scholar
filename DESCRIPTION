@@ -33,7 +33,9 @@ Suggests:
     rmarkdown,
     prettydoc,
     roxygen2,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    spelling
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Encoding: UTF-8
+Language: en-GB

@@ -8,6 +8,17 @@ The scholar R package provides functions to extract citation data from [Google S
 
 *Development of the scholar package has resumed and a new maintainer should be confirmed shortly. Please continue to file issues and make pull requests against https://github.com/jkeirstead/scholar going forwards.*
 
+## Installation
+
+```r
+# from CRAN
+install.packages("scholar")
+
+# from GitHub
+if(!requireNamespace('remotes')) install.packages("remotes")
+remotes::install_github('jkeirstead/scholar')
+```
+
 ## Basic features
 
 Individual scholars are referenced by a unique character string, which can be found by searching for an author and inspecting the resulting scholar homepage.  For example, the profile of physicist Richard Feynman is located at http://scholar.google.com/citations?user=B7vSqZsAAAAJ and so his unique id is `B7vSqZsAAAAJ`.

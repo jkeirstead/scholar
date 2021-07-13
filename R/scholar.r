@@ -36,7 +36,10 @@ get_profile <- function(id) {
     url <- compose_url(id, url_template)
 
     ## Generate a list of all the tables identified by the scholar ID
-    page <- get_scholar_resp(url) %>% read_html()
+    page <- get_scholar_resp(url)
+    if (is.na(page)) return(NA)
+
+    page <- page %>% read_html()
     tables <- page %>% html_table()
     
   ## The citation stats are in tables[[1]]$tables$stats
@@ -91,7 +94,10 @@ get_citation_history <- function(id) {
     url <- compose_url(id, url_template)
 
     ## A better way would actually be to read out the plot of citations
-    page <- get_scholar_resp(url) %>% read_html()
+    page <- get_scholar_resp(url)
+    if (is.na(page)) return(page)
+
+    page <- page %>% read_html()
     years <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_t']") %>%
         html_text() %>% as.numeric()
     vals <- page %>% html_nodes(xpath="//*/span[@class='gsc_g_al']") %>%
@@ -272,7 +278,10 @@ get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
       last_name,
       '&hl=en&oi=ao'
   )
-  aa <- content(get_scholar_resp(url), as='text')
+  page <- get_scholar_resp(url)
+  if (is.na(page)) return(NA)
+
+  aa <- content(page, as='text')
   ids <-
     stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")
   

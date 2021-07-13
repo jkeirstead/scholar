@@ -50,10 +50,15 @@ get_scholar_resp <- function(url, attempts_left = 5) {
     # On a successful GET, return the response
     if (httr::status_code(resp) == 200) {
         resp
+    } else if (httr::status_code(resp )) {
+        warning("Page 404. Please check whether the provided URL is correct.")
+        return(NA)
     } else if(httr::status_code(resp) == 429){
-      stop("Response code 429. Google is rate limiting you for making too many requests too quickly.")
+        warning("Response code 429. Google is rate limiting you for making too many requests too quickly.")
+        return(NA)
     } else if (attempts_left == 1) { # When attempts run out, stop with an error
-        stop("Cannot connect to Google Scholar. Is the ID you provided correct?")
+        warning("Cannot connect to Google Scholar. Is the ID you provided correct?")
+        return(NA)
     } else { # Otherwise, sleep a second and try again
         Sys.sleep(1)
         get_scholar_resp(url, attempts_left - 1)

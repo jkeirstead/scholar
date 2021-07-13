@@ -24,7 +24,9 @@ get_complete_authors = function(id, pubid, delay = .4, initials = TRUE) {
 
       url1 <- page %>%
           read_html
-      auths = as.character(rvest::html_node(url1, ".gsc_vcd_value") %>% rvest::html_text())
+
+      auths = as.character(rvest::html_node(url1, ".gsc_oci_value") %>% rvest::html_text())
+
       return(auths)
   }
 

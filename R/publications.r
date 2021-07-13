@@ -86,7 +86,7 @@ get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FA
 
         title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
         pubid <- cites %>% html_nodes(".gsc_a_at") %>%
-            html_attr("data-href") %>% str_extract(":.*$") %>% str_sub(start=2)
+            html_attr("href") %>% str_extract(":.*$") %>% str_sub(start=2)
         doc_id <- cites %>% html_nodes(".gsc_a_ac") %>% html_attr("href") %>%
             str_extract("cites=.*$") %>% str_sub(start=7)
         cited_by <- suppressWarnings(cites %>% html_nodes(".gsc_a_ac") %>%
@@ -171,14 +171,13 @@ get_article_cite_history <- function (id, article) {
 
     ## Inspect the bar chart to retrieve the citation values and years
     years <- doc %>%
-        html_nodes(xpath="//*/div[@id='gsc_vcd_graph_bars']/a") %>%
-            html_attr("href") %>%
-                str_replace(".*as_yhi=(.*)$", "\\1") %>%
-                    as.numeric()
+        html_nodes(".gsc_oci_g_t") %>% 
+        html_text() %>% 
+        as.numeric()
     vals <- doc %>%
-        html_nodes(xpath="//*/span[@class='gsc_vcd_g_al']") %>%
-            html_text() %>%
-                as.numeric()
+        html_nodes(".gsc_oci_g_al") %>% 
+        html_text() %>% 
+        as.numeric()
 
     df <- data.frame(year = years, cites = vals)
     if(nrow(df)>0) {
@@ -245,6 +244,7 @@ get_oldest_article <- function(id) {
 ##' @export
 ##' @author Dominique Makowski and Guangchuang Yu
 get_impactfactor <- function(journals, max.distance = 0.05) {
+    message("The impact factor data is out-of-date and we may remove this function in future release.")
     get_journal_stats(journals, max.distance, impactfactor)
 }
 

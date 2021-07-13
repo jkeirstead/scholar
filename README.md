@@ -1,4 +1,8 @@
 # scholar
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/scholar)](https://CRAN.R-project.org/package=scholar)
+[![R-CMD-check](https://github.com/jkeirstead/scholar/workflows/R-CMD-check/badge.svg)](https://github.com/jkeirstead/scholar/actions)
+<!-- badges: end -->
 
 The scholar R package provides functions to extract citation data from [Google Scholar](http://scholar.google.com).  In addition to retrieving basic information about a single scholar, the package also allows you to compare multiple scholars and predict future h-index values.
 

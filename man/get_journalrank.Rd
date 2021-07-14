@@ -9,7 +9,7 @@ get_journalrank(journals, max.distance = 0.05)
 \arguments{
 \item{journals}{a character list giving the journal list}
 
-\item{max.distance}{maximum distance allowed for a match bewteen journal and journal list.
+\item{max.distance}{maximum distance allowed for a match between journal and journal list.
 Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
 (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components}
 }

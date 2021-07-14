@@ -68,7 +68,7 @@ get_complete_authors = function(id, pubid, delay = .4, initials = TRUE) {
 
 ##' format_authors
 ##'
-##' This function convers first and middle names to initials
+##' This function converts first and middle names to initials
 ##' @param string a character vector of names
 
 format_authors = function(string)

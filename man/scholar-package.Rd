@@ -47,11 +47,11 @@ Useful links:
 Authors:
 \itemize{
   \item James Keirstead \email{james.keirstead@gmail.com}
+  \item Gregory Jefferis \email{jefferis@gmail.com} (\href{https://orcid.org/0000-0002-0587-9355}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Gregory Jefferis \email{jefferis@gmail.com} [contributor]
   \item Gordon Getzinger [contributor]
   \item Jorge Cimentada \email{cimentadaj@gmail.com} [contributor]
   \item Max Czapanskiy \email{maxczapanskiy@gmail.com} [contributor]

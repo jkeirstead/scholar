@@ -1,8 +1,24 @@
 # scholar
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/scholar)](https://CRAN.R-project.org/package=scholar)
+[![R-CMD-check](https://github.com/jkeirstead/scholar/workflows/R-CMD-check/badge.svg)](https://github.com/jkeirstead/scholar/actions)
+<!-- badges: end -->
 
 The scholar R package provides functions to extract citation data from [Google Scholar](http://scholar.google.com).  In addition to retrieving basic information about a single scholar, the package also allows you to compare multiple scholars and predict future h-index values.
 
-*Development of the scholar package has resumed and a new maintainer should be confirmed shortly. Please continue to file issues and make pull requests against https://github.com/jkeirstead/scholar going forwards.*
+*Development of the scholar package is ongoing with [GuangchuangYu](https://github.com/GuangchuangYu) acting as maintainer. 
+Please continue to file issues and make pull requests against https://github.com/jkeirstead/scholar going forwards.*
+
+## Installation
+
+```r
+# from CRAN
+install.packages("scholar")
+
+# from GitHub
+if(!requireNamespace('remotes')) install.packages("remotes")
+remotes::install_github('jkeirstead/scholar')
+```
 
 ## Basic features
 
@@ -29,7 +45,7 @@ Additional functions allow the user to query the publications list, e.g. `get_nu
 
 ## Comparing scholars
 
-You can also compare multiple scholars, as shown below.  Note that these two particular scholars are rather profilic and these queries will take a very long time to run.
+You can also compare multiple scholars, as shown below.  Note that these two particular scholars are rather prolific and these queries will take a very long time to run.
 
 ```
 # Compare Feynman and Stephen Hawking

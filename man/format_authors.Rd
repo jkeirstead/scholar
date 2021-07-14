@@ -10,5 +10,5 @@ format_authors(string)
 \item{string}{a character vector of names}
 }
 \description{
-This function convers first and middle names to initials
+This function converts first and middle names to initials
 }

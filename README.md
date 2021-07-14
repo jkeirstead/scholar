@@ -1,13 +1,11 @@
 # scholar
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/scholar)](https://CRAN.R-project.org/package=scholar)
-[![R-CMD-check](https://github.com/jkeirstead/scholar/workflows/R-CMD-check/badge.svg)](https://github.com/jkeirstead/scholar/actions)
+[![R-CMD-check](https://github.com/YuLab-SMU/scholar/workflows/R-CMD-check/badge.svg)](https://github.com/YuLab-SMU/scholar/actions)
 <!-- badges: end -->
 
 The scholar R package provides functions to extract citation data from [Google Scholar](http://scholar.google.com).  In addition to retrieving basic information about a single scholar, the package also allows you to compare multiple scholars and predict future h-index values.
 
-*Development of the scholar package is ongoing with [GuangchuangYu](https://github.com/GuangchuangYu) acting as maintainer. 
-Please continue to file issues and make pull requests against https://github.com/jkeirstead/scholar going forwards.*
 
 ## Installation
 
@@ -17,7 +15,7 @@ install.packages("scholar")
 
 # from GitHub
 if(!requireNamespace('remotes')) install.packages("remotes")
-remotes::install_github('jkeirstead/scholar')
+remotes::install_github('YuLab-SMU/scholar')
 ```
 
 ## Basic features

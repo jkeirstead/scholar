@@ -1,3 +1,8 @@
+# scholar 0.2.2.991
+
++ fixed when some years contain 0 cites (@jefferis, #101)
++ update documents (@jefferis, #100)
+
 # scholar 0.2.2
 
 + return NULL if fail to access data (follow CRAN policy)

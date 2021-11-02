@@ -8,8 +8,9 @@ utils::globalVariables(c("name"))
 ##' Gets profile information for a researcher from Google Scholar.
 ##' Each scholar profile page gives the researcher's name,
 ##' affiliation, their homepage (if specified), and a summary of their
-##' key citation and impact metrics. The scholar ID can be found by
-##' searching Google Scholar at \url{http://scholar.google.com}.
+##' key citation and publication availability metrics. The scholar
+##' ID can be found by searching Google Scholar at 
+##' \url{http://scholar.google.com}.
 ##'
 ##' @param id 	a character string specifying the Google Scholar ID.
 ##' If multiple ids are specified, only the first value is used and a

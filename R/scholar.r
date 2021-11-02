@@ -17,8 +17,8 @@ utils::globalVariables(c("name"))
 ##' multiple scholars.
 ##'
 ##' @return 	a list containing the scholar's name, affiliation,
-##' citations, impact metrics, research interests, homepage and
-##' the author's list of coauthors provided by Google Scholar.
+##' citations, impact and publication availability metrics,
+##' research interests, homepage and coauthors.
 ##'
 ##' @examples {
 ##'    ## Gets profiles of some famous physicists
@@ -35,9 +35,9 @@ get_profile <- function(id) {
     url_template <- paste0(site, "/citations?hl=en&user=%s")
     url <- compose_url(id, url_template)
 
-    ## Generate a list of all the tables identified by the scholar ID
-    page <- get_scholar_resp(url) %>% read_html()
-    tables <- page %>% html_table()
+  ## Generate a list of all the tables identified by the scholar ID
+  page <- get_scholar_resp(url) %>% read_html()
+  tables <- page %>% html_table()
     
   ## The citation stats are in tables[[1]]$tables$stats
   ## but the number of rows seems to vary by OS
@@ -46,13 +46,12 @@ get_profile <- function(id) {
 
   ## The personal info is in
   name <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_in']") %>% html_text()
-  bio_info <- page %>% html_nodes(xpath="//*/div[@class='gsc_prf_il']") %>% html_text()
-  interests <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_int']") %>% html_children() %>% html_text()
-  affiliation <- bio_info[1]
+  bio_info <- page %>% html_nodes(xpath = "//*/div[@class='gsc_prf_il']")
+  affiliation <- html_text(bio_info)[1]
 
-  ## Specialities (trim out HTML non-breaking space)
-  specs <- iconv(bio_info[2], from="UTF8", to="ASCII")
-  specs <- str_trim(tolower(str_split(specs, ",")[[1]]))
+  ## Specialities (leave capitalisation as is)
+  specs <- html_nodes(bio_info[3],".gsc_prf_inta") %>% html_text()
+  specs <- str_trim(iconv(specs, from = "UTF8", to = "ASCII"))
 
   ## Extract the homepage
   homepage <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_ivh']//a/@href") %>% html_text()
@@ -60,14 +59,24 @@ get_profile <- function(id) {
   ## Grab all coauthors
   coauthors <- list_coauthors(id, n_coauthors = 20) # maximum availabe in profile
 
-  return(list(id=id, name=name, affiliation=affiliation,
-              total_cites=as.numeric(as.character(stats[rows-2,2])),
-              h_index=as.numeric(as.character(stats[rows-1,2])),
-              i10_index=as.numeric(as.character(stats[rows,2])),
-              fields=specs,
-              homepage=homepage,
-              interests=interests,
-              coauthors=coauthors$coauthors))
+  ## Check 'publicly available' vs 'not publicly available' statistics
+  ## (note, not actually detecting open access, just free-to view) 
+  available <- page %>% html_nodes(xpath = "//*/div[@class='gsc_rsb_m_a']") %>% html_text()
+  available <- as.numeric(str_split(available," ")[[1]][1])
+  not_available <- page %>% html_nodes(xpath = "//*/div[@class='gsc_rsb_m_na']") %>% html_text()
+  not_available <- as.numeric(str_split(not_available," ")[[1]][1])
+   
+  return(list(id = id,
+              name = name,
+              affiliation = affiliation, 
+              total_cites = as.numeric(as.character(stats[rows - 2,2])),
+              h_index = as.numeric(as.character(stats[rows - 1, 2])),
+              i10_index = as.numeric(as.character(stats[rows, 2])),
+              fields = specs,
+              homepage = homepage,
+              coauthors = coauthors$coauthors,
+              available = available,
+              not_available = not_available))
 }
 
 ##' Get historical citation data for a scholar

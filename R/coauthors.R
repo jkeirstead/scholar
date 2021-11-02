@@ -29,28 +29,41 @@
 #'
 #'
 get_coauthors <- function(id, n_coauthors = 5, n_deep = 1) {
-    stopifnot(is.numeric(n_deep), length(n_deep) >= 1, n_deep != 0)
+    
     stopifnot(is.numeric(n_coauthors), length(n_coauthors) >= 1, n_coauthors != 0)
     
     all_coauthors <- list_coauthors(id, n_coauthors)
+    
+    # remove false entries containing "Sort by *" 
+    all_coauthors <- all_coauthors[setdiff(1:nrow(all_coauthors),
+                                           grep("Sort by ", all_coauthors$coauthors)),] 
     
     empty_network <- replicate(n_deep, list())
     
     # Here I grab the id of the coauthors url because list_coauthors
     # needs to accept ids and not urls
-    for (i in seq_len(n_deep)) {
-        if (i == 1)  {
-            empty_network[[i]] <- clean_network(grab_id(all_coauthors$coauthors_url),
-                                                n_coauthors)
-        } else {
-            empty_network[[i]] <- clean_network(grab_id(empty_network[[i - 1]]$coauthors_url),
-                                                n_coauthors)
+    if(n_deep == 0){            
+        empty_network[[1]] <- clean_network(grab_id(all_coauthors$coauthors_url),
+                                                                    25) # grab up to 25 coauthors of coauthors
+        }else{
+            for (i in seq_len(n_deep)) {
+                if (i == 1)  {
+                    empty_network[[i]] <- clean_network(grab_id(all_coauthors$coauthors_url),
+                                                        n_coauthors)
+                } else {
+                    empty_network[[i]] <- clean_network(grab_id(empty_network[[i - 1]]$coauthors_url),
+                                                        n_coauthors)
+                }
+            }
         }
-    }
-    
     final_network <- rbind(all_coauthors, Reduce(rbind, empty_network))
+    final_network <- final_network[setdiff(1:nrow(final_network),
+            grep("Sort by ", final_network$coauthors)),]  # remove false entries containing "Sort by *" 
     final_network$author <- stringr::str_to_title(final_network$author)
     final_network$coauthors <- stringr::str_to_title(final_network$coauthors)
+    if(n_deep == 0) {
+        final_network <- final_network[final_network$coauthors %in% final_network$author,]
+    }
     res <- final_network[c("author", "coauthors")]
     res <- res[!res$coauthors %in% c("Sort By Year", "Sort By Title", "Sort By Citations"), ]
     return(res)

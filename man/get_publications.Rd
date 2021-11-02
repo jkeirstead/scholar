@@ -25,8 +25,10 @@ parameter.}
 \item{cstop}{an integer specifying the last article to
 process.}
 
-\item{pagesize}{an integer specifying the number of articles to
-fetch}
+\item{pagesize}{an integer specifying the number of articles to fetch in one
+batch. It is recommended to leave the default value of 100 unless you
+experience time-out errors. Note this is \emph{not} the \bold{total}
+number of publications to fetch.}
 
 \item{flush}{should the cache be flushed?  Search results are
 cached by default to speed up repeated queries.  If this argument

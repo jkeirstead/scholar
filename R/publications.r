@@ -13,8 +13,10 @@ utils::globalVariables(c("."))
 ##' parameter.
 ##' @param cstop an integer specifying the last article to
 ##' process.
-##' @param pagesize an integer specifying the number of articles to
-##' fetch
+##' @param pagesize an integer specifying the number of articles to fetch in one
+##'   batch. It is recommended to leave the default value of 100 unless you
+##'   experience time-out errors. Note this is \emph{not} the \bold{total}
+##'   number of publications to fetch.
 ##' @param flush should the cache be flushed?  Search results are
 ##' cached by default to speed up repeated queries.  If this argument
 ##' is TRUE, the cache will be cleared and the data reloaded from
@@ -83,7 +85,7 @@ get_publications <- function(id, cstart = 0, cstop = Inf, pagesize=100, flush=FA
 
         title <- cites %>% html_nodes(".gsc_a_at") %>% html_text()
         pubid <- cites %>% html_nodes(".gsc_a_at") %>%
-            html_attr("data-href") %>% str_extract(":.*$") %>% str_sub(start=2)
+            html_attr("href") %>% str_extract(":.*$") %>% str_sub(start=2)
         doc_id <- cites %>% html_nodes(".gsc_a_ac") %>% html_attr("href") %>%
             str_extract("cites=.*$") %>% str_sub(start=7)
         cited_by <- suppressWarnings(cites %>% html_nodes(".gsc_a_ac") %>%
@@ -166,14 +168,15 @@ get_article_cite_history <- function (id, article) {
 
     ## Inspect the bar chart to retrieve the citation values and years
     years <- doc %>%
-        html_nodes(xpath="//*/div[@id='gsc_vcd_graph_bars']/a") %>%
-            html_attr("href") %>%
-                str_replace(".*as_yhi=(.*)$", "\\1") %>%
-                    as.numeric()
+        html_nodes(".gsc_oci_g_a") %>% 
+        html_attr('href') %>% 
+        stringr::str_match("as_ylo=(\\d{4})&") %>% 
+        "["(,2) %>% 
+        as.numeric()
     vals <- doc %>%
-        html_nodes(xpath="//*/span[@class='gsc_vcd_g_al']") %>%
-            html_text() %>%
-                as.numeric()
+        html_nodes(".gsc_oci_g_al") %>% 
+        html_text() %>% 
+        as.numeric()
 
     df <- data.frame(year = years, cites = vals)
     if(nrow(df)>0) {
@@ -230,7 +233,7 @@ get_oldest_article <- function(id) {
 ##' id <- cbind(id, impact)
 ##'}
 ##' @param journals a character list giving the journal list
-##' @param max.distance maximum distance allowed for a match bewteen journal and journal list.
+##' @param max.distance maximum distance allowed for a match between journal and journal list.
 ##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
 ##' (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components
 ##'
@@ -317,7 +320,7 @@ get_journal_stats <- function(journals, max.distance, source_data, col = "Journa
 ##' id <- cbind(id, impact)
 ##' }
 ##' @param journals a character list giving the journal list
-##' @param max.distance maximum distance allowed for a match bewteen journal and journal list.
+##' @param max.distance maximum distance allowed for a match between journal and journal list.
 ##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
 ##' (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components
 ##'

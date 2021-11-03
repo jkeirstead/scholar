@@ -72,10 +72,18 @@ get_profile <- function(id) {
   ## Check 'publicly available' vs 'not publicly available' statistics
   ## (note, not actually detecting open access, just free-to view) 
   available <- page %>% html_nodes(xpath = "//*/div[@class='gsc_rsb_m_a']") %>% html_text()
-  available <- as.numeric(str_split(available," ")[[1]][1])
+  if(!identical(available, character(0))){
+    available <- as.numeric(str_split(available," ")[[1]][1])
+  }else{
+    available <- NA
+  }
   not_available <- page %>% html_nodes(xpath = "//*/div[@class='gsc_rsb_m_na']") %>% html_text()
-  not_available <- as.numeric(str_split(not_available," ")[[1]][1])
-   
+  if(!identical(not_available, character(0))){
+    not_available <- as.numeric(str_split(not_available," ")[[1]][1])  
+  }else{
+    not_available <- NA
+  }
+
   return(list(id = id,
               name = name,
               affiliation = affiliation, 

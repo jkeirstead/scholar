@@ -24,6 +24,7 @@ Metrics include:
 \item {available}     {the number of publications that have a version online that can be read for free (though not necessarily reusable under an open access license)}
 \item {not_available} {the number of publications only available behind a paywall}
 }
+}
 \description{
 Gets profile information for a researcher from Google Scholar.
 Each scholar profile page gives the researcher's name,

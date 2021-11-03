@@ -28,6 +28,7 @@ utils::globalVariables(c("name"))
 ##'  \item {i10_index}     {the number of publications that each have at least 10 citations}
 ##'  \item {available}     {the number of publications that have a version online that can be read for free (though not necessarily reusable under an open access license)}
 ##'  \item {not_available} {the number of publications only available behind a paywall}
+##' }
 ##'
 ##' @examples {
 ##'    ## Gets profiles of some famous physicists

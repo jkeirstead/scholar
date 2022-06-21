@@ -5,8 +5,7 @@
 ##' fit to data from neuroscience researchers with an h-index greater
 ##' than 5 and between 5 to 12 years since publishing their first
 ##' article.  So naturally if this isn't you, then the results should
-##' be taken with a large pinch of salt.  For more caveats, see
-##' \url{https://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/}.
+##' be taken with a large pinch of salt.  
 ##'
 ##' @note A scientist has an h-index of n if he or she publishes n
 ##' papers with at least n citations each.  Values returned are

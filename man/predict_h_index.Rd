@@ -28,8 +28,7 @@ the future using Acuna et al's method (see source).  The model was
 fit to data from neuroscience researchers with an h-index greater
 than 5 and between 5 to 12 years since publishing their first
 article.  So naturally if this isn't you, then the results should
-be taken with a large pinch of salt.  For more caveats, see
-\url{https://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/}.
+be taken with a large pinch of salt.
 }
 \details{
 Since the model is calibrated to neuroscience

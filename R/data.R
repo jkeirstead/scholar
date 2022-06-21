@@ -1,3 +1,7 @@
+##
+## REMOVE
+##
+##
 ## #' Impact Factor (2017)
 ## #'
 ## #' Downloaded from https://www.researchgate.net/post/New_Impact_factors_2017_for_Journals_are_released_now
@@ -28,14 +32,14 @@
 ## "impactfactor"
 
 
-# Journal metrics (2017)
+# Journal metrics (2021)
 # 
 # Downloaded from https://www.scimagojr.com/journalrank.php
 # 
-# Rename (remove whitespaces) to scimagojr2017.csv
+# Rename (remove whitespaces) to scimagojr2021.csv
 # 
 # library(tidyverse)
-# journalrankings <- read.csv2("scimagojr2017.csv") %>%
+# journalrankings <- read.csv2("scimagojr2021.csv") %>%
 #    dplyr::rename(Journal = Title)
 # # 
-# save(journalrankings, file="journalrankings.rda", compress="xz")
+# save(journalrankings, file="R/sysdata.rda", compress='xz')

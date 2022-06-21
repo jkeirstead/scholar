@@ -1,7 +1,7 @@
 Package: scholar
 Type: Package
 Title: Analyse Citation Data from Google Scholar
-Version: 0.2.2.991
+Version: 0.2.3
 Authors@R: c(
     person("Guangchuang", "Yu",   email = "guangchuangyu@gmail.com",   role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6485-8781")),
     person("James", "Keirstead",  email = "james.keirstead@gmail.com", role = "aut"),
@@ -16,11 +16,12 @@ Description: Provides functions to extract citation data from Google
     Scholar.  Convenience functions are also provided for comparing
     multiple scholars and predicting future h-index values.
 Depends:
-    R (>= 3.4.0)
+    R (>= 3.5.0)
 Imports:
     R.cache,
     dplyr,
     httr,
+    rlang,
     rvest,
     stringr,
     xml2,
@@ -38,6 +39,6 @@ VignetteBuilder: knitr
 License: MIT + file LICENSE
 URL: https://github.com/YuLab-SMU/scholar
 BugReports: https://github.com/YuLab-SMU/scholar/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8
 Language: en-GB

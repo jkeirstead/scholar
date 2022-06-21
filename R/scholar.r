@@ -8,17 +8,27 @@ utils::globalVariables(c("name"))
 ##' Gets profile information for a researcher from Google Scholar.
 ##' Each scholar profile page gives the researcher's name,
 ##' affiliation, their homepage (if specified), and a summary of their
-##' key citation and impact metrics.  The scholar ID can be found by
-##' searching Google Scholar at \url{http://scholar.google.com}.
+##' key citation and publication availability metrics. The scholar
+##' ID can be found by searching Google Scholar at 
+##' \url{http://scholar.google.com}.
 ##'
 ##' @param id 	a character string specifying the Google Scholar ID.
 ##' If multiple ids are specified, only the first value is used and a
-##' warning is generated.  See the example below for how to profile
+##' warning is generated. See the example below for how to profile
 ##' multiple scholars.
 ##'
 ##' @return 	a list containing the scholar's name, affiliation,
-##' citations, impact metrics, research interests, homepage and
-##' the author's list of coauthors provided by Google Scholar.
+##' citations, impact and publication availability metrics,
+##' research interests, homepage and coauthors.
+##' 
+##' Metrics include:
+##' \itemize{
+##'  \item {total_cites}   {combined citations to all publications}
+##'  \item {h_index}       {the largest number h such that h publications each have at least h citations}
+##'  \item {i10_index}     {the number of publications that each have at least 10 citations}
+##'  \item {available}     {the number of publications that have a version online that can be read for free (though not necessarily reusable under an open access license)}
+##'  \item {not_available} {the number of publications only available behind a paywall}
+##' }
 ##'
 ##' @examples {
 ##'    ## Gets profiles of some famous physicists
@@ -41,6 +51,7 @@ get_profile <- function(id) {
 
     page <- page %>% read_html()
     tables <- page %>% html_table()
+
     
   ## The citation stats are in tables[[1]]$tables$stats
   ## but the number of rows seems to vary by OS
@@ -49,13 +60,12 @@ get_profile <- function(id) {
 
   ## The personal info is in
   name <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_in']") %>% html_text()
-  bio_info <- page %>% html_nodes(xpath="//*/div[@class='gsc_prf_il']") %>% html_text()
-  interests <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_int']") %>% html_children() %>% html_text()
-  affiliation <- bio_info[1]
+  bio_info <- page %>% html_nodes(xpath = "//*/div[@class='gsc_prf_il']")
+  affiliation <- html_text(bio_info)[1]
 
-  ## Specialities (trim out HTML non-breaking space)
-  specs <- iconv(bio_info[2], from="UTF8", to="ASCII")
-  specs <- str_trim(tolower(str_split(specs, ",")[[1]]))
+  ## Specialities (leave capitalisation as is)
+  specs <- html_nodes(bio_info[3],".gsc_prf_inta") %>% html_text()
+  specs <- str_trim(iconv(specs, from = "UTF8", to = "ASCII"))
 
   ## Extract the homepage
   homepage <- page %>% html_nodes(xpath="//*/div[@id='gsc_prf_ivh']//a/@href") %>% html_text()
@@ -63,14 +73,32 @@ get_profile <- function(id) {
   ## Grab all coauthors
   coauthors <- list_coauthors(id, n_coauthors = 20) # maximum availabe in profile
 
-  return(list(id=id, name=name, affiliation=affiliation,
-              total_cites=as.numeric(as.character(stats[rows-2,2])),
-              h_index=as.numeric(as.character(stats[rows-1,2])),
-              i10_index=as.numeric(as.character(stats[rows,2])),
-              fields=specs,
-              homepage=homepage,
-              interests=interests,
-              coauthors=coauthors$coauthors))
+  ## Check 'publicly available' vs 'not publicly available' statistics
+  ## (note, not actually detecting open access, just free-to view) 
+  available <- page %>% html_nodes(xpath = "//*/div[@class='gsc_rsb_m_a']") %>% html_text()
+  if(!identical(available, character(0))){
+    available <- as.numeric(str_split(available," ")[[1]][1])
+  }else{
+    available <- NA
+  }
+  not_available <- page %>% html_nodes(xpath = "//*/div[@class='gsc_rsb_m_na']") %>% html_text()
+  if(!identical(not_available, character(0))){
+    not_available <- as.numeric(str_split(not_available," ")[[1]][1])  
+  }else{
+    not_available <- NA
+  }
+
+  return(list(id = id,
+              name = name,
+              affiliation = affiliation, 
+              total_cites = as.numeric(as.character(stats[rows - 2,2])),
+              h_index = as.numeric(as.character(stats[rows - 1, 2])),
+              i10_index = as.numeric(as.character(stats[rows, 2])),
+              fields = specs,
+              homepage = homepage,
+              coauthors = coauthors$coauthors,
+              available = available,
+              not_available = not_available))
 }
 
 ##' Get historical citation data for a scholar

@@ -224,33 +224,34 @@ get_oldest_article <- function(id) {
 
 
 
-##' Get journal metrics.
-##'
-##' Get journal metrics (impact factor) for a journal list.
-##'
-##' @examples
-##' \dontrun{
-##' library(scholar)
-##'
-##' id <- get_publications("bg0BZ-QAAAAJ&hl")
-##' impact <- get_impactfactor(journals=id$journal, max.distance = 0.1)
-##'
-##' id <- cbind(id, impact)
-##'}
-##' @param journals a character list giving the journal list
-##' @param max.distance maximum distance allowed for a match between journal and journal list.
-##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
-##' (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components
-##'
-##' @return Journal metrics data.
-##'
-##' @import dplyr
-##' @export
-##' @author Dominique Makowski and Guangchuang Yu
-get_impactfactor <- function(journals, max.distance = 0.05) {
-    message("The impact factor data is out-of-date and we may remove this function in future release.")
-    get_journal_stats(journals, max.distance, impactfactor)
-}
+
+# ##' Get journal metrics.
+# ##'
+# ##' Get journal metrics (impact factor) for a journal list.
+# ##'
+# ##' @examples
+# ##' \dontrun{
+# ##' library(scholar)
+# ##'
+# ##' id <- get_publications("bg0BZ-QAAAAJ&hl")
+# ##' impact <- get_impactfactor(journals=id$journal, max.distance = 0.1)
+# ##'
+# ##' id <- cbind(id, impact)
+# ##'}
+# ##' @param journals a character list giving the journal list
+# ##' @param max.distance maximum distance allowed for a match between journal and journal list.
+# ##' Expressed either as integer, or as a fraction of the pattern length times the maximal transformation cost
+# ##' (will be replaced by the smallest integer not less than the corresponding fraction), or a list with possible components
+# ##'
+# ##' @return Journal metrics data.
+# ##'
+# ##' @import dplyr
+# ##' @export
+# ##' @author Dominique Makowski and Guangchuang Yu
+# get_impactfactor <- function(journals, max.distance = 0.05) {
+#     message("The impact factor data is out-of-date and we may remove this function in future release.")
+#     get_journal_stats(journals, max.distance, impactfactor)
+# }
 
 
 get_journal_stats <- function(journals, max.distance, source_data, col = "Journal") {

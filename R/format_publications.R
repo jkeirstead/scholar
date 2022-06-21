@@ -11,11 +11,12 @@
 ##' }
 ##' @return a vector of formated publications
 ##' @importFrom rlang .data
+##' @export
 ##' @author R Thériault and modified by Guangchuang Yu
 format_publications <- function(scholar.profile, author.name = NULL) {
   pubs <- get_publications(scholar.profile)
   pubs2 <- pubs %>% 
-    strsplit(x = .data$author, split = ",") 
+    strsplit(x = .$author, split = ",") 
   
   pubs$author <- lapply(pubs2, function(x) {
     x <- swap_initials(x)

@@ -3,6 +3,7 @@
 export(author_position)
 export(compare_scholar_careers)
 export(compare_scholars)
+export(format_publications)
 export(get_article_cite_history)
 export(get_citation_history)
 export(get_coauthors)

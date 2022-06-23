@@ -17,7 +17,7 @@ scholars and predicting h-index scores based on past publication records.
 }
 \note{
 A complementary set of Google Scholar functions can be found at
-  \url{https://biostat.jhsph.edu/~jleek/code/googleCite.r}.  The
+  \url{https://www.biostat.jhsph.edu/~jleek/code/googleCite.r}.  The
   \code{scholar} package was developed independently.
 }
 \section{Google Scholar cookies}{

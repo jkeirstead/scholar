@@ -16,7 +16,7 @@
 #'   \code{\link{get_scholar_resp}} function to carry out the query.
 #'
 #' @note A complementary set of Google Scholar functions can be found at
-#'   \url{https://biostat.jhsph.edu/~jleek/code/googleCite.r}.  The
+#'   \url{https://www.biostat.jhsph.edu/~jleek/code/googleCite.r}.  The
 #'   \code{scholar} package was developed independently.
 #'
 #' @source The package reads data from \url{https://scholar.google.com}.  Dates

@@ -1,7 +1,7 @@
 Package: scholar
 Type: Package
 Title: Analyse Citation Data from Google Scholar
-Version: 0.2.3.900
+Version: 0.2.3.901
 Authors@R: c(
     person("Guangchuang", "Yu",   email = "guangchuangyu@gmail.com",   role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6485-8781")),
     person("James", "Keirstead",  email = "james.keirstead@gmail.com", role = "aut"),

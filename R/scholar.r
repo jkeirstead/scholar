@@ -320,7 +320,7 @@ get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
   # maybe pattern = ";user=[^&|\"]+[&|\"]") is more safe
   # see also https://github.com/jkeirstead/scholar/issues/111
 
-  
+
   if (length(unlist(ids)) == 0) {
     message("No Scholar ID found.")
     return(NA)
@@ -347,7 +347,7 @@ get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
         warning("No researcher found at the indicated affiliation.")
         return(NA)
       } else {
-        x_profile <- profiles[[which(which_profile != 0)]]
+        x_profile <- profiles[[which(which_profile != 0)[1]]]
       }
     }
   } else {

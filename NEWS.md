@@ -1,6 +1,6 @@
-# scholar 0.2.3.900
+# scholar 0.2.3.901
 
-+ update regexpr to extract ID in `get_scholar_id()` (2022-06-25, Sta, #111)
++ fixed duplicated profiles and update regexpr to extract ID in `get_scholar_id()` (2022-06-25, Sta, #111, #112)
 
 # scholar 0.2.3
 

@@ -1,3 +1,7 @@
+# scholar 0.2.3.900
+
++ update regexpr to extract ID in `get_scholar_id()` (2022-06-25, Sta, #111)
+
 # scholar 0.2.3
 
 + `format_publications` to format publication list (2022-06-21, Tue)

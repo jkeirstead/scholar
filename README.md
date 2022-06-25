@@ -59,10 +59,22 @@ compare_scholar_careers(ids)
 
 ## Predicting future h-index values
 
-Finally users can predict the future [h-index](http://en.wikipedia.org/wiki/H-index) of a scholar, based on the method of [Acuna et al.](https://www.nature.com/nature/articles/489201a).  Since the method was originally calibrated on data from neuroscientists, it goes without saying that, if the scholar is from another discipline, then the results should be taken with a large pinch of salt.  A more general critique of the original paper is available   [here](http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/).  Still, it's a bit of fun.  
+Users can predict the future [h-index](http://en.wikipedia.org/wiki/H-index) of a scholar, based on the method of [Acuna et al.](https://www.nature.com/nature/articles/489201a).  Since the method was originally calibrated on data from neuroscientists, it goes without saying that, if the scholar is from another discipline, then the results should be taken with a large pinch of salt.  A more general critique of the original paper is available   [here](http://simplystatistics.org/2012/10/10/whats-wrong-with-the-predicting-h-index-paper/).  Still, it's a bit of fun.  
 
 ```
 ## Predict h-index of original method author, Daniel Acuna
 id <- 'GAi23ssAAAAJ'
 predict_h_index(id)
+```
+
+## Formatting publications for CV
+
+Finally, the `format_publications` function can be used (e.g., in conjunction with the [`vitae`](https://pkg.mitchelloharawild.com/vitae/) package) to format publications in APA Style. The short name of the author of interest (e.g., of the person whose CV is being made) can be highlighted in bold with the `author.name` argument. The function after the pipe allows rmarkdown to format them properly, and the code chunk should be set to `results = "asis"`.
+
+```
+# APA style:
+format_publications("NrfwEncAAAAJ", "R Thériault") |> cat(sep='\n\n')
+
+# Numbering format:
+format_publications("NrfwEncAAAAJ", "R Thériault") |> print(quote=FALSE)
 ```

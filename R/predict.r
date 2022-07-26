@@ -28,15 +28,19 @@
 ##' sequence of predicted h-indices contains a negative value or is
 ##' non-increasing.
 ##' @export
-##' @examples {
-##'    ## Predict h-index of original method author
-##'   id <- "GAi23ssAAAAJ"
+##' @examples 
+##'   ## Predict h-index of original method author
+##' \dontrun{
+##'   id <- "DO5oG40AAAAJ"
 ##'   df <- predict_h_index(id)
 ##' }
 predict_h_index <- function(id, journals) {
   id <- tidy_id(id)
   n <- get_num_articles(id) # number of articles written
-  h <- get_profile(id)$h_index
+  h <- get_profile(id)
+  if (is.na(h)) return(NA)
+  h <- h$h_index
+
   y <- as.numeric(format(Sys.Date(), "%Y")) - get_oldest_article(id)
   j <- get_num_distinct_journals(id)
 

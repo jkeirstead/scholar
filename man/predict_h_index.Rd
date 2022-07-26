@@ -45,9 +45,9 @@ fractional so it's up to your own vanity whether you want to round
 up or down.
 }
 \examples{
-{
-   ## Predict h-index of original method author
-  id <- "GAi23ssAAAAJ"
+  ## Predict h-index of original method author
+\dontrun{
+  id <- "DO5oG40AAAAJ"
   df <- predict_h_index(id)
 }
 }

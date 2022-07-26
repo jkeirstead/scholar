@@ -314,7 +314,7 @@ get_scholar_id <- function(last_name="", first_name="", affiliation = NA) {
   aa <- content(page, as='text')
   ids <- stringr::str_extract_all(
       string = aa, 
-      pattern = ";user=[0-9a-zA-Z_]+"
+      pattern = ";user=[0-9a-zA-Z_\\-]+"
       )
     #stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")
   # maybe pattern = ";user=[^&|\"]+[&|\"]") is more safe

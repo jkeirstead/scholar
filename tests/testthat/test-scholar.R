@@ -35,7 +35,7 @@ test_that("get_citation_history works", {
 test_that("get_article_cite_history works", {
   skip_on_cran()
   skip_if_offline()
-  expect_is(ach <- get_article_cite_history("B7vSqZsAAAAJ", "qxL8FJ1GzNcC"), 
+  expect_is(ach <- get_article_cite_history("B7vSqZsAAAAJ", "qxL8FJ1GzNcC"),
             'data.frame')
   expect_equal(names(ach), c("year", "cites", "pubid"))
 })
@@ -47,10 +47,34 @@ test_that("get_profile works", {
     authorlist <- scholar::get_publications(id)$author
     author <- scholar::get_profile(id)$name
     author_position(authorlist, author)
-    
+
     expect_is(h <- get_citation_history("xJaxiEEAAAAJ"), 'data.frame')
     expect_equal(names(h), c("year", "cites"))
 })
+
+
+test_that("get_publication_abstract works", {
+  skip_on_cran()
+  skip_if_offline()
+  id <- 'K6EVDoYAAAAJ'
+  pub <- scholar::get_publications(id)
+  pub_id <- pub[1,]$pubid
+
+  abst <- scholar::get_publication_abstract(id, pub_id)
+  testthat::expect_true(stringr::str_starts(abst, "Practitioner Summary"))
+})
+
+test_that("get_publication_url works", {
+  skip_on_cran()
+  skip_if_offline()
+  id <- 'K6EVDoYAAAAJ'
+  pub <- scholar::get_publications(id)
+  pub_id <- pub[1,]$pubid
+
+  url <- scholar::get_publication_url(id, pub_id)
+  testthat::expect_true(stringr::str_starts(url, "https://"))
+})
+
 
 
 # Here we could add tests that use cached data

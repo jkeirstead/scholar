@@ -440,3 +440,141 @@ get_publication_url <- function(id, pub_id, flush = FALSE) {
 }
 
 
+##' Gets the URL to the google scholar website of an article.
+##'
+##' @param id a character string specifying the Google Scholar ID.
+##' @param pubid a character string specifying the article id.
+##'
+##' @return a String that contains the URL to the scholar website of the article
+##'
+##' @export
+#'
+# ' @examples
+get_article_scholar_url <- function(id, pubid){
+
+  # ensure tidy_id
+  id <- tidy_id(id)
+
+  site <- getOption("scholar_site")
+
+  url_template <- paste0(site, "/citations?view_op=view_citation&hl=en&user=%s&citation_for_view=%s")
+  url <- sprintf(url_template, id, paste0(id,":",pubid))
+  url
+}
+
+
+##' Gets the full date for a publication
+##'
+##' @param id a character string specifying the Google Scholar ID.
+##' @param pub_id a character string specifying the publication id.
+##' @param flush Whether or not to clear the cache
+##'
+##' @return a String that contains the publication date
+##'
+##' @importFrom stringr str_which
+##' @importFrom dplyr "%>%"
+##' @importFrom xml2 read_html
+##' @importFrom rvest html_nodes html_text html_attr
+##' @import R.cache
+##' @export
+#'
+# ' @examples
+get_publication_date <- function(id, pub_id, flush = FALSE) {
+  # ensure tidy_id
+  id <- tidy_id(id)
+  #debug
+  #id <- "K6EVDoYAAAAJ"
+  #pub_id <- "HIFyuExEbWQC"
+
+  ## Define the cache path
+  cache.dir <- file.path(tempdir(), "r-scholar")
+  setCacheRootPath(cache.dir)
+
+  ## Clear the cache if requested
+  if (flush) saveCache(NULL, key=list(id, pub_id, "date"))
+
+  ## Check if we've cached it already
+  data <- loadCache(list(id, pub_id, "date"))
+
+  site <- getOption("scholar_site")
+
+  ## If not, get the data and save it to cache
+  if (is.null(data)) {
+
+    url_template <- paste0(site, "/citations?view_op=view_citation&hl=en&user=%s&citation_for_view=%s")
+    url <- sprintf(url_template, id, paste0(id,":",pub_id))
+
+    page <- get_scholar_resp(url)
+    if (is.null(page)) return(NA)
+
+    page <- page %>% rvest::read_html()
+
+    fields <- page %>% rvest::html_nodes(xpath="//div[@class='gsc_oci_field']") %>% rvest::html_text()
+    field_num <- stringr::str_which(fields, "Publication date")
+    data_fields <- page %>% rvest::html_nodes(xpath="//div[@class='gsc_oci_value']") %>% rvest::html_text()
+
+    data <- data_fields[field_num]
+  }
+
+  return(data)
+
+}
+
+
+##' Gets the full data for a publication
+##'
+##' @param id a character string specifying the Google Scholar ID.
+##' @param pub_id a character string specifying the publication id.
+##' @param flush Whether or not to clear the cache
+##'
+##' @return a list that contains the full data
+##'
+##' @importFrom stringr str_which
+##' @importFrom dplyr "%>%"
+##' @importFrom xml2 read_html
+##' @importFrom rvest html_nodes html_text html_attr
+##' @import R.cache
+##' @export
+#'
+# ' @examples
+get_publication_data_extended <- function(id, pub_id, flush = FALSE) {
+  # ensure tidy_id
+  id <- tidy_id(id)
+  #debug
+  #id <- "K6EVDoYAAAAJ"
+  #pub_id <- "HIFyuExEbWQC"
+
+  ## Define the cache path
+  cache.dir <- file.path(tempdir(), "r-scholar")
+  setCacheRootPath(cache.dir)
+
+  ## Clear the cache if requested
+  if (flush) saveCache(NULL, key=list(id, pub_id, "data"))
+
+  ## Check if we've cached it already
+  data <- loadCache(list(id, pub_id, "data"))
+
+  site <- getOption("scholar_site")
+
+  ## If not, get the data and save it to cache
+  if (is.null(data)) {
+
+    url_template <- paste0(site, "/citations?view_op=view_citation&hl=en&user=%s&citation_for_view=%s")
+    url <- sprintf(url_template, id, paste0(id,":",pub_id))
+
+    page <- get_scholar_resp(url)
+    if (is.null(page)) return(NA)
+
+    page <- page %>% rvest::read_html()
+
+    fields <- page %>% rvest::html_nodes(xpath="//div[@class='gsc_oci_field']") %>% rvest::html_text()
+    field_num <- stringr::str_which(fields, "Publication date")
+    data_fields <- page %>% rvest::html_nodes(xpath="//div[@class='gsc_oci_value']") %>% rvest::html_text()
+
+    names(data_fields) <- fields
+    data <- as.data.frame(t(data_fields))
+  }
+
+  return(data)
+
+}

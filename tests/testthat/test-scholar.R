@@ -57,22 +57,24 @@ test_that("get_publication_abstract works", {
   skip_on_cran()
   skip_if_offline()
   id <- 'K6EVDoYAAAAJ'
-  pub <- scholar::get_publications(id)
-  pub_id <- pub[1,]$pubid
+  #pub <- scholar::get_publications(id)
+  pub_id <- "HIFyuExEbWQC" # pub[1,]$pubid
 
   abst <- scholar::get_publication_abstract(id, pub_id)
-  testthat::expect_true(stringr::str_starts(abst, "Practitioner Summary"))
+  #message(paste0(" ",stringr::str_sub(abst, 1, 21)))
+  testthat::expect_equal(stringr::str_sub(abst,1,20), "Practitioner Summary")
 })
 
 test_that("get_publication_url works", {
   skip_on_cran()
   skip_if_offline()
   id <- 'K6EVDoYAAAAJ'
-  pub <- scholar::get_publications(id)
-  pub_id <- pub[1,]$pubid
+  #pub <- scholar::get_publications(id)
+  pub_id <- "HIFyuExEbWQC" #pub_id <- pub[1,]$pubid
 
   url <- scholar::get_publication_url(id, pub_id)
-  testthat::expect_true(stringr::str_starts(url, "https://"))
+  #message(paste0(" ",stringr::str_sub(url, 1, 8)))
+  testthat::expect_equal(stringr::str_sub(url, 1,8), "https://")
 })
 
 

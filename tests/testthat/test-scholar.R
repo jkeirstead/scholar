@@ -73,7 +73,7 @@ test_that("get_publication_url works", {
   pub_id <- "HIFyuExEbWQC" #pub_id <- pub[1,]$pubid
 
   url <- scholar::get_publication_url(id, pub_id)
-  #message(paste0(" ",stringr::str_sub(url, 1, 8)))
+  # message(paste0(" ",stringr::str_sub(url, 1, 8)))
   testthat::expect_equal(stringr::str_sub(url, 1,8), "https://")
 })
 

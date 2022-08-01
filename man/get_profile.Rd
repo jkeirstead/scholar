@@ -9,20 +9,21 @@ get_profile(id)
 \arguments{
 \item{id}{a character string specifying the Google Scholar ID.
 If multiple ids are specified, only the first value is used and a
-warning is generated.  See the example below for how to profile
+warning is generated. See the example below for how to profile
 multiple scholars.}
 }
 \value{
 a list containing the scholar's name, affiliation,
 citations, impact and publication availability metrics,
 research interests, homepage and coauthors.
+
 Metrics include:
 \itemize{
-\item {total_cites}   {combined citations to all publications}
-\item {h_index}       {the largest number h such that h publications each have at least h citations}
-\item {i10_index}     {the number of publications that each have at least 10 citations}
-\item {available}     {the number of publications that have a version online that can be read for free (though not necessarily reusable under an open access license)}
-\item {not_available} {the number of publications only available behind a paywall}
+ \item {total_cites}   {combined citations to all publications}
+ \item {h_index}       {the largest number h such that h publications each have at least h citations}
+ \item {i10_index}     {the number of publications that each have at least 10 citations}
+ \item {available}     {the number of publications that have a version online that can be read for free (though not necessarily reusable under an open access license)}
+ \item {not_available} {the number of publications only available behind a paywall}
 }
 }
 \description{
@@ -30,7 +31,7 @@ Gets profile information for a researcher from Google Scholar.
 Each scholar profile page gives the researcher's name,
 affiliation, their homepage (if specified), and a summary of their
 key citation and publication availability metrics. The scholar
-ID can be found by searching Google Scholar at
+ID can be found by searching Google Scholar at 
 \url{http://scholar.google.com}.
 }
 \examples{

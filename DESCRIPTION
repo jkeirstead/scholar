@@ -36,6 +36,6 @@ Suggests:
     testthat (>= 2.1.0),
     spelling
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8
 Language: en-GB

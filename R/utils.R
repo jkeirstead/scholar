@@ -52,7 +52,7 @@ get_scholar_resp <- function(url, attempts_left = 5) {
     # On a successful GET, return the response
     if (httr::status_code(resp) == 200) {
         resp
-    } else if (httr::status_code(resp )) {
+    } else if (httr::status_code(resp) == 404) {
         warning("Page 404. Please check whether the provided URL is correct.")
         return(NULL)
     } else if(httr::status_code(resp) == 429){

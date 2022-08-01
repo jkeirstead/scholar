@@ -31,3 +31,8 @@ clean:
 	cd ..;\
 	$(RM) -r $(PKGNAME).Rcheck/
 
+update:
+	git fetch --all;\
+	git checkout master;\
+	git merge upstream/master;\
+	git merge origin/master

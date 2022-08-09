@@ -38,7 +38,7 @@ id <- 'B7vSqZsAAAAJ'
 ## Get his profile
 l <- get_profile(id)
 
-## Print his name and affliation
+## Print his name and affiliation
 l$name
 l$affiliation
 
@@ -94,6 +94,7 @@ ggplot(ach, aes(year, cites)) +
 ```
 
 # Comparing scholars
+
 You can compare the citation history of scholars by fetching data with 
 `compare_scholars`.
 ```{r}
@@ -132,3 +133,20 @@ plot_coauthors(coauthor_network)
 ```
 
 Note however, that these are the coauthors listed in Google Scholar profile and not coauthors from all publications.
+
+# Formatting publications for CV
+
+The `format_publications` function can be used for example in conjunction with the [`vitae`](https://pkg.mitchelloharawild.com/vitae/) package to format publications in APA Style. The short name of the author of interest (e.g., of the person whose CV is being made) can be highlighted in bold with the `author.name` argument. The function after the pipe allows rmarkdown to format them properly, and the code chunk should be set to `results = "asis"`.
+
+### APA style
+
+```{r  results = "asis"}
+format_publications("NrfwEncAAAAJ", "R Thériault") |> cat(sep='\n\n')
+
+```
+
+### Numbering format
+
+```{r  results = "asis"}
+format_publications("NrfwEncAAAAJ", "R Thériault") |> print(quote=FALSE)
+```

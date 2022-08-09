@@ -39,6 +39,6 @@ VignetteBuilder: knitr
 License: MIT + file LICENSE
 URL: https://github.com/YuLab-SMU/scholar
 BugReports: https://github.com/YuLab-SMU/scholar/issues
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Encoding: UTF-8
 Language: en-GB

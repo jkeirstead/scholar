@@ -34,49 +34,56 @@
 ##'   id <- "GAi23ssAAAAJ"
 ##'   df <- predict_h_index(id)
 ##' }
-predict_h_index <- function(id, journals) {
+predict_h_index <- function(id, journals = NULL) {
   id <- tidy_id(id)
-  n <- get_num_articles(id) # number of articles written
+  
+  # Getting the h-index and checking for NA
   h <- get_profile(id)$h_index
+  if (is.na(h)) return(NA)
+  
+  n <- get_num_articles(id) # number of articles written
   y <- as.numeric(format(Sys.Date(), "%Y")) - get_oldest_article(id)
   j <- get_num_distinct_journals(id)
-
-  if (missing(journals)) {
+  
+  # Handle optional journals parameter
+  if (is.null(journals)) {
     q <- get_num_top_journals(id)
   } else {
     q <- get_num_top_journals(id, journals)
   }
-
-  ## Regression coefficients, courtesy of Daniel Acuna
+  
+  # Regression coefficients
   coefs <- c(
-             1,0.760,0.373,0.967,-0.069,0.018,0.033,
-             2,1.413,0.781,0.936,-0.132,0.018,0.064,
-             3,2.227,1.105,0.903,-0.193,0.027,0.096,
-             4,3.196,1.386,0.871,-0.274,0.039,0.145,
-             5,3.997,1.578,0.858,-0.345,0.063,0.198,
-             6,4.752,1.671,0.817,-0.377,0.117,0.282,
-             7,5.741,1.761,0.761,-0.420,0.170,0.394,
-             8,6.531,1.796,0.669,-0.420,0.252,0.508,
-             9,7.482,1.653,0.561,-0.415,0.383,0.629,
-             10,8.734,1.326,0.478,-0.411,0.522,0.823)
+    1, 0.760, 0.373, 0.967, -0.069, 0.018, 0.033,
+    2, 1.413, 0.781, 0.936, -0.132, 0.018, 0.064,
+    3, 2.227, 1.105, 0.903, -0.193, 0.027, 0.096,
+    4, 3.196, 1.386, 0.871, -0.274, 0.039, 0.145,
+    5, 3.997, 1.578, 0.858, -0.345, 0.063, 0.198,
+    6, 4.752, 1.671, 0.817, -0.377, 0.117, 0.282,
+    7, 5.741, 1.761, 0.761, -0.420, 0.170, 0.394,
+    8, 6.531, 1.796, 0.669, -0.420, 0.252, 0.508,
+    9, 7.482, 1.653, 0.561, -0.415, 0.383, 0.629,
+    10, 8.734, 1.326, 0.478, -0.411, 0.522, 0.823
+  )
   coefs.m <- matrix(coefs, nrow=10, byrow=TRUE)
   coefs <- coefs.m[,-1]
   vals <- c(1, sqrt(n), h, y, j, q)
-
-  ## Calculate the h-index predictions
+  
+  # Calculate the h-index predictions
   h.pred <- coefs %*% vals
   h.vals <- c(h, h.pred)
-
-  ## Check for sensible values
-  standard.warning <- "You're probably not a neuroscientist.  Please read the documentation for information on the limitations of this function."
   
-  if (any(diff(h.vals)<0))
-      warning(paste0("Decreasing h-values predicted. ", standard.warning))
-
-  if (any(h.vals<0))
-      warning("Negative h-values predicted. ", standard.warning)
+  # Check for sensible values
+  standard.warning <- "You're probably not a neuroscientist. Please read the documentation for information on the limitations of this function."
   
-  return(data.frame(years_ahead=c(0:10), h_index=h.vals))
-
+  if (any(diff(h.vals) < 0)) {
+    warning(paste0("Decreasing h-values predicted. ", standard.warning))
+  }
+  
+  if (any(h.vals < 0)) {
+    warning(paste0("Negative h-values predicted. ", standard.warning))
+  }
+  
+  return(data.frame(years_ahead = 0:10, h_index = h.vals))
 }
   
